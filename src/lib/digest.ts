@@ -14,7 +14,7 @@ export function buildDigest(sales: Sale[], from: string, unsubscribeUrl = `${SIT
   const deals = dealRules.filter((r) => r.discountPct && r.discountPct >= 50);
   const html = `<!doctype html><html><body style="margin:0;background:#f2f4f7;font-family:Arial,sans-serif;color:#1d2330">
 <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="background:#fff;max-width:600px">
-<tr><td style="background:#1b3a8a;padding:16px"><img src="${SITE_URL}/logo-email.png" alt="ThriftRadarFL" width="176" height="28" style="display:block;border:0;outline:none;height:auto;max-width:176px"></td></tr>
+<tr><td style="background:#1b3a8a;padding:16px"><img src="${SITE_URL}/logo-email.png" alt="ThriftRadarFL" width="215" height="40" style="display:block;border:0;outline:none;height:auto;max-width:215px"></td></tr>
 <tr><td style="padding:16px"><h1 style="font-size:20px;margin:0 0 8px">This week's hot sales</h1>
 ${top.map((s) => `<p style="margin:0 0 12px"><a href="${SITE_URL}/sales/${s.slug}" style="color:#1b3a8a;font-weight:bold">${h(s.title)}</a><br><span style="font-size:13px;color:#555">${h(s.city)} · ${s.days.map((d) => `${d.date.slice(5)} ${d.start}${d.discountPct ? ` (${d.discountPct}% off)` : ""}`).join(", ")}</span></p>`).join("\n") || "<p>No sales listed this week.</p>"}
 <h2 style="font-size:16px;margin:16px 0 8px">Half-off &amp; color-tag days</h2><ul style="padding-left:18px;font-size:13px">${deals.map((r) => `<li>${DAYS[r.day]}: ${h(r.label)}${r.verified ? "" : " <i>(unverified)</i>"}</li>`).join("")}</ul>

@@ -5,7 +5,7 @@ const links = [["/", "This Week"], ["/today", "Today"], ["/map", "Map"], ["/cale
 export default function Nav() {
   return (<header>
     <div className="bg-royal-dark text-white"><div className="mx-auto flex max-w-[1160px] flex-wrap items-center gap-2 px-4 py-3">
-      <Link href="/" aria-label="ThriftRadarFL home" className="shrink-0"><Image src="/logo.svg" alt="ThriftRadar FL" width={176} height={26} priority unoptimized className="block h-auto w-[140px] sm:w-[176px]" /></Link>
+      <Link href="/" aria-label="ThriftRadarFL home" className="flex shrink-0 items-center gap-2"><Image src="/icons/mark-64.png" alt="" width={32} height={32} priority unoptimized className="block h-8 w-8" /><span className="font-[Arial,Helvetica,sans-serif] text-xl font-bold tracking-tight text-white sm:text-2xl">ThriftRadar</span><span className="rounded-[4px] bg-cta px-1.5 py-0.5 text-xs font-bold text-white">FL</span></Link>
       <span className="ml-2 hidden text-xs text-blue-100 lg:inline">Central Florida estate sales, auctions &amp; thrift deal days</span>
       <form action="/search" role="search" className="order-last flex w-full gap-1 sm:order-none sm:ml-auto sm:w-auto"><label htmlFor="nav-q" className="sr-only">Search sales and stores</label>
         <input id="nav-q" name="q" type="search" placeholder="Search sales & stores" className="min-w-0 flex-1 rounded-sm border border-white/30 bg-white px-2 py-1.5 text-sm text-ink sm:w-56" />

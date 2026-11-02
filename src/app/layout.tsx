@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description, applicationName: SITE_NAME, alternates: { canonical: "/" },
   openGraph: { type: "website", siteName: SITE_NAME, locale: "en_US", url: "/", title: "ThriftRadarFL", description, },
   twitter: { card: "summary_large_image", title: "ThriftRadarFL", description },
-  icons: { icon: "/favicon.ico", apple: "/icons/apple-touch-icon.png" },
+  icons: { apple: "/icons/apple-touch-icon.png" },
   appleWebApp: { capable: true, title: "ThriftRadar", statusBarStyle: "black-translucent" },
 };
 const cities = [["port-orange", "Port Orange"], ["daytona-beach", "Daytona Beach"], ["deland", "DeLand"], ["new-smyrna-beach", "New Smyrna Beach"], ["ormond-beach", "Ormond Beach"]];

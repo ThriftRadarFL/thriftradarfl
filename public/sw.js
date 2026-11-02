@@ -1,6 +1,6 @@
 // ThriftRadarFL service worker: network-first pages with offline fallback; saved sales cached for offline use.
-const VERSION = "v1"; const PAGES = `tr-pages-${VERSION}`; const SAVED = "tr-saved"; const STATIC = `tr-static-${VERSION}`;
-const PRECACHE = ["/offline", "/saved", "/icons/icon-192.png", "/logo.svg"];
+const VERSION = "v2"; const PAGES = `tr-pages-${VERSION}`; const SAVED = "tr-saved"; const STATIC = `tr-static-${VERSION}`;
+const PRECACHE = ["/offline", "/saved", "/icons/icon-192.png", "/icons/mark-64.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(STATIC).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => ![PAGES, SAVED, STATIC].includes(k)).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener("message", (e) => {
