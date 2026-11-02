@@ -44,3 +44,7 @@ data/digest-subscribers.json
 
 # local secrets
 .secrets-*
+# runtime data with personal info (JSON mode)
+data/submissions.json
+data/contact.json
+data/*.tmp

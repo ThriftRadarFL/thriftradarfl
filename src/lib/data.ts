@@ -16,15 +16,17 @@ const venuesFile = path.join(DATA_DIR, "venues.json");
 async function readJson<T>(file: string, fallback: T): Promise<T> {
   try { return JSON.parse(await fs.readFile(file, "utf8")) as T; } catch { return fallback; }
 }
-let writeChain: Promise<unknown> = Promise.resolve();
-// Serialized + atomic (tmp file + rename) so concurrent admin writes can't corrupt JSON.
-function writeJson(file: string, data: unknown) {
+let chain: Promise<unknown> = Promise.resolve();
+// Read-modify-write is serialized (one global queue) and atomic (tmp file + rename) so concurrent writes never lose updates or corrupt JSON.
+function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: T; result?: R } | T): Promise<R> {
   const run = async () => {
+    const cur = await readJson<T>(file, fallback); const out = fn(cur);
+    const { next, result } = (out && typeof out === "object" && "next" in (out as object) ? out : { next: out }) as { next: T; result?: R };
     await fs.mkdir(DATA_DIR, { recursive: true });
-    const tmp = `${file}.${process.pid}.tmp`;
-    await fs.writeFile(tmp, JSON.stringify(data, null, 2) + "\n"); await fs.rename(tmp, file);
+    const tmp = `${file}.${process.pid}.${Math.random().toString(36).slice(2)}.tmp`;
+    await fs.writeFile(tmp, JSON.stringify(next, null, 2) + "\n"); await fs.rename(tmp, file); return result as R;
   };
-  const p = writeChain.then(run, run); writeChain = p.catch(() => {}); return p;
+  const p = chain.then(run, run); chain = p.catch(() => {}); return p;
 }
 
 // DB is used when DATABASE_URL is set AND reachable. Any DB error (timeout, protocol, auth) marks it down for 60s and
@@ -56,64 +58,59 @@ export async function getSales(): Promise<Sale[]> { return (await getAllSales())
 export async function getSale(slug: string) { return (await getSales()).find((s) => s.slug === slug) ?? null; }
 
 export async function upsertSale(sale: Sale) {
-  return viaDb(() => pg.dbUpsertSale(sale), async () => { const all = (await jsonSales()).filter((s) => s.slug !== sale.slug); await writeJson(salesFile, [...all, sale]); });
+  return viaDb(() => pg.dbUpsertSale(sale), () => mutate<Sale[]>(salesFile, mockSales as Sale[], (all) => [...all.filter((s) => s.slug !== sale.slug), sale]));
 }
 export async function setSalePublished(slug: string, published: boolean) {
   const s = (await getAllSales()).find((x) => x.slug === slug); if (!s) return false; await upsertSale({ ...s, published }); return true;
 }
 export async function deleteSale(slug: string) {
-  return viaDb(() => pg.dbDeleteSale(slug), async () => writeJson(salesFile, (await jsonSales()).filter((s) => s.slug !== slug)));
+  return viaDb(() => pg.dbDeleteSale(slug), () => mutate<Sale[]>(salesFile, mockSales as Sale[], (all) => all.filter((s) => s.slug !== slug)));
 }
 export async function upsertVenue(v: Venue) {
-  return viaDb(() => pg.dbUpsertVenue(v), async () => { const all = (await readJson<Venue[]>(venuesFile, seedVenues as Venue[])).filter((x) => x.slug !== v.slug); await writeJson(venuesFile, [...all, v]); });
+  return viaDb(() => pg.dbUpsertVenue(v), () => mutate<Venue[]>(venuesFile, seedVenues as Venue[], (all) => [...all.filter((x) => x.slug !== v.slug), v]));
 }
 export async function deleteVenue(slug: string) {
-  await viaDb(() => pg.dbDeleteVenue(slug), async () => writeJson(venuesFile, (await readJson<Venue[]>(venuesFile, seedVenues as Venue[])).filter((x) => x.slug !== slug)));
-  const rules = await getDealRules(); if (rules.some((r) => r.venue === slug)) await writeJson(rulesFile, rules.filter((r) => r.venue !== slug));
+  await viaDb(() => pg.dbDeleteVenue(slug), () => mutate<Venue[]>(venuesFile, seedVenues as Venue[], (all) => all.filter((x) => x.slug !== slug)));
+  await mutate<DealRule[]>(rulesFile, seedDealRules, (all) => all.filter((r) => r.venue !== slug));
 }
 
 // Deal rules: JSON-backed (seeded from deal-rules.ts) so admins can edit them.
 const rulesFile = path.join(DATA_DIR, "deal-rules.json");
 export async function getDealRules(): Promise<DealRule[]> { return (await readJson<DealRule[]>(rulesFile, seedDealRules)).map((r) => ({ ...r, id: r.id || ruleId(r) })); }
-export async function upsertDealRule(r: DealRule) { const all = (await getDealRules()).filter((x) => x.id !== r.id); await writeJson(rulesFile, [...all, r].sort((a, b) => a.day - b.day)); }
-export async function deleteDealRule(id: string) { const all = await getDealRules(); await writeJson(rulesFile, all.filter((x) => x.id !== id)); return all.some((x) => x.id === id); }
+const withIds = (rs: DealRule[]) => rs.map((r) => ({ ...r, id: r.id || ruleId(r) }));
+export async function upsertDealRule(r: DealRule) { await mutate<DealRule[]>(rulesFile, seedDealRules, (all) => [...withIds(all).filter((x) => x.id !== r.id), r].sort((a, b) => a.day - b.day)); }
+export async function deleteDealRule(id: string) { return mutate<DealRule[], boolean>(rulesFile, seedDealRules, (all) => { const w = withIds(all); return { next: w.filter((x) => x.id !== id), result: w.some((x) => x.id === id) }; }); }
 
 // Public submissions → pending queue reviewed in /admin.
 export type Submission = { id: string; at: string; email: string; sale: Sale };
 const subsFile = path.join(DATA_DIR, "submissions.json");
 export const listSubmissions = () => readJson<Submission[]>(subsFile, []);
 export async function addSubmission(sale: Sale, email: string) {
-  const list = await listSubmissions(); const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
-  await writeJson(subsFile, [...list, { id, at: new Date().toISOString(), email, sale: { ...sale, published: false } }]); return id;
+  const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+  await mutate<Submission[]>(subsFile, [], (list) => [...list, { id, at: new Date().toISOString(), email, sale: { ...sale, published: false } }]); return id;
 }
 export async function resolveSubmission(id: string, approve: boolean) {
-  const list = await listSubmissions(); const s = list.find((x) => x.id === id); if (!s) return null;
-  if (approve) await upsertSale({ ...s.sale, published: true });
-  await writeJson(subsFile, list.filter((x) => x.id !== id)); return s.sale.slug;
+  const s = await mutate<Submission[], Submission | undefined>(subsFile, [], (list) => ({ next: list.filter((x) => x.id !== id), result: list.find((x) => x.id === id) }));
+  if (!s) return null; if (approve) await upsertSale({ ...s.sale, published: true }); return s.sale.slug;
 }
 
 // Contact form messages (stored locally; no email sent).
 export type ContactMsg = { id: string; at: string; name: string; email: string; message: string };
 const contactFile = path.join(DATA_DIR, "contact.json");
 export const listContacts = () => readJson<ContactMsg[]>(contactFile, []);
-export async function addContact(m: Omit<ContactMsg, "id" | "at">) { await writeJson(contactFile, [...(await listContacts()), { ...m, id: Date.now().toString(36), at: new Date().toISOString() }]); }
-export async function deleteContact(id: string) { await writeJson(contactFile, (await listContacts()).filter((x) => x.id !== id)); }
+export async function addContact(m: Omit<ContactMsg, "id" | "at">) { await mutate<ContactMsg[]>(contactFile, [], (l) => [...l, { ...m, id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`, at: new Date().toISOString() }]); }
+export async function deleteContact(id: string) { await mutate<ContactMsg[]>(contactFile, [], (l) => l.filter((x) => x.id !== id)); }
 
 const subsJson = path.join(DATA_DIR, "digest-subscribers.json");
 type Sub = { email: string; area: string; at: string };
 export async function addDigestSubscriber(email: string, area: string) {
-  return viaDb(() => pg.dbAddSubscriber(email, area), async () => {
-    const list = await readJson<Sub[]>(subsJson, []);
-    if (list.some((x) => x.email.toLowerCase() === email.toLowerCase())) return false;
-    await writeJson(subsJson, [...list, { email, area, at: new Date().toISOString() }]); return true;
-  });
+  return viaDb(() => pg.dbAddSubscriber(email, area), () => mutate<Sub[], boolean>(subsJson, [], (list) =>
+    list.some((x) => x.email.toLowerCase() === email.toLowerCase()) ? { next: list, result: false } : { next: [...list, { email, area, at: new Date().toISOString() }], result: true }));
 }
 export async function listSubscribers(): Promise<Sub[]> { return viaDb(() => pg.dbListSubscribers(), () => readJson<Sub[]>(subsJson, [])); }
 export async function removeSubscriber(email: string) {
-  return viaDb(() => pg.dbRemoveSubscriber(email), async () => {
-    const list = await readJson<Sub[]>(subsJson, []); const next = list.filter((x) => x.email.toLowerCase() !== email.toLowerCase());
-    await writeJson(subsJson, next); return next.length !== list.length;
-  });
+  return viaDb(() => pg.dbRemoveSubscriber(email), () => mutate<Sub[], boolean>(subsJson, [], (list) => {
+    const next = list.filter((x) => x.email.toLowerCase() !== email.toLowerCase()); return { next, result: next.length !== list.length }; }));
 }
 export const citySlug = (city: string) => city.toLowerCase().replace(/\s+/g, "-");
 export const CITIES: Record<string, string> = {

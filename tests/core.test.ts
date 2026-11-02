@@ -43,3 +43,26 @@ test("importer parses EstateSales.net JSON-LD fixture into ET days", () => {
   assert.deepEqual(s!.days![0], { date: "2026-11-12", start: "09:00", end: "15:00", discountPct: 0 });
   assert.ok(isAllowedImportHost("https://www.estatesales.net/x")); assert.ok(!isAllowedImportHost("https://evil.com/x"));
 });
+import { parseDealRule, parseContact } from "../src/lib/validate";
+import { searchAll, matches } from "../src/lib/search";
+import { saleJsonLd, venueJsonLd } from "../src/lib/jsonld";
+import { seedVenues } from "../src/lib/seed-data";
+import type { Venue } from "../src/lib/data";
+test("parseDealRule / parseContact", () => {
+  const r = parseDealRule({ venue: "goodwill-port-orange", day: "3", kind: "half_off", label: "Half off", discountPct: "50", verified: "on" });
+  assert.ok(r.ok); if (r.ok) { assert.equal(r.value.day, 3); assert.equal(r.value.verified, true); assert.equal(r.value.color, "bg-coral"); assert.ok(r.value.id); }
+  const bad = parseDealRule({ venue: "", day: 9, kind: "x", label: "", time: "9am", discountPct: 200 }); assert.equal(bad.ok, false);
+  if (!bad.ok) assert.equal(bad.errors.length, 6);
+  assert.ok(parseContact({ name: "A", email: "a@b.co", message: "long enough message" }).ok); assert.equal(parseContact({ name: "", email: "x", message: "hi" }).ok, false);
+});
+test("search matches all terms across fields, accent/case-insensitive", () => {
+  assert.ok(matches(["Café Estate", "DeLand"], "cafe deland")); assert.ok(!matches(["Café"], "")); assert.ok(!matches(["a"], "a b"));
+  const r = searchAll("port orange", mockSales as Sale[], seedVenues as Venue[]); assert.ok(r.sales.length > 0); assert.ok(r.venues.some((v) => v.slug === "goodwill-port-orange"));
+  assert.ok(searchAll("bins", [], seedVenues as Venue[]).venues.length >= 2);
+});
+test("JSON-LD: Event has ET offsets, absolute URLs; Store has address", () => {
+  const ld = saleJsonLd(mockSales[0] as Sale);
+  assert.equal(ld["@type"], "Event"); assert.match(ld.startDate, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:00-05:00$/); assert.match(ld.url, /^https?:\/\//);
+  assert.equal(ld.location.address.addressRegion, "FL");
+  const v = venueJsonLd(seedVenues[0] as Venue); assert.equal(v["@type"], "Store"); assert.equal(v.address.postalCode, seedVenues[0].zip);
+});
