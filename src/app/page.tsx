@@ -1,14 +1,25 @@
 import Link from "next/link";
-import { getSales, dataMode } from "@/lib/data";
+import { getSales } from "@/lib/data";
+import { PageHead, DayBox, Discount, typeLabel } from "@/components/ui";
+const chip: Record<string, string> = { estate: "bg-coral", auction: "bg-royal", thrift: "bg-teal", outlet_bins: "bg-cta", yard: "bg-[#6b4fa0]" };
 export default async function Home() {
-  const sales = await getSales();
-  return (<div className="space-y-4">
-    <h1 className="text-2xl font-bold">This Week in Central Florida</h1>
-    <p className="text-xs text-gray-500">Data mode: {dataMode}</p>
-    {sales.map((s) => (<div key={s.slug} className="rounded border p-3">
-      <Link href={`/sales/${s.slug}`} className="font-semibold hover:underline">{s.title}</Link>
-      <div className="text-sm text-gray-600">{s.type} · {s.city} {s.zip}</div>
-      <ul className="text-sm">{s.days.map((d) => <li key={d.date}>{d.date} {d.start}–{d.end}{d.discountPct ? ` · ${d.discountPct}% off` : ""}</li>)}</ul>
-    </div>))}
+  const sales = [...(await getSales())].sort((a, b) => a.days[0].date.localeCompare(b.days[0].date));
+  const best = (s: (typeof sales)[number]) => Math.max(...s.days.map((d) => d.discountPct ?? 0));
+  const featured = sales.filter((s) => best(s) >= 50).slice(0, 4);
+  const cities = new Set(sales.map((s) => s.city)).size;
+  return (<div>
+    <PageHead title="This Week in Central Florida" sub={`${sales.length} sales across ${cities} cities · Daytona, Port Orange, DeLand, Ormond, NSB, Orlando`} />
+    {featured.length > 0 && <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border border-cta-dark bg-cta px-4 py-2 text-sm text-white">
+      <span className="font-bold uppercase tracking-wide">Half-off days:</span>
+      {featured.map((s) => <Link key={s.slug} href={`/sales/${s.slug}`} className="font-bold underline-offset-2 hover:underline">{s.title} <span className="font-normal text-red-100">· {s.city}</span></Link>)}</div>}
+    <div className="grid gap-3 lg:grid-cols-2">{sales.map((s) => (<article key={s.slug} className="panel flex flex-col">
+      <div className="flex items-start gap-2 border-b border-line px-3 py-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2"><span className={`pill ${chip[s.type] ?? "bg-gray-500"}`}>{typeLabel[s.type] ?? s.type}</span><span className="text-xs text-gray-600">{s.city}, FL {s.zip}</span></div>
+          <Link href={`/sales/${s.slug}`} className="mt-0.5 block font-bold text-ink hover:text-royal">{s.title}</Link></div>
+        <Link href={`/sales/${s.slug}`} className="btn-red px-3 py-1 text-xs">View</Link></div>
+      <div className="flex flex-wrap gap-1.5 px-3 py-2">{s.days.map((d) => (<div key={d.date} className="flex items-center gap-1.5 border border-line pr-2">
+        <DayBox date={d.date} /><div className="text-xs leading-tight"><div className="font-bold">{d.start}–{d.end}</div><div className="mt-0.5"><Discount pct={d.discountPct} /></div></div></div>))}</div>
+    </article>))}</div>
   </div>);
 }

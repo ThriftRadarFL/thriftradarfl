@@ -25,8 +25,9 @@ async function main() {
   }
   await db.insert(s.tags).values(seedTags.map((name) => ({ name }))).onConflictDoNothing();
   for (const m of mockSales) {
-    const { days, ...rest } = m;
-    const [r] = await db.insert(s.sales).values({ ...rest, source: "estatesales_net" }).onConflictDoNothing().returning({ id: s.sales.id });
+    if (m.type !== "estate" && m.type !== "auction" && m.type !== "yard") continue; // thrift/bins mocks are UI-only
+    const { days, type, ...rest } = m;
+    const [r] = await db.insert(s.sales).values({ ...rest, type, source: "estatesales_net" as const }).onConflictDoNothing().returning({ id: s.sales.id });
     if (r) await db.insert(s.saleDays).values(days.map((d) => ({ saleId: r.id, date: d.date, startTime: d.start, endTime: d.end, discountPct: d.discountPct })));
   }
   console.log("Seeded.");

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 48" role="img" aria-label="ThriftRadar FL">
+  <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round">
+    <circle cx="24" cy="24" r="18"/>
+    <circle cx="24" cy="24" r="11"/>
+    <circle cx="24" cy="24" r="4"/>
+    <line x1="24" y1="24" x2="38" y2="10"/>
+  </g>
+  <path d="M24 24 L38 10 A18 18 0 0 1 39.5 16 Z" fill="#d4001a"/>
+  <circle cx="24" cy="24" r="2.5" fill="#ffffff"/>
+  <text x="52" y="32" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#ffffff">ThriftRadar</text>
+  <rect x="218" y="10" width="36" height="26" rx="4" fill="#d4001a"/>
+  <text x="226" y="29" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#ffffff">FL</text>
+</svg>
