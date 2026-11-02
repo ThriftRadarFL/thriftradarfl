@@ -1,4 +1,4 @@
-// Generates scripts/supabase-0002.sql: idempotent paste-into-SQL-Editor version of drizzle/0002 + deal-rule seed.
+// Generates scripts/supabase-0002.sql: self-sufficient, idempotent paste-into-SQL-Editor file: migrations 0002–0005 + upsert of ALL seed venues and deal rules + removal of dropped venues.
 import { writeFileSync, readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 const entries = JSON.parse(readFileSync("drizzle/meta/_journal.json", "utf8")).entries.filter((e: { idx: number }) => e.idx >= 2) as { idx: number; tag: string; when: number }[];
@@ -39,9 +39,14 @@ ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 -- Seed/refresh venues (new stores added 2026-11-02 with sources in notes)
 INSERT INTO venues (slug, name, type, address, city, zip, lat, lng, phone, hours_json, notes, source_url, org_key) VALUES
 ${venues}
-ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, address = EXCLUDED.address, city = EXCLUDED.city, zip = EXCLUDED.zip, lat = EXCLUDED.lat, lng = EXCLUDED.lng, phone = EXCLUDED.phone, hours_json = EXCLUDED.hours_json, notes = EXCLUDED.notes, source_url = EXCLUDED.source_url, org_key = EXCLUDED.org_key;
+ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, type = EXCLUDED.type, address = EXCLUDED.address, city = EXCLUDED.city, zip = EXCLUDED.zip, lat = EXCLUDED.lat, lng = EXCLUDED.lng, phone = EXCLUDED.phone, hours_json = EXCLUDED.hours_json, notes = EXCLUDED.notes, source_url = EXCLUDED.source_url, org_key = EXCLUDED.org_key;
 
--- Seed deal rules (upsert by rule_key; skips venues that don't exist yet)
+-- Remove stores dropped from the seed (not on the official Goodwill CFL list); its deal rules cascade
+DELETE FROM venues WHERE slug IN ('goodwill-daytona-isb');
+-- Legacy rules inserted by scripts/seed.ts before rule_key existed would duplicate the keyed rows below
+DELETE FROM deal_rules WHERE rule_key IS NULL;
+
+-- Seed deal rules (upsert by rule_key)
 INSERT INTO deal_rules (rule_key, venue_id, kind, day_of_week, start_time, color, discount_pct, label, description, verified)
 SELECT v.rule_key, ve.id, v.kind::deal_kind, v.day, v.t::time, v.color, v.pct, v.label, v.label, v.verified
 FROM (VALUES
@@ -57,4 +62,4 @@ CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (id serial PRIMARY KEY, 
 ${marks}
 COMMIT;
 `);
-console.log("wrote scripts/supabase-0002.sql", dealRules.length, "rules");
+console.log("wrote scripts/supabase-0002.sql", seedVenues.length, "venues", dealRules.length, "rules");

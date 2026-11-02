@@ -68,9 +68,14 @@ INSERT INTO venues (slug, name, type, address, city, zip, lat, lng, phone, hours
   ('city-thrift-semoran', 'City Thrift - Semoran', 'thrift'::venue_type, '1803 S Semoran Blvd', 'Orlando', '32822', 28.52088, -81.3102, NULL, NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/ (checked 2026-11-02).', 'https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/', 'city-thrift'),
   ('st-vincent-de-paul-thrift-store-longwood', 'St. Vincent de Paul Thrift Store - Longwood', 'thrift'::venue_type, '150 N US Hwy 17-92', 'Longwood', '32750', NULL, NULL, '321-972-2925', NULL, 'Not on the map yet (address didn''t geocode). UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://findthrift.com/store-list/FL/Longwood (checked 2026-11-02).', 'https://findthrift.com/store-list/FL/Longwood', 'society-of-st-vincent-de-paul'),
   ('salvation-army-w-colonial-orlando', 'Salvation Army Thrift Store (W Colonial Dr)', 'thrift'::venue_type, '3899-3955 W Colonial Dr', 'Orlando', '32808', 28.552831, -81.427908, '(321) 398-5520', '{"mon-sat":"9:00-18:00","sun":"closed"}'::jsonb, 'Hours Mon–Sat 9 AM–6 PM, closed Sun. Wednesday Customer Appreciation Day (50% off all tag colors but one) and rotating color-tag sales are store-specific and come from a business-owner reply on Yelp — unverified with the store. Source: https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/ (checked 2026-11-02).', 'https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/', 'salvation')
-ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, address = EXCLUDED.address, city = EXCLUDED.city, zip = EXCLUDED.zip, lat = EXCLUDED.lat, lng = EXCLUDED.lng, phone = EXCLUDED.phone, hours_json = EXCLUDED.hours_json, notes = EXCLUDED.notes, source_url = EXCLUDED.source_url, org_key = EXCLUDED.org_key;
+ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, type = EXCLUDED.type, address = EXCLUDED.address, city = EXCLUDED.city, zip = EXCLUDED.zip, lat = EXCLUDED.lat, lng = EXCLUDED.lng, phone = EXCLUDED.phone, hours_json = EXCLUDED.hours_json, notes = EXCLUDED.notes, source_url = EXCLUDED.source_url, org_key = EXCLUDED.org_key;
 
--- Seed deal rules (upsert by rule_key; skips venues that don't exist yet)
+-- Remove stores dropped from the seed (not on the official Goodwill CFL list); its deal rules cascade
+DELETE FROM venues WHERE slug IN ('goodwill-daytona-isb');
+-- Legacy rules inserted by scripts/seed.ts before rule_key existed would duplicate the keyed rows below
+DELETE FROM deal_rules WHERE rule_key IS NULL;
+
+-- Seed deal rules (upsert by rule_key)
 INSERT INTO deal_rules (rule_key, venue_id, kind, day_of_week, start_time, color, discount_pct, label, description, verified)
 SELECT v.rule_key, ve.id, v.kind::deal_kind, v.day, v.t::time, v.color, v.pct, v.label, v.label, v.verified
 FROM (VALUES
