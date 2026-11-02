@@ -8,6 +8,7 @@ Shipped:
 - `/admin`: password gate, add/edit/delete sales, add/edit venues, paste-URL import from EstateSales.net JSON-LD, subscriber count + CSV, digest preview
 - Add-to-Calendar `.ics` (RFC 5545, validated with a parser) + subscribable `/api/calendar` feed
 - `/deals` (15 demo rules, flagged unverified), store pages show deal days, `/city/[city]` ×5, home city/type filters, keyless SVG map
+- `/calendar`: 14-day grid of estate sales + deal days, links to iCal feed (added 2am)
 - Digest: signup → JSON/DB, email template, `/digest/preview`, Resend cron route (dry-run w/o key), one-click unsubscribe
 - SEO: sitemap.xml, robots.txt, OG/Twitter meta, canonical URLs, Event JSON-LD; security headers
 - 13 demo sales; `npm test` (6 passing), typecheck, lint, build all green; dev server on :3000
