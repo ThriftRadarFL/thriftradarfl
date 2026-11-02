@@ -12,10 +12,6 @@ export const seedVenues = [
   { slug: "berners-auction-deland", org: "berners", name: "Berner's Auction", type: "auction_house" as const, address: "1500 Jacobs Rd", city: "DeLand", zip: "32724", lat: 29.0065, lng: -81.2870, phone: null, hoursJson: { wed: "18:30-22:00" }, notes: "Weekly Wednesday auction." },
 ];
 
-export const seedDealRules = [
-  { venue: "berners-auction-deland", kind: "restock" as const, dayOfWeek: 3, startTime: "18:30", description: "Weekly auction, Wednesdays 6:30-10pm", source: "estatesales.net" },
-  { venue: "goodwill-pine-hills-outlet", kind: "bins_rotation" as const, dayOfWeek: null, startTime: null, description: "Bin rotations throughout the day — times TBD (crowdsource)", source: "placeholder" },
-];
 
 export const seedTags = ["furniture", "mid-century", "tools", "jewelry", "vinyl", "art", "collectibles", "clothing"];
 
@@ -36,4 +32,17 @@ export const mockSales = [
     days: [ { date: "2026-11-13", start: "09:00", end: "15:00", discountPct: 0 }, { date: "2026-11-14", start: "09:00", end: "15:00", discountPct: 30 }, { date: "2026-11-15", start: "10:00", end: "14:00", discountPct: 50 } ] },
   { slug: "pine-hills-bins-restock-2026-11", title: "Pine Hills Outlet — Fresh Bins Monday", type: "outlet_bins" as const, city: "Orlando", zip: "32818", lat: 28.5785, lng: -81.4565, sourceUrl: "https://www.goodwillcfl.org/locations/", paymentMethods: ["cash", "card"],
     days: [ { date: "2026-11-09", start: "08:00", end: "17:00", discountPct: 0 } ] },
+  // --- Additional DEMO sales (fictional, for layout/testing) ---
+  { slug: "ormond-beach-mid-century-estate-2026-11", title: "Ormond Beach Mid-Century Estate — Teak & Barware", type: "estate" as const, city: "Ormond Beach", zip: "32176", lat: 29.30, lng: -81.06, sourceUrl: "https://www.estatesales.net/FL/Ormond-Beach", paymentMethods: ["cash", "card"],
+    days: [ { date: "2026-11-19", start: "09:00", end: "15:00", discountPct: 0 }, { date: "2026-11-20", start: "09:00", end: "15:00", discountPct: 25 }, { date: "2026-11-21", start: "09:00", end: "13:00", discountPct: 50 } ] },
+  { slug: "nsb-coastal-cottage-estate-2026-11", title: "New Smyrna Coastal Cottage Estate — Nautical & Art", type: "estate" as const, city: "New Smyrna Beach", zip: "32168", lat: 29.03, lng: -80.93, sourceUrl: "https://www.estatesales.net/FL/New-Smyrna-Beach", paymentMethods: ["cash", "venmo"],
+    days: [ { date: "2026-11-20", start: "08:00", end: "14:00", discountPct: 0 }, { date: "2026-11-21", start: "08:00", end: "14:00", discountPct: 30 } ] },
+  { slug: "deland-downtown-moving-sale-2026-11", title: "DeLand Historic District Moving Sale — Antiques & Books", type: "yard" as const, city: "DeLand", zip: "32720", lat: 29.03, lng: -81.30, sourceUrl: "https://www.estatesales.net/FL/DeLand", paymentMethods: ["cash"],
+    days: [ { date: "2026-11-14", start: "07:30", end: "13:00", discountPct: 0 } ] },
+  { slug: "daytona-beachside-condo-estate-2026-11", title: "Daytona Beachside Condo Estate — Furniture & Jewelry", type: "estate" as const, city: "Daytona Beach", zip: "32118", lat: 29.21, lng: -81.01, sourceUrl: "https://www.estatesales.net/FL/Daytona-Beach", paymentMethods: ["cash", "card", "zelle"],
+    days: [ { date: "2026-11-20", start: "09:00", end: "15:00", discountPct: 0 }, { date: "2026-11-21", start: "09:00", end: "15:00", discountPct: 50 } ] },
+  { slug: "port-orange-garage-tools-2026-11", title: "Port Orange Garage Sale — Tools & Fishing Gear", type: "yard" as const, city: "Port Orange", zip: "32127", lat: 29.12, lng: -80.99, sourceUrl: "https://www.estatesales.net/FL/Port-Orange", paymentMethods: ["cash"],
+    days: [ { date: "2026-11-21", start: "07:00", end: "12:00", discountPct: 0 } ] },
+  { slug: "berners-auction-thanksgiving-week-deland-2026-11", title: "Berner's Auction — Pre-Holiday Collectibles Night", type: "auction" as const, city: "DeLand", zip: "32724", lat: 29.0065, lng: -81.287, sourceUrl: "https://www.estatesales.net/FL/Daytona-Beach", paymentMethods: ["cash", "card"],
+    days: [ { date: "2026-11-18", start: "18:30", end: "22:00", discountPct: 0 }, { date: "2026-11-25", start: "18:30", end: "22:00", discountPct: 0 } ] },
 ];

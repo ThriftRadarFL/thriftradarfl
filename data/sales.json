@@ -200,5 +200,166 @@
         "discountPct": 0
       }
     ]
+  },
+  {
+    "slug": "ormond-beach-mid-century-estate-2026-11",
+    "title": "Ormond Beach Mid-Century Estate — Teak & Barware",
+    "type": "estate",
+    "city": "Ormond Beach",
+    "zip": "32176",
+    "lat": 29.3,
+    "lng": -81.06,
+    "sourceUrl": "https://www.estatesales.net/FL/Ormond-Beach",
+    "paymentMethods": [
+      "cash",
+      "card"
+    ],
+    "days": [
+      {
+        "date": "2026-11-19",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-20",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 25
+      },
+      {
+        "date": "2026-11-21",
+        "start": "09:00",
+        "end": "13:00",
+        "discountPct": 50
+      }
+    ]
+  },
+  {
+    "slug": "nsb-coastal-cottage-estate-2026-11",
+    "title": "New Smyrna Coastal Cottage Estate — Nautical & Art",
+    "type": "estate",
+    "city": "New Smyrna Beach",
+    "zip": "32168",
+    "lat": 29.03,
+    "lng": -80.93,
+    "sourceUrl": "https://www.estatesales.net/FL/New-Smyrna-Beach",
+    "paymentMethods": [
+      "cash",
+      "venmo"
+    ],
+    "days": [
+      {
+        "date": "2026-11-20",
+        "start": "08:00",
+        "end": "14:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-21",
+        "start": "08:00",
+        "end": "14:00",
+        "discountPct": 30
+      }
+    ]
+  },
+  {
+    "slug": "deland-downtown-moving-sale-2026-11",
+    "title": "DeLand Historic District Moving Sale — Antiques & Books",
+    "type": "yard",
+    "city": "DeLand",
+    "zip": "32720",
+    "lat": 29.03,
+    "lng": -81.3,
+    "sourceUrl": "https://www.estatesales.net/FL/DeLand",
+    "paymentMethods": [
+      "cash"
+    ],
+    "days": [
+      {
+        "date": "2026-11-14",
+        "start": "07:30",
+        "end": "13:00",
+        "discountPct": 0
+      }
+    ]
+  },
+  {
+    "slug": "daytona-beachside-condo-estate-2026-11",
+    "title": "Daytona Beachside Condo Estate — Furniture & Jewelry",
+    "type": "estate",
+    "city": "Daytona Beach",
+    "zip": "32118",
+    "lat": 29.21,
+    "lng": -81.01,
+    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach",
+    "paymentMethods": [
+      "cash",
+      "card",
+      "zelle"
+    ],
+    "days": [
+      {
+        "date": "2026-11-20",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-21",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 50
+      }
+    ]
+  },
+  {
+    "slug": "port-orange-garage-tools-2026-11",
+    "title": "Port Orange Garage Sale — Tools & Fishing Gear",
+    "type": "yard",
+    "city": "Port Orange",
+    "zip": "32127",
+    "lat": 29.12,
+    "lng": -80.99,
+    "sourceUrl": "https://www.estatesales.net/FL/Port-Orange",
+    "paymentMethods": [
+      "cash"
+    ],
+    "days": [
+      {
+        "date": "2026-11-21",
+        "start": "07:00",
+        "end": "12:00",
+        "discountPct": 0
+      }
+    ]
+  },
+  {
+    "slug": "berners-auction-thanksgiving-week-deland-2026-11",
+    "title": "Berner's Auction — Pre-Holiday Collectibles Night",
+    "type": "auction",
+    "city": "DeLand",
+    "zip": "32724",
+    "lat": 29.0065,
+    "lng": -81.287,
+    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach",
+    "paymentMethods": [
+      "cash",
+      "card"
+    ],
+    "days": [
+      {
+        "date": "2026-11-18",
+        "start": "18:30",
+        "end": "22:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-25",
+        "start": "18:30",
+        "end": "22:00",
+        "discountPct": 0
+      }
+    ]
   }
 ]

@@ -3,7 +3,8 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as s from "../src/db/schema";
 import { eq } from "drizzle-orm";
-import { seedOrgs, seedVenues, seedDealRules, seedTags, mockSales } from "../src/lib/seed-data";
+import { seedOrgs, seedVenues, seedTags, mockSales } from "../src/lib/seed-data";
+import { dealRules } from "../src/lib/deal-rules";
 
 async function main() {
   if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL not set (see .env.example)");
@@ -22,9 +23,10 @@ async function main() {
     const [r] = await db.insert(s.venues).values({ ...rest, orgId: orgIds[org] }).onConflictDoNothing().returning({ id: s.venues.id });
     if (r) venueIds[v.slug] = r.id;
   }
-  for (const d of seedDealRules) {
-    const { venue, ...rest } = d;
-    if (venueIds[venue]) await db.insert(s.dealRules).values({ ...rest, venueId: venueIds[venue] });
+  for (const d of dealRules) {
+    if (!venueIds[d.venue]) continue; // only for newly inserted venues (keeps reseed idempotent)
+    await db.insert(s.dealRules).values({ venueId: venueIds[d.venue], kind: d.kind, dayOfWeek: d.day, startTime: d.time ?? null, discountPct: d.discountPct ?? null,
+      description: d.label, verifiedAt: d.verified ? new Date() : null, source: d.verified ? "estatesales.net" : "UNVERIFIED demo" });
   }
   await db.insert(s.tags).values(seedTags.map((name) => ({ name }))).onConflictDoNothing();
   for (const m of mockSales) {
