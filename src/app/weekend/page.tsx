@@ -1,3 +1,4 @@
+import { range12 } from "@/lib/time";
 import Link from "next/link";
 import { PageHead } from "@/components/ui";
 import { getSales, getVenues, getDealRules } from "@/lib/data";
@@ -21,7 +22,7 @@ export default async function Weekend() {
         <div className="space-y-2 p-3">
           <div className="text-xs font-bold uppercase text-gray-600">Estate sales ({daySales.length})</div>
           {daySales.map((s) => { const x = s.days.find((y) => y.date === iso)!; return <Link key={s.slug} href={`/sales/${s.slug}`} className="block rounded border border-line p-2 text-sm hover:border-royal">
-            <b className="text-royal">{s.title}</b><div className="text-xs text-gray-600">{s.city} · {x.start}–{x.end}{x.discountPct ? ` · ${x.discountPct}% off` : ""}</div></Link>; })}
+            <b className="text-royal">{s.title}</b><div className="text-xs text-gray-600">{s.city} · {range12(x.start, x.end)}{x.discountPct ? ` · ${x.discountPct}% off` : ""}</div></Link>; })}
           {!daySales.length && <div className="text-xs text-gray-600">No sales listed yet</div>}
           <div className="pt-2 text-xs font-bold uppercase text-gray-600">Deal days ({deals.length})</div>
           {deals.map((r) => <div key={r.venue + r.label} className={`pill ${r.color} block whitespace-normal`}>{r.label}<div className="text-[11px] font-normal">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}

@@ -1,3 +1,4 @@
+import { range12 } from "@/lib/time";
 import Link from "next/link";
 import { getSales, CITIES, citySlug } from "@/lib/data";
 import { PageHead, DayBox, Discount, typeLabel } from "@/components/ui";
@@ -33,7 +34,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           {!!s.tags?.length && <div className="mt-1 flex flex-wrap gap-1">{cleanTags(s.tags).map((t) => <span key={t} className="rounded-sm border border-line bg-paper px-1.5 text-[11px] text-gray-700">{TAG_LABEL[t]}</span>)}</div>}</div>
         <FavButton slug={s.slug} title={s.title} compact /><Link href={`/sales/${s.slug}`} className="btn-red px-3 py-1 text-xs" aria-label={`View ${s.title}`}>View</Link></div>
       <div className="flex flex-wrap gap-1.5 px-3 py-2">{s.days.map((d) => (<div key={d.date} className="flex items-center gap-1.5 border border-line pr-2">
-        <DayBox date={d.date} /><div className="text-xs leading-tight"><div className="font-bold">{d.start}–{d.end}</div><div className="mt-0.5"><Discount pct={d.discountPct} /></div></div></div>))}</div>
+        <DayBox date={d.date} /><div className="text-xs leading-tight"><div className="font-bold">{range12(d.start, d.end)}</div><div className="mt-0.5"><Discount pct={d.discountPct} /></div></div></div>))}</div>
     </article>))}</div>
   </div>);
 }

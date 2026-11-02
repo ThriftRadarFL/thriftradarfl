@@ -1,3 +1,4 @@
+import { range12 } from "@/lib/time";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSale } from "@/lib/data";
@@ -24,7 +25,7 @@ export default async function Sale({ params }: P) {
       <div className="space-y-4 md:col-span-2">
         <section className="panel"><h2 className="panel-head">Sale schedule</h2>
           <ul>{s.days.map((d) => <li key={d.date} className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-line px-4 py-3 last:border-0">
-            <DayBox date={d.date} /><span className="font-bold">{d.start} – {d.end}</span><span className="ml-auto"><Discount pct={d.discountPct} /></span></li>)}</ul></section>
+            <DayBox date={d.date} /><span className="font-bold">{range12(d.start, d.end)}</span><span className="ml-auto"><Discount pct={d.discountPct} /></span></li>)}</ul></section>
         {tags.length > 0 && <section className="panel"><h2 className="panel-head">Items to look for</h2>
           <ul className="flex flex-wrap gap-1.5 border-b border-line p-3">{tags.map((t) => <li key={t}><Link href={`/search?q=${encodeURIComponent(t)}`} className="pill bg-royal hover:bg-royal-dark">{TAG_LABEL[t]}</Link></li>)}</ul>
           <div className="divide-y divide-line">{tags.map((t) => <div key={t} className="p-4 text-sm"><h3 className="font-bold text-royal">Flip tip · {TAG_LABEL[t]}</h3><p className="mt-1">{FLIP_TIPS[t]}</p>

@@ -18,7 +18,7 @@ export const dealRules: DealRule[] = [
   { venue: "goodwill-taft-outlet", day: 4, kind: "dollar_day", label: "Select bins $1 items", color: "bg-coral", verified: false },
   { venue: "goodwill-taft-outlet", day: 6, kind: "bins_rotation", label: "Furniture rotation", color: "bg-royal", time: "10:00", verified: false },
   { venue: "berners-auction-deland", day: 2, kind: "restock", label: "Preview day", color: "bg-gray-700", verified: false },
-  { venue: "berners-auction-deland", day: 3, kind: "restock", label: "Weekly auction 6:30pm", color: "bg-royal", time: "18:30", verified: true },
+  { venue: "berners-auction-deland", day: 3, kind: "restock", label: "Weekly auction", color: "bg-royal", time: "18:30", verified: true },
 ];
 export const nextDealDate = (r: DealRule, from = new Date()) => { const d = new Date(from); d.setDate(d.getDate() + ((r.day - d.getDay() + 7) % 7)); return d.toLocaleDateString("en-CA"); };
 export const ruleId = (r: Pick<DealRule, "venue" | "day" | "label">) => `${r.venue}-${r.day}-${r.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;

@@ -1,3 +1,4 @@
+import { range12 } from "@/lib/time";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -37,7 +38,7 @@ export default async function City({ params }: P) {
       <div className="grid gap-px bg-line sm:grid-cols-3">{weekend.map((w) => <div key={w.date} className="bg-white p-3">
         <div className="mb-2 border-b-2 border-cta pb-1 text-sm font-bold text-royal">{md(w.date)}</div>
         {w.sales.map(({ sale: s, day }) => <Link key={s.slug} href={`/sales/${s.slug}`} className="mb-1.5 block rounded-sm border border-line bg-gradient-to-b from-white to-paper p-2 text-sm hover:border-royal">
-          <b className="text-royal">{s.title}</b><div className="text-xs text-gray-600">{typeLabel[s.type] ?? s.type} · {day.start}–{day.end}{day.discountPct ? ` · ${day.discountPct}% off` : ""}</div></Link>)}
+          <b className="text-royal">{s.title}</b><div className="text-xs text-gray-600">{typeLabel[s.type] ?? s.type} · {range12(day.start, day.end)}{day.discountPct ? ` · ${day.discountPct}% off` : ""}</div></Link>)}
         {w.deals.map((r) => <div key={r.id ?? r.venue + r.label} className={`pill ${r.color} mb-1.5 block whitespace-normal`}>{r.label}<div className="text-[11px] font-normal">{r.store}{!r.verified && " · unverified"}</div></div>)}
         {!w.sales.length && !w.deals.length && <p className="text-xs text-gray-600">Nothing listed yet.</p>}</div>)}</div>
       {!weekend.length && <p className="p-3 text-sm">Weekend&apos;s over — check back Thursday for the next one.</p>}</section>

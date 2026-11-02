@@ -1,4 +1,5 @@
 "use client";
+import { range12 } from "@/lib/time";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useFavs } from "@/components/FavButton";
@@ -30,7 +31,7 @@ export default function Planner({ sales, today }: { sales: S[]; today: string })
     <section className="panel md:col-span-2 self-start"><h2 className="panel-head">2 · Your route{route.length > 1 ? ` · ~${Math.round(routeMiles(route, start ?? undefined))} mi straight-line` : ""}</h2>
       <ol className="text-sm">{route.map((s, i) => { const d = s.days.find((x) => x.date === day) ?? s.days[0]; const prev = i ? route[i - 1] : start;
         return <li key={s.slug} className="flex items-center gap-3 border-b border-line px-4 py-2 last:border-0"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-royal text-xs font-bold text-white">{i + 1}</span>
-          <div className="min-w-0 flex-1"><Link href={`/sales/${s.slug}`} className="link block truncate">{s.title}</Link><span className="text-xs text-gray-600">{s.city} · {d.start}–{d.end}{prev ? ` · ${milesBetween(prev, s).toFixed(1)} mi from ${i ? "previous" : "you"}` : ""}</span></div></li>; })}</ol>
+          <div className="min-w-0 flex-1"><Link href={`/sales/${s.slug}`} className="link block truncate">{s.title}</Link><span className="text-xs text-gray-600">{s.city} · {range12(d.start, d.end)}{prev ? ` · ${milesBetween(prev, s).toFixed(1)} mi from ${i ? "previous" : "you"}` : ""}</span></div></li>; })}</ol>
       {route.length > 0 ? <div className="space-y-2 p-4"><a href={url} target="_blank" rel="noopener noreferrer" className="btn-red block text-center">Open route in Google Maps ↗</a>
         {route.length > 10 && <p className="text-xs text-gray-600">Google Maps allows 10 stops per link — the first 10 are included.</p>}
         <p className="text-xs text-gray-600">Order is optimized by distance. Check each sale&apos;s hours; addresses are approximate until the seller releases them.</p></div>
