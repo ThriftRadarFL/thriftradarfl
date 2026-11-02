@@ -86,7 +86,7 @@ test("csv: quotes, escaped quotes, CRLF, embedded newlines", () => {
 });
 test("seed venues: unique slugs, every new store has a source URL, coords in Florida or 0", () => {
   const slugs = seedVenues.map((v) => v.slug); assert.equal(new Set(slugs).size, slugs.length);
-  for (const v of seedVenues) { if (v.slug !== "goodwill-daytona-isb") assert.match(v.sourceUrl, /^https:\/\//, v.slug);
+  for (const v of seedVenues) { assert.match(v.sourceUrl, /^https:\/\//, v.slug);
     if (v.lat) { assert.ok(v.lat > 24 && v.lat < 31.5 && v.lng < -79.5 && v.lng > -88, v.slug); } }
 });
 import { siteUrl, isLocalUrl } from "../src/lib/site";
@@ -116,4 +116,17 @@ test("validation gaps: real dates, parseable http(s) URLs, venue caps/zip/coords
   const v = { name: "V", city: "DeLand", type: "thrift" };
   assert.ok(parseVenue({ ...v, zip: " 32720 ", sourceUrl: "https://example.org/x" }).ok);
   for (const bad of [{ zip: "abc" }, { lat: 40 }, { slug: "Bad Slug" }, { sourceUrl: "https://" }, { name: "x".repeat(200) }, { notes: "x".repeat(3000) }]) assert.equal(parseVenue({ ...v, ...bad }).ok, false, JSON.stringify(bad).slice(0, 40));
+});
+
+test("store research merge: seed rules parse, removed Daytona ISB, new stores present, structured hours accepted", async () => {
+  const { parseDealRule, parseVenue: pv } = await import("../src/lib/validate");
+  const { dealRules: rules } = await import("../src/lib/deal-rules");
+  for (const r of rules) assert.ok(parseDealRule({ ...r }).ok, r.label);
+  const slugs = seedVenues.map((v) => v.slug);
+  assert.ok(!slugs.includes("goodwill-daytona-isb")); assert.ok(!rules.some((r) => r.venue === "goodwill-daytona-isb"));
+  for (const s of ["salvation-army-w-colonial-orlando", "goodwill-holly-hill", "halifax-humane-society-thrift-store"]) assert.ok(slugs.includes(s), s);
+  assert.ok(!slugs.some((s) => s.includes("bunnell") || s === "savers-orlando"));
+  assert.ok(rules.filter((r) => r.venue === "salvation-army-w-colonial-orlando").every((r) => !r.verified));
+  for (const r of rules.filter((r) => /outlet/.test(r.venue))) assert.equal(r.verified, false, r.label);
+  const v = pv({ name: "X", city: "Orlando", hoursJson: { "mon-sat": "9:00-18:00" } }); assert.ok(v.ok && v.value.hoursJson?.["mon-sat"] === "9:00-18:00");
 });

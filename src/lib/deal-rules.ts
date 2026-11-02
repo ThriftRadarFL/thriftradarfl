@@ -6,11 +6,7 @@ export const dealRules: DealRule[] = [
   { venue: "goodwill-port-orange", day: 0, kind: "color_tag", label: "Color of the Week 50% off (color changes Sundays, posted in store)", discountPct: 50, color: "bg-teal", verified: true },
   { venue: "goodwill-port-orange", day: 1, kind: "senior_day", label: "Seniors 55+ discount (ask in store for amount)", color: "bg-gray-700", verified: true },
   { venue: "goodwill-port-orange", day: 3, kind: "senior_day", label: "Military 10% off", discountPct: 10, color: "bg-gray-700", verified: true },
-  { venue: "goodwill-daytona-isb", day: 0, kind: "color_tag", label: "Color of the Week 50% off (color changes Sundays, posted in store)", discountPct: 50, color: "bg-teal", verified: true },
-  { venue: "goodwill-daytona-isb", day: 1, kind: "senior_day", label: "Seniors 55+ discount (ask in store for amount)", color: "bg-gray-700", verified: true },
-  { venue: "goodwill-daytona-isb", day: 3, kind: "senior_day", label: "Military 10% off", discountPct: 10, color: "bg-gray-700", verified: true },
   { venue: "goodwill-port-orange", day: 2, kind: "restock", label: "Fresh housewares floor (AM)", color: "bg-royal", time: "09:00", verified: false },
-  { venue: "goodwill-daytona-isb", day: 5, kind: "half_off", label: "Half-off clothing", discountPct: 50, color: "bg-coral", verified: false },
   { venue: "goodwill-pine-hills-outlet", day: 1, kind: "restock", label: "Heavy bin restock (AM)", color: "bg-royal", time: "08:00", verified: false },
   { venue: "goodwill-pine-hills-outlet", day: 4, kind: "dollar_day", label: "Bins $/lb discount day", color: "bg-coral", verified: false },
   { venue: "goodwill-pine-hills-outlet", day: 6, kind: "bins_rotation", label: "Saturday bin rotations hourly", color: "bg-royal", verified: false },
@@ -19,6 +15,12 @@ export const dealRules: DealRule[] = [
   { venue: "goodwill-taft-outlet", day: 6, kind: "bins_rotation", label: "Furniture rotation", color: "bg-royal", time: "10:00", verified: false },
   { venue: "berners-auction-deland", day: 2, kind: "restock", label: "Preview day", color: "bg-gray-700", verified: false },
   { venue: "berners-auction-deland", day: 3, kind: "restock", label: "Weekly auction", color: "bg-royal", time: "18:30", verified: true },
+  // Store-specific, UNVERIFIED (Yelp owner reply / aggregators) — https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/
+  { venue: "salvation-army-w-colonial-orlando", day: 3, kind: "half_off", label: "Customer Appreciation Day: 50% off all tag colors but one (Yelp)", discountPct: 50, color: "bg-coral", verified: false },
+  { venue: "omg-thrift", day: 1, kind: "color_tag", label: "Color of the Week half price (changes Mondays, per thriftstores.net)", discountPct: 50, color: "bg-teal", verified: false },
+  { venue: "the-hope-chest", day: 6, kind: "dollar_day", label: "$1 clothing, non-boutique (per mylocalnooks.com)", color: "bg-coral", verified: false },
+  { venue: "city-thrift-edgewater", day: 2, kind: "senior_day", label: "Seniors 30% off (per uncoveringflorida.com)", discountPct: 30, color: "bg-gray-700", verified: false },
+  { venue: "city-thrift-edgewater", day: 3, kind: "senior_day", label: "Military discount (per uncoveringflorida.com)", color: "bg-gray-700", verified: false },
 ];
 export const nextDealDate = (r: DealRule, from = new Date()) => { const d = new Date(from); d.setDate(d.getDate() + ((r.day - d.getDay() + 7) % 7)); return d.toLocaleDateString("en-CA"); };
 export const ruleId = (r: Pick<DealRule, "venue" | "day" | "label">) => `${r.venue}-${r.day}-${r.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;

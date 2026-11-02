@@ -1,4 +1,4 @@
-import { getVenue, upsertVenue, getDealRules } from "@/lib/data";
+import { getVenue, upsertVenue, getDealRules, deleteVenue } from "@/lib/data";
 import { parseVenue } from "@/lib/validate";
 import { isAdminRequest } from "@/lib/auth";
 import { handle, json, readBody, HttpError } from "@/lib/api";
@@ -13,4 +13,9 @@ export const PUT = handle(async (req: Request, { params }: P) => {
   const slug = (await params).slug; const ex = await getVenue(slug); if (!ex) throw new HttpError(404, "not found");
   const r = parseVenue({ ...ex, hours: ex.hoursJson ? Object.values(ex.hoursJson)[0] : "", ...(await readBody(req)), slug }); if (!r.ok) throw new HttpError(400, "validation failed", r.errors);
   await upsertVenue(r.value); return json({ data: r.value });
+});
+export const DELETE = handle(async (req: Request, { params }: P) => {
+  if (!isAdminRequest(req)) throw new HttpError(401, "unauthorized");
+  const slug = (await params).slug; if (!(await getVenue(slug))) throw new HttpError(404, "not found");
+  await deleteVenue(slug); return json({ data: { slug, deleted: true } });
 });

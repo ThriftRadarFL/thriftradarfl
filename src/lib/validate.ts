@@ -38,6 +38,12 @@ export function parseSale(o: Record<string, unknown>): R<Sale> {
   const pmClean = pm.map((x) => String(x).slice(0, CAPS.paymentItem)).slice(0, CAPS.payment);
   return { ok: true, value: { slug: String(o.slug || "") || slugify(`${title}-${days[0].date.slice(0, 7)}`), title, type, city, zip, lat: num(o.lat), lng: num(o.lng), sourceUrl, paymentMethods: pmClean, days, ...(o.tags != null && cleanTags(o.tags).length ? { tags: cleanTags(o.tags) } : {}) } };
 }
+// Structured hours ({"mon-sat":"9:00-18:00"}) from API/JSON callers; ignored unless small string→string map.
+const hoursObj = (h: unknown): Record<string, string> | null => {
+  if (!h || typeof h !== "object" || Array.isArray(h)) return null; const ent = Object.entries(h as Record<string, unknown>);
+  if (!ent.length || ent.length > 10 || ent.some(([k, v]) => typeof v !== "string" || k.length > 20 || v.length > 60)) return null;
+  return Object.fromEntries(ent) as Record<string, string>;
+};
 export function parseVenue(o: Record<string, unknown>): R<Venue> {
   const e: string[] = []; const name = String(o.name ?? "").trim(); if (!name) e.push("name required");
   const city = String(o.city ?? "").trim(); if (!city) e.push("city required");
@@ -50,7 +56,7 @@ export function parseVenue(o: Record<string, unknown>): R<Venue> {
   const lat = num(o.lat), lng = num(o.lng); if (lat && (lat < 24 || lat > 31.5)) e.push("lat outside Florida"); if (lng && (lng < -88 || lng > -79.5)) e.push("lng outside Florida");
   if (o.sourceUrl && !isHttpUrl(String(o.sourceUrl))) e.push("sourceUrl must be a valid http(s) URL");
   if (e.length) return { ok: false, errors: e };
-  return { ok: true, value: { slug: String(o.slug || "") || slugify(name), org: String(o.org ?? ""), name, type, address: String(o.address ?? ""), city, zip: String(o.zip ?? "").trim(), lat: num(o.lat), lng: num(o.lng), phone: o.phone ? String(o.phone) : null, hoursJson: o.hours ? { daily: String(o.hours) } : null, notes: String(o.notes ?? ""), ...(o.sourceUrl && isHttpUrl(String(o.sourceUrl)) ? { sourceUrl: String(o.sourceUrl) } : {}) } };
+  return { ok: true, value: { slug: String(o.slug || "") || slugify(name), org: String(o.org ?? ""), name, type, address: String(o.address ?? ""), city, zip: String(o.zip ?? "").trim(), lat: num(o.lat), lng: num(o.lng), phone: o.phone ? String(o.phone) : null, hoursJson: o.hours ? { daily: String(o.hours) } : hoursObj(o.hoursJson), notes: String(o.notes ?? ""), ...(o.sourceUrl && isHttpUrl(String(o.sourceUrl)) ? { sourceUrl: String(o.sourceUrl) } : {}) } };
 }
 export function parseDealRule(o: Record<string, unknown>): R<DealRule> {
   const e: string[] = []; const venue = String(o.venue ?? "").trim(); if (!/^[a-z0-9-]+$/.test(venue)) e.push("venue required");
