@@ -1,9 +1,11 @@
 import { range12 } from "@/lib/time";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getSale } from "@/lib/data";
+import { getSale, citySlug } from "@/lib/data";
 import { SITE_URL } from "@/lib/site";
 import { saleJsonLd } from "@/lib/jsonld";
+import { saleEnded } from "@/lib/seo";
+import { todayET } from "@/lib/cities";
 import { PageHead, DayBox, Discount, typeLabel } from "@/components/ui";
 import FavButton from "@/components/FavButton";
 import ShareButtons from "@/components/ShareButtons";
@@ -12,7 +14,7 @@ type P = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: P) {
   const s = await getSale((await params).slug); if (!s) return { title: "Sale not found", robots: { index: false } };
   const description = `${typeLabel[s.type] ?? "Sale"} in ${s.city}, FL · ${s.days.length} day${s.days.length > 1 ? "s" : ""} starting ${s.days[0]?.date}. Hours, discounts and add-to-calendar.`;
-  return { title: `${s.title} · ${s.city}, FL`, description, alternates: { canonical: `/sales/${s.slug}` },
+  return { title: `${s.title} · ${s.city}, FL`, description, alternates: { canonical: `/sales/${s.slug}` }, ...(saleEnded(s, todayET()) ? { robots: { index: false, follow: true } } : {}),
     openGraph: { type: "article", title: s.title, description, url: `/sales/${s.slug}` }, twitter: { card: "summary_large_image", title: s.title, description } };
 }
 export default async function Sale({ params }: P) {
@@ -21,6 +23,7 @@ export default async function Sale({ params }: P) {
   return (<div><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(saleJsonLd(s)).replace(/</g, "\\u003c") }} />
     <PageHead title={s.title} sub={`${typeLabel[s.type] ?? s.type} · ${s.city}, FL ${s.zip}`} />
     <nav aria-label="Breadcrumb" className="-mt-2 mb-3 truncate text-xs text-gray-600"><Link href="/" className="hover:underline">Home</Link> › <Link href="/sales" className="hover:underline">Sales</Link> › <span aria-current="page">{s.title}</span></nav>
+    {saleEnded(s, todayET()) && <div role="status" className="mb-4 border-l-4 border-cta bg-white p-3 text-sm shadow-sm"><b>This sale has ended.</b> See <Link href={`/city/${citySlug(s.city)}`} className="font-bold text-royal underline">upcoming sales in {s.city}</Link> or <Link href="/sales" className="font-bold text-royal underline">all upcoming sales</Link>.</div>}
     <div className="grid gap-4 md:grid-cols-3">
       <div className="space-y-4 md:col-span-2">
         <section className="panel"><h2 className="panel-head">Sale schedule</h2>

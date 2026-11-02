@@ -32,3 +32,21 @@ test("cityData: weekend sales + deal days for that city's stores only; nearby so
   const near = nearbyCities(cityList(sales, venues, "2026-11-02"), "port-orange");
   assert.equal(near[0].slug, "daytona-beach"); assert.ok(near.every((c, i) => i === 0 || (c.miles ?? 0) >= (near[i - 1].miles ?? 0)));
 });
+import { sitemapEntries, robotsRules, saleEnded } from "../src/lib/seo";
+test("sitemap: only live published sales, no empty cities, absolute URLs, no fake lastmod on detail pages", () => {
+  const mk = (slug: string, date: string, published = true) => ({ slug, title: slug, type: "estate", city: "DeLand", zip: "32720", lat: 29, lng: -81.3, sourceUrl: "", paymentMethods: [], published, days: [{ date, start: "08:00", end: "12:00", discountPct: 0 }] });
+  const venue = { slug: "v1", org: "", name: "V", type: "thrift", address: "1", city: "Sanford", zip: "32771", lat: 28.8, lng: -81.27, phone: null, hoursJson: null, notes: "" };
+  const urls = sitemapEntries("https://x.test", [mk("old", "2026-10-01"), mk("new", "2026-11-05"), mk("draft", "2026-11-05", false)], [venue], "2026-11-02");
+  const u = urls.map((e) => e.url);
+  assert.ok(u.includes("https://x.test/sales/new")); assert.ok(!u.includes("https://x.test/sales/old")); assert.ok(!u.includes("https://x.test/sales/draft"));
+  assert.ok(u.includes("https://x.test/city/sanford")); assert.ok(u.includes("https://x.test/city/deland")); assert.ok(!u.includes("https://x.test/city/ormond-beach"), "empty city excluded");
+  assert.ok(u.every((x) => x.startsWith("https://x.test"))); assert.equal(new Set(u).size, u.length, "no duplicates");
+  assert.equal(urls.find((e) => e.url.endsWith("/sales/new"))?.lastModified, undefined);
+  assert.equal(saleEnded(mk("a", "2026-11-01"), "2026-11-02"), true); assert.equal(saleEnded(mk("a", "2026-11-02"), "2026-11-02"), false);
+});
+test("robots: blocks admin/api/preview, points at absolute sitemap; preview deploys fully disallowed", () => {
+  const r = robotsRules("https://x.test", { VERCEL_ENV: "production" }); assert.equal(r.sitemap, "https://x.test/sitemap.xml");
+  const rule = Array.isArray(r.rules) ? r.rules[0] : r.rules; assert.ok((rule.disallow as string[]).includes("/admin")); assert.ok((rule.disallow as string[]).includes("/api/"));
+  assert.equal(robotsRules("https://x.test", {}).sitemap, "https://x.test/sitemap.xml");
+  const p = robotsRules("https://x.test", { VERCEL_ENV: "preview" }); const pr = Array.isArray(p.rules) ? p.rules[0] : p.rules; assert.equal(pr.disallow, "/"); assert.equal(p.sitemap, undefined);
+});
