@@ -70,3 +70,10 @@ Blocked on your logins: GitHub push, Supabase, Vercel, MapTiler (interactive map
 - **SEO:** sitemap = live published sales + non-empty cities only; robots blocks `/digest/preview` + `/offline`, drops `Host`, disallows all on Vercel preview deploys; ended sales show a banner + noindex
 - **Validation:** impossible dates and unparseable URLs rejected; venue caps/zip/coords/slug checks; store page can't crash on a bad source URL
 - Tests: 60 passing (+4 Postgres tests that run with `PG_TEST_URL`); typecheck, lint, build green
+
+## 5 PM pass
+- **This weekend near you** (`/weekend`): ZIP (default **32127** Port Orange) + radius 10/25/50 mi/any, or 📍 *Use my location* (coords rounded, only in the URL). Sales + store deal days sorted closest first with miles; sales without coords fall back to their ZIP centroid; empty state links to the radius that reaches the nearest listing; unknown/non-FL ZIP shows a notice and uses 32127. ZIP centroids: `src/lib/zips.ts` (232 Central FL ZCTAs, US Census 2023 Gazetteer; regenerate with `scripts/gen-zips.mjs`)
+- **Deal-day calendars:** `/api/calendar/deals` (`?venue=`, `?city=`, `?verified=1`, `?download=1`) — weekly `RRULE` events, all-day (timed rules like Berner's 6:30 PM auction get 2 h), stable UIDs so subscriptions update in place, unverified rules say so. `/api/calendar?deals=1` = sales + deals in one feed. Subscribe (webcal) / Google Calendar / .ics buttons on `/deals` and every store page with deal days; links on `/calendar`. Note: webcal/Google links use `NEXT_PUBLIC_SITE_URL`, so they only work for others once deployed
+- **Printable route planner** (`/plan`): 🖨 *Print list* → clean black-on-white sheet (day, stop count, total miles, checkboxes, per-leg + running miles, sale URLs, notes lines; nav/footer/controls hidden) and *Copy as text* for texting the list
+- Screens (390px, 0 overflow, no console errors): `screens/mobile/weekend*.png`, `deals.png`, `stores_goodwill-port-orange.png`, `plan_route.png`, `plan_print.png` (print media)
+- Tests: 67 passing (+4 Postgres tests with `PG_TEST_URL`); typecheck, lint, build (`NEXT_DIST_DIR=.next-build`) green. Nothing pushed, no new logins needed
