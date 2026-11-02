@@ -8,6 +8,7 @@ import { saleEnded } from "@/lib/seo";
 import { todayET } from "@/lib/cities";
 import { PageHead, DayBox, Discount, typeLabel } from "@/components/ui";
 import FavButton from "@/components/FavButton";
+import AddToRoute from "@/components/AddToRoute";
 import ShareButtons from "@/components/ShareButtons";
 import { cleanTags, TAG_LABEL, FLIP_TIPS, ebaySoldUrl } from "@/lib/flip-tips";
 type P = { params: Promise<{ slug: string }> };
@@ -43,6 +44,7 @@ export default async function Sale({ params }: P) {
         {s.sourceUrl ? <a className="btn-red block text-center" href={s.sourceUrl} target="_blank" rel="noopener noreferrer">Original listing ↗</a>
           : <p className="text-xs text-gray-600">Submitted directly — no external listing.</p>}
         <a className="btn-gray block text-center" href={`/api/ics/${s.slug}`} download>Add to calendar (.ics)</a>
+        {!saleEnded(s, todayET()) && <AddToRoute slug={s.slug} day={s.days.find((d) => d.date >= todayET())?.date} />}
         <FavButton slug={s.slug} title={s.title} />
         <ShareButtons url={url} title={`${s.title} · ${s.city}, FL`} /></div></aside>
     </div></div>);

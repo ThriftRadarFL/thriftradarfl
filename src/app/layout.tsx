@@ -10,14 +10,14 @@ export const viewport = { themeColor: "#072a66", width: "device-width", initialS
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "ThriftRadarFL — Central Florida estate sales & thrift deals", template: `%s | ${SITE_NAME}` },
-  description, applicationName: SITE_NAME, alternates: { canonical: "/" },
+  description, applicationName: SITE_NAME, alternates: { canonical: "/", types: { "application/atom+xml": [{ url: "/feed.xml", title: "ThriftRadarFL · New sales" }] } },
   openGraph: { type: "website", siteName: SITE_NAME, locale: "en_US", url: "/", title: "ThriftRadarFL", description, },
   twitter: { card: "summary_large_image", title: "ThriftRadarFL", description },
   icons: { apple: "/icons/apple-touch-icon.png" },
   appleWebApp: { capable: true, title: "ThriftRadar", statusBarStyle: "black-translucent" },
 };
 const cities = [["port-orange", "Port Orange"], ["daytona-beach", "Daytona Beach"], ["deland", "DeLand"], ["new-smyrna-beach", "New Smyrna Beach"], ["ormond-beach", "Ormond Beach"], ["orlando", "Orlando"]];
-const pages = [["/about", "About"], ["/faq", "FAQ"], ["/submit", "Submit a sale"], ["/contact", "Contact"], ["/privacy", "Privacy"], ["/terms", "Terms"], ["/sales", "All sales"], ["/search", "Search"]];
+const pages = [["/about", "About"], ["/faq", "FAQ"], ["/submit", "Submit a sale"], ["/contact", "Contact"], ["/privacy", "Privacy"], ["/terms", "Terms"], ["/sales", "All sales"], ["/new", "New this week"], ["/search", "Search"]];
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (<html lang="en"><body className="antialiased">
     <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:bg-white focus:px-3 focus:py-2 focus:font-bold focus:text-royal">Skip to content</a>

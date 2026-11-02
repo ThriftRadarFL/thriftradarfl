@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import NavLinks from "./NavLinks";
-const links = [["/", "This Week"], ["/today", "Today"], ["/map", "Map"], ["/calendar", "Calendar"], ["/weekend", "Weekend"], ["/stores", "Stores"], ["/deals", "Deal Days"], ["/city", "Cities"], ["/saved", "♥ Saved"], ["/plan", "Route"], ["/digest", "Digest"]];
+const links = [["/", "This Week"], ["/new", "New"], ["/today", "Today"], ["/map", "Map"], ["/calendar", "Calendar"], ["/weekend", "Weekend"], ["/stores", "Stores"], ["/deals", "Deal Days"], ["/city", "Cities"], ["/saved", "♥ Saved"], ["/plan", "Route"], ["/digest", "Digest"]];
 export default function Nav() {
   return (<header className="print:hidden">
     <div className="bg-royal-dark text-white"><div className="mx-auto flex max-w-[1160px] flex-wrap items-center gap-2 px-4 py-3">
