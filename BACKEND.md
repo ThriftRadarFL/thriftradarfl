@@ -1,35 +1,58 @@
 # ThriftRadarFL — Backend Architecture
 
-## Current (offline, shipped)
-- **Persistence:** `src/lib/data.ts` reads/writes `data/sales.json`, `data/venues.json`, `data/digest-subscribers.json` (gitignored). Falls back to `src/lib/seed-data.ts`. Regenerate JSON: `npx tsx scripts/export-json.ts`.
-- **Validation:** `src/lib/validate.ts` (`parseSale`, `parseVenue`) — no deps, returns `{ok, value|errors}`.
-- **Auth (stub):** `src/lib/auth.ts` — `ADMIN_PASSWORD` env; httpOnly cookie = sha256 token, or `Authorization: Bearer <ADMIN_PASSWORD>` for API.
-- **Deal rules:** `src/lib/deal-rules.ts` (UNVERIFIED demo schedules except Berner's Wed auction).
+## Data layer (`src/lib/data.ts`) — one API, two drivers
+- **JSON driver (default):** `data/sales.json`, `data/venues.json`, `data/digest-subscribers.json` (subscribers gitignored). Writes are serialized + atomic (tmp + rename). Regenerate from seed: `npm run data:export`.
+- **Postgres driver (`src/lib/db-store.ts`):** auto-enabled when `DATABASE_URL` is set. Same function signatures (getSales/getSale/upsertSale/deleteSale/getVenues/upsertVenue/add/list/removeSubscriber). Upsert sale = transaction (sale row + replace sale_days).
+- Verified offline against a local PGlite Postgres: `drizzle-kit migrate` → `npm run db:seed` (idempotent) → `npm run data:smoke` all pass.
+- Note: on Vercel the filesystem is read-only → JSON mode is read-only there; set `DATABASE_URL` for writes.
 
-## API
+## Schema (`src/db/schema.ts`, migrations in `drizzle/`)
+organizations → venues (lat/lng, hours jsonb, active) → deal_rules (kind enum, day_of_week, start_time, discount_pct, verified_at, source)
+sales (slug unique, type enum incl. thrift/outlet_bins, city/zip/lat/lng, payment_methods[], source, source_url, status, featured_until) → sale_days (date, start/end, discount_pct)
+tags ↔ sale_tags; subscribers (email unique, zip, area, interests[], tier).
+Deal rules source of truth for now: `src/lib/deal-rules.ts` (seeded into DB; UNVERIFIED demo except Berner's Wed auction).
+
+## Auth
+- `ADMIN_PASSWORD` (env). `/admin` login sets httpOnly sha256 token cookie (secure in prod). APIs accept that cookie or `Authorization: Bearer <ADMIN_PASSWORD>`. Timing-safe comparisons, 800ms delay on failed login.
+- Later: Supabase Auth magic link + RLS (public read sales/venues, service-role writes).
+
+## API (all JSON errors `{error, details?}`; body cap 32KB; `src/lib/api.ts`)
 | Method | Route | Auth | Notes |
 |---|---|---|---|
 | GET | `/api/health` | – | dataMode, adminConfigured |
-| GET | `/api/sales?city=port-orange&type=estate` | – | list |
-| POST | `/api/sales` | admin | create (JSON body = Sale; `days` array or newline string) |
-| GET/PUT/DELETE | `/api/sales/[slug]` | PUT/DELETE admin | |
-| GET | `/api/venues`, `/api/venues/[slug]` | – | |
-| POST | `/api/venues` | admin | upsert |
-| POST | `/api/subscribers` | – | `{email, area}` → JSON file |
-| GET | `/api/ics/[slug]` | – | iCalendar, one VEVENT per sale day, America/New_York |
+| GET | `/api/sales?city=&type=&upcoming=1&from=YYYY-MM-DD` | – | |
+| POST | `/api/sales` | admin | 201; 409 if slug exists |
+| GET/PUT/DELETE | `/api/sales/[slug]` | write=admin | PUT = partial merge + revalidate; 404s |
+| GET/POST | `/api/venues?city=` | POST admin | |
+| GET/PUT | `/api/venues/[slug]` | PUT admin | GET includes dealRules |
+| GET | `/api/deal-rules?venue=` | – | |
+| POST | `/api/subscribers` | – | rate-limited 5/min/IP, honeypot `company` |
+| GET | `/api/subscribers` | admin | JSON list |
+| GET | `/api/admin/subscribers` | admin | CSV export |
+| POST | `/api/admin/import` | admin | `{url}` → draft Sale from listing JSON-LD (not saved) |
+| GET | `/api/ics/[slug]` | – | RFC 5545 (VTIMEZONE, folding, escaping), download |
+| GET | `/api/calendar?city=` | – | subscribable feed of upcoming sales |
+| GET | `/api/cron/digest?dry=1&from=` | `CRON_SECRET` bearer | dry-run without RESEND_API_KEY |
+| GET/POST | `/api/unsubscribe?e=&t=` | HMAC token | one-click (RFC 8058) |
+Pages: `/`, `/?city=&type=`, `/map` (keyless SVG plot), `/stores`, `/stores/[slug]`, `/sales/[slug]` (JSON-LD Event), `/deals`, `/city/[city]` ×5, `/digest`, `/digest/preview`, `/admin`, `/sitemap.xml`, `/robots.txt`.
 
-Pages: `/admin` (server actions), `/deals`, `/city/[city]` (5 SSG cities), `/digest` (server action).
+## Email
+`src/lib/digest.ts` builds subject/html/text (top 10 sales in next 10 days by discount + 50%-off deal days). `vercel.json` cron: Thursdays 11:00 UTC (7am EDT / 6am EST). Resend batch API (100/call), List-Unsubscribe headers. Needs `RESEND_API_KEY`, `DIGEST_FROM` on a verified domain, `CRON_SECRET`.
 
-## Target schema (Postgres via Drizzle, `src/db/schema.ts`)
-orgs → venues (geo lat/lng, hours jsonb) → deal_rules (venue, kind, dow, time, verified, source) ; sales (slug, type, city, zip, geo, source_url, payment[]) → sale_days (date, start, end, discount_pct) ; tags ↔ sale_tags ; subscribers (email unique, area, confirmed_at, unsub_token) ; admin users via Supabase Auth.
+## Maps
+Now: keyless SVG overview + city lists. Next: MapLibre GL + MapTiler tiles (`NEXT_PUBLIC_MAPTILER_KEY`), geocode on admin save.
+
+## Import / scraping policy
+Admin-triggered, one URL at a time, host allowlist (estatesales.net/.org, auctionzip, hibid), reads only schema.org JSON-LD, 10s timeout, identifies UA, never rehosts images, always keeps `sourceUrl` + "Original Listing" link. No crawlers/bulk scraping. Prefer organizer submissions.
+
+## Security
+Security headers in `next.config.ts`; `/admin` + `/api/` disallowed in robots; admin noindex.
+
+## Tests
+`npm test` (node:test: validation, ics, digest, importer fixture), `npm run check` (typecheck + tests + lint).
 
 ## Phased rollout
-1. **Phase 1 (now):** JSON layer, password admin. Deploy works read-only on Vercel (filesystem is read-only there → admin writes only locally until Phase 2).
-2. **Phase 2:** Supabase Postgres. `npm run db:push && npm run db:seed`; swap `data.ts` functions to Drizzle queries behind same signatures (`hasDb` switch). Migrate subscribers JSON → table.
-3. **Phase 3:** Supabase Auth (magic link) replaces `ADMIN_PASSWORD`; RLS: public read on sales/venues, writes service-role only.
-4. **Phase 4 — Email:** Resend weekly digest (Thu 7am ET) via Vercel Cron → `/api/cron/digest` (protect with `CRON_SECRET`); double opt-in + one-click unsubscribe.
-5. **Phase 5 — Maps:** MapTiler key + MapLibre GL on `/map`; geocode addresses (MapTiler geocoding) on admin save.
-6. **Phase 6 — Import:** Admin "paste EstateSales.net URL" → fetch + parse title/dates/address. Policy: respect robots.txt/ToS, manual trigger only, always link back to source, no image rehosting, no bulk scraping. Prefer organizer submissions.
-
-## Jobs (later)
-- Daily: expire past sales, prune; weekly: digest send; nightly: re-verify deal rules flagged `verified=false`.
+1. ✅ JSON layer, password admin, APIs, ics, SEO, digest builder (offline).
+2. Supabase Postgres: set `DATABASE_URL` → `npm run db:migrate && npm run db:seed` (code switches automatically).
+3. Deploy Vercel (env vars), set `NEXT_PUBLIC_SITE_URL`.
+4. Resend + cron live. 5. MapTiler map. 6. Supabase Auth replaces ADMIN_PASSWORD. 7. Organizer submission form + moderation queue.
