@@ -40,3 +40,13 @@ Blocked on your logins: GitHub push, Supabase, Vercel, MapTiler (interactive map
 - Digest logo is now `public/logo-email.png`
 - Mobile pass at 390px with Playwright → `screens/mobile/*.png` (22 pages). Fixed: /map list overflowed (453px), breadcrumb overlapping the sale header, small tap targets on map list. **Fixed a real bug:** MapLibre's worker failed to load under Next bundling (blank map tiles) — worker now served from `/public` (copied on install/dev/build)
 - Known limit: if the DB fails mid-write, that write lands in local JSON (fine locally, ephemeral on Vercel)
+
+## 3 PM feature pass
+- **Route planner** `/plan`: saved sales → pick day/stops → nearest-neighbor + 2-opt driving order, per-leg miles, "start from my location", Google Maps multi-stop link (≤10 stops)
+- **Map**: filters (day, type, city, show stores), 📍 Near me with distance-sorted list, markers update without reloading the map; MapLibre loads on idle (desktop) / on tap (phone)
+- **PWA**: manifest + icons (192/512/maskable/apple), service worker (production only): network-first pages, offline page, saved sales + their .ics cached for offline; install prompt (Android) + iOS "Add to Home Screen" hint
+- **Seed stores**: +16 real stores (14 Goodwill CFL + West Volusia & Greater Volusia Habitat ReStores) — address/phone/hours from the official sites (`sourceUrl` on each), coords from US Census geocoder (3 didn't geocode → not on map). ⚠ Existing "Goodwill Daytona Beach (Intl Speedway)" is **not** on goodwillcfl.org's list — flagged in its notes
+- **Items to look for** tags + flip-value tips (generic know-how + eBay *sold* comps links); tags only derived from titles for demo sales; migration 0003
+- **Admin**: CSV bulk import (template, preview, all-or-nothing import, confirm), **audit log** of every admin action incl. logins; migration 0004
+- **Polish/perf**: active nav tab, navy gradients, focus/disabled states, ≥40px tap targets, metadata always in `<head>`. Lighthouse (prod, mobile): home 90/100/100/100, sale 99/100/100/100, map 96/100/100/100 (was 70)
+- Supabase paste file `scripts/supabase-0002.sql` now covers 0002–0004 + venue seed + deal rules (verified twice on PGlite)
