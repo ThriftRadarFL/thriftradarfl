@@ -18,9 +18,9 @@ h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter
 
 @layer components {
   .panel { @apply bg-white border border-line rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.15)]; }
-  .panel-head { @apply bg-royal text-white px-4 py-2 text-sm font-bold uppercase tracking-wide; }
-  .btn-red { @apply inline-block bg-cta text-white font-bold px-4 py-2 rounded-sm border border-cta-dark shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-cta-dark; }
-  .btn-gray { @apply inline-block bg-white text-royal font-bold px-4 py-2 rounded-sm border border-line hover:bg-paper; }
+  .panel-head { @apply bg-gradient-to-b from-royal to-royal-dark text-white px-4 py-2 text-sm font-bold uppercase tracking-wide; }
+  .btn-red { @apply inline-block min-h-10 bg-cta text-white font-bold px-4 py-2 rounded-sm border border-cta-dark shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-cta-dark; }
+  .btn-gray { @apply inline-block min-h-10 bg-white text-royal font-bold px-4 py-2 rounded-sm border border-line hover:bg-paper; }
   .pill { @apply inline-block px-2 py-0.5 text-xs font-bold rounded-sm text-white; }
   .daybox { @apply flex flex-col items-center justify-center w-11 shrink-0 border border-line bg-paper text-center leading-tight; }
   .link { @apply text-royal font-bold hover:underline; }
@@ -33,3 +33,9 @@ h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter
 .prose-page p, .prose-page li { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem; }
 .prose-page ul { list-style: disc; padding-left: 1.25rem; }
 .prose-page a { color: var(--color-royal); font-weight: bold; text-decoration: underline; }
+
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 0.5rem; }
+body { text-rendering: optimizeLegibility; }
+::selection { background: #0b3d91; color: #fff; }
+button:disabled, .btn-red:disabled, .btn-gray:disabled { opacity: 0.55; cursor: not-allowed; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #f5b400; outline-offset: 0; border-color: #0b3d91; }

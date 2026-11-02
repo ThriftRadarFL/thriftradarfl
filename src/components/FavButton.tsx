@@ -13,7 +13,7 @@ export default function FavButton({ slug, title, compact }: { slug: string; titl
   const favs = useFavs(); const on = !!favs?.includes(slug);
   const toggle = () => { const f = readFavs(); writeFavs(on ? f.filter((x) => x !== slug) : [...f, slug]);
     navigator.serviceWorker?.controller?.postMessage({ type: on ? "unsave" : "save", slug }); };
-  return <button type="button" onClick={toggle} aria-pressed={on} aria-label={on ? `Remove ${title} from saved sales` : `Save ${title}`}
-    className={compact ? `px-2 py-1 text-lg leading-none ${on ? "text-cta" : "text-gray-600 hover:text-cta"}` : `btn-gray block w-full text-center ${on ? "text-cta" : ""}`}>
+  return <button type="button" onClick={toggle} aria-pressed={on} aria-label={compact ? (on ? `Remove ${title} from saved sales` : `Save ${title}`) : undefined}
+    className={compact ? `min-h-10 min-w-10 px-2 py-1 text-lg leading-none ${on ? "text-cta" : "text-gray-600 hover:text-cta"}` : `btn-gray block w-full text-center ${on ? "text-cta" : ""}`}>
     <span aria-hidden="true">{on ? "♥" : "♡"}</span>{!compact && (on ? " Saved" : " Save this sale")}</button>;
 }

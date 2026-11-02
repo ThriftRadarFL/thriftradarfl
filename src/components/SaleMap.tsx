@@ -23,7 +23,7 @@ export default function SaleMap({ pins, apiKey, me }: { pins: MapPin[]; apiKey: 
     const b = new lib.LngLatBounds();
     for (const p of pins) {
       const dot = document.createElement("a"); dot.href = p.href; dot.title = p.name; dot.setAttribute("aria-label", p.name);
-      dot.style.cssText = `display:block;width:18px;height:18px;border-radius:50%;background:${p.color};border:2px solid #fff;box-shadow:0 0 3px #0008`;
+      dot.style.cssText = `display:block;width:24px;height:24px;border-radius:50%;background:${p.color};border:2px solid #fff;box-shadow:0 0 3px #0008`;
       markers.current.push(new lib.Marker({ element: dot }).setLngLat([p.lng, p.lat]).addTo(m)); b.extend([p.lng, p.lat]);
     }
     meMarker.current?.remove(); meMarker.current = null;

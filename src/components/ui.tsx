@@ -1,5 +1,5 @@
 export function PageHead({ title, sub }: { title: string; sub?: string }) {
-  return (<div className="bg-royal text-white -mx-4 -mt-4 mb-4 px-6 py-4 border-b-4 border-cta">
+  return (<div className="bg-gradient-to-r from-royal-dark via-royal to-royal-dark text-white -mx-4 -mt-4 mb-4 px-6 py-4 border-b-4 border-cta">
     <h1 className="text-2xl">{title}</h1>{sub && <p className="mt-1 text-sm text-blue-100">{sub}</p>}</div>);
 }
 export function DayBox({ date }: { date: string }) {
