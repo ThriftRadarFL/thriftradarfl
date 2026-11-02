@@ -17,8 +17,8 @@ export default async function Sale({ params }: P) {
   const { slug } = await params; const s = await getSale(slug); if (!s) notFound();
   const url = `${SITE_URL}/sales/${s.slug}`; const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.city}, FL ${s.zip}`)}`;
   return (<div><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(saleJsonLd(s)).replace(/</g, "\\u003c") }} />
-    <nav aria-label="Breadcrumb" className="-mt-1 mb-2 text-xs text-gray-600"><Link href="/" className="hover:underline">Home</Link> › <Link href="/sales" className="hover:underline">Sales</Link> › <span aria-current="page">{s.title}</span></nav>
     <PageHead title={s.title} sub={`${typeLabel[s.type] ?? s.type} · ${s.city}, FL ${s.zip}`} />
+    <nav aria-label="Breadcrumb" className="-mt-2 mb-3 truncate text-xs text-gray-600"><Link href="/" className="hover:underline">Home</Link> › <Link href="/sales" className="hover:underline">Sales</Link> › <span aria-current="page">{s.title}</span></nav>
     <div className="grid gap-4 md:grid-cols-3">
       <div className="space-y-4 md:col-span-2">
         <section className="panel"><h2 className="panel-head">Sale schedule</h2>

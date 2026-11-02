@@ -8,6 +8,7 @@ export default function SaleMap({ pins, apiKey }: { pins: MapPin[]; apiKey: stri
     let map: import("maplibre-gl").Map | undefined; let dead = false;
     import("maplibre-gl").then((ml) => {
       if (dead || !el.current) return;
+      ml.setWorkerUrl("/maplibre-gl-worker.mjs"); // bundlers can't resolve MapLibre v6's worker; served from /public
       const m = (map = new ml.Map({ container: el.current, style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${encodeURIComponent(apiKey)}`, center: [-81.38, 28.54], zoom: 8 }));
       m.addControl(new ml.NavigationControl(), "top-right");
       const b = new ml.LngLatBounds();

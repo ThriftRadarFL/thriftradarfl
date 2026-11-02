@@ -34,4 +34,9 @@ Blocked on your logins: GitHub push, Supabase, Vercel, MapTiler (interactive map
 - **A11y/mobile:** skip link, visible focus ring, darker text/coral for contrast, labelled inputs/search, aria on filters/favorites/status, reduced-motion, wrapping layouts, loading skeleton, empty states everywhere
 - **Tests:** 26 passing (validation, search, JSON-LD, ics, digest, importer, data layer incl. DB-down fallback + concurrency, API handlers incl. auth/ics/cron dry run); typecheck, lint, build green
 
-Known limits: publish flag, deal rules, submissions and contact messages are JSON-backed (not yet in Postgres schema); digest email logo is SVG (some clients won't render it).
+## 2:45 PM pass
+- Migration `drizzle/0002_*` + idempotent `scripts/supabase-0002.sql` (regenerate: `npx tsx scripts/gen-supabase-0002.ts`): `sales.published/description`, `deal_rules.rule_key/label/verified`, `submissions`, `contact_messages` (RLS on). Publish flag, deal-rule CRUD, submissions and contact now go to Postgres when reachable. Verified on PGlite: 0000→0002 apply cleanly; paste file runs twice without error and seeds rules
+- DB timeout 1.5 s per query (`DB_TIMEOUT_MS`), retry after 5 min (`DB_BACKOFF_MS`); box warm-up wait gone
+- Digest logo is now `public/logo-email.png`
+- Mobile pass at 390px with Playwright → `screens/mobile/*.png` (22 pages). Fixed: /map list overflowed (453px), breadcrumb overlapping the sale header, small tap targets on map list. **Fixed a real bug:** MapLibre's worker failed to load under Next bundling (blank map tiles) — worker now served from `/public` (copied on install/dev/build)
+- Known limit: if the DB fails mid-write, that write lands in local JSON (fine locally, ephemeral on Vercel)

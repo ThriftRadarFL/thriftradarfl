@@ -22,7 +22,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
       <Link href={q("city")} className={fl(!sp.city)}>All</Link>{Object.entries(CITIES).map(([k, n]) => <Link key={k} href={q("city", k)} className={fl(sp.city === k)}>{n}</Link>)}
       <span className="mr-1 sm:ml-3 text-xs font-bold uppercase text-gray-600">Type</span><Link href={q("type")} className={fl(!sp.type)}>All</Link>
       {TYPES.map((t) => <Link key={t} href={q("type", t)} className={fl(sp.type === t)}>{typeLabel[t]}</Link>)}
-      <a href={`/api/calendar${sp.city ? `?city=${sp.city}` : ""}`} className="ml-auto text-xs underline">Subscribe (calendar feed)</a></div>
+      <a href={`/api/calendar${sp.city ? `?city=${sp.city}` : ""}`} className="ml-auto py-2 text-xs underline">Subscribe (calendar feed)</a></div>
     {sales.length === 0 && <p className="panel p-4 text-sm">No upcoming sales match these filters. <Link href="/" className="underline">Clear filters</Link></p>}
     <div className="grid gap-3 lg:grid-cols-2">{sales.map((s) => (<article key={s.slug} className="panel flex flex-col">
       <div className="flex items-start gap-2 border-b border-line px-3 py-2">

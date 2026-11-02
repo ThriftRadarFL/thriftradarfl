@@ -19,17 +19,17 @@ export default async function MapPage() {
   const X = (lng: number) => ((lng - minLng) / (maxLng - minLng)) * W, Y = (lat: number) => ((maxLat - lat) / (maxLat - minLat)) * H;
   const fill: Record<string, string> = { estate: "#e0603f", auction: "#1b3a8a", auction_house: "#1b3a8a", thrift: "#1f9e8f", outlet_bins: "#d7262e", yard: "#6b4fa0" };
   const labels = Object.entries(geo.reduce<Record<string, { lat: number; lng: number; n: number }>>((a, p) => { const c = (a[p.city] ??= { lat: 0, lng: 0, n: 0 }); c.lat += p.lat; c.lng += p.lng; c.n++; return a; }, {}));
-  return (<div><PageHead title="Sale Map" sub={`${pins.length} pins in ${byCity.length} cities · list view, north to south`} />
+  return (<div><PageHead title="Sale Map" sub={`${pins.length} pins in ${byCity.length} cities · map + list by city, north to south`} />
     <div className="panel mb-3 overflow-hidden"><div className="panel-head">Overview</div>
       {mapKey ? <SaleMap apiKey={mapKey} pins={geo.map((p) => ({ key: p.key, href: p.href, name: p.name, lat: p.lat, lng: p.lng, color: fill[p.type] ?? "#888" }))} /> : <><svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full max-h-[520px] bg-[#eaf2f8]" role="img" aria-label="Plot of sales and stores by location">
         {labels.map(([city, c]) => <text key={city} x={X(c.lng / c.n) + 10} y={Y(c.lat / c.n) - 10} fontSize="14" fill="#555" fontWeight="bold">{city}</text>)}
         {geo.map((p) => <a key={p.key} href={p.href}><circle cx={X(p.lng)} cy={Y(p.lat)} r="8" fill={fill[p.type] ?? "#888"} stroke="#fff" strokeWidth="2"><title>{p.name}</title></circle></a>)}
       </svg><p className="px-3 py-1 text-[11px] text-gray-600">Approximate positions — tap a dot for details. Exact addresses are on each listing.</p></>}</div>
-    <div className="grid gap-3 md:grid-cols-4">
-      <div className="md:col-span-3 grid gap-3 sm:grid-cols-2">{byCity.map(([city, ps]) => (<div key={city} className="panel">
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+      <div className="min-w-0 md:col-span-3 grid grid-cols-1 gap-3 sm:grid-cols-2">{byCity.map(([city, ps]) => (<div key={city} className="panel min-w-0">
         <div className="panel-head flex justify-between"><span>{city}</span><span className="font-normal">{ps.length}</span></div>
-        <ul className="divide-y divide-line text-sm">{ps.map((p) => <li key={p.key} className="flex items-center gap-2 px-3 py-1.5">
-          <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${dot[p.type] ?? "bg-gray-400"}`} /><Link href={p.href} className="truncate hover:text-royal">{p.name}</Link>
+        <ul className="divide-y divide-line text-sm">{ps.map((p) => <li key={p.key} className="flex min-h-11 items-center gap-2 px-3 py-1.5">
+          <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${dot[p.type] ?? "bg-gray-400"}`} /><Link href={p.href} className="min-w-0 flex-1 truncate py-2 hover:text-royal">{p.name}</Link>
           <span className="ml-auto shrink-0 text-[11px] text-gray-600">{typeLabel[p.type] ?? p.type}</span></li>)}</ul></div>))}</div>
       <div className="panel self-start"><div className="panel-head">Legend</div><ul className="space-y-1.5 p-3 text-sm">
         {[["estate", "Estate sale"], ["auction", "Auction"], ["thrift", "Thrift store"], ["outlet_bins", "Outlet bins"], ["yard", "Yard sale"]].map(([t, l]) =>

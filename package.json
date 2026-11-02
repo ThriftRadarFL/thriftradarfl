@@ -16,7 +16,11 @@
     "test": "tsx --test tests/*.test.ts",
     "data:export": "tsx scripts/export-json.ts",
     "data:smoke": "tsx scripts/smoke-data.ts",
-    "check": "npm run typecheck && npm test && npm run lint"
+    "check": "npm run typecheck && npm test && npm run lint",
+    "copy:maplibre-worker": "node -e \"require('fs').copyFileSync('node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs','public/maplibre-gl-worker.mjs')\"",
+    "predev": "npm run -s copy:maplibre-worker",
+    "prebuild": "npm run -s copy:maplibre-worker",
+    "postinstall": "npm run -s copy:maplibre-worker"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",
