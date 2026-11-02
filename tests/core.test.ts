@@ -84,3 +84,8 @@ test("csv: quotes, escaped quotes, CRLF, embedded newlines", () => {
   const r = parseSale(records[0]); assert.ok(r.ok); if (r.ok) { assert.equal(r.value.days.length, 2); assert.equal(r.value.days[1].discountPct, 50); assert.deepEqual(r.value.tags, ["furniture", "tools"]); }
   assert.ok(csvToRecords("foo,bar\n1,2").errors.some((e) => e.includes('missing column "title"')));
 });
+test("seed venues: unique slugs, every new store has a source URL, coords in Florida or 0", () => {
+  const slugs = seedVenues.map((v) => v.slug); assert.equal(new Set(slugs).size, slugs.length);
+  for (const v of seedVenues) { if (v.slug !== "goodwill-daytona-isb") assert.match(v.sourceUrl, /^https:\/\//, v.slug);
+    if (v.lat) { assert.ok(v.lat > 24 && v.lat < 31.5 && v.lng < -79.5 && v.lng > -88, v.slug); } }
+});

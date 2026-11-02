@@ -19,6 +19,7 @@ export default async function Store({ params }: { params: Promise<{ slug: string
         <p className="text-lg">{v.address}<br />{v.city}, FL {v.zip}</p>{v.phone && <p><a className="font-bold text-royal hover:underline" href={`tel:${v.phone.replace(/[^\d+]/g, "")}`}>{v.phone}</a></p>}
         {v.notes && <p className="text-sm text-gray-700 border-l-4 border-coral pl-3">{v.notes}</p>}
         <a className="btn-red mt-2" href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener noreferrer">Get directions ↗</a>
+        {v.sourceUrl && <p className="text-xs text-gray-600">Source: <a href={v.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">{new URL(v.sourceUrl).hostname}</a></p>}
         <div className="pt-2"><ShareButtons url={`${SITE_URL}/stores/${v.slug}`} title={v.name} /></div></div></div>
       <div className="panel"><div className="panel-head">Hours</div><table className="w-full text-sm">
         <tbody>{hours.length ? hours.map(([k, h]) => <tr key={k} className="border-b border-line"><td className="px-4 py-2 font-bold capitalize">{k}</td><td className="px-4 py-2">{h}</td></tr>)

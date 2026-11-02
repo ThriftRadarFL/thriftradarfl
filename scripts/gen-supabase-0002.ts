@@ -5,8 +5,10 @@ const entries = JSON.parse(readFileSync("drizzle/meta/_journal.json", "utf8")).e
 const marks = entries.map((j) => { const hash = createHash("sha256").update(readFileSync(`drizzle/${j.tag}.sql`, "utf8")).digest("hex");
   return `INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '${hash}', ${j.when} WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '${hash}'); -- ${j.tag}`; }).join("\n");
 import { dealRules, ruleId } from "../src/lib/deal-rules";
+import { seedVenues } from "../src/lib/seed-data";
 const q = (s: string | null | undefined) => (s == null ? "NULL" : `'${s.replace(/'/g, "''")}'`);
 const rules = dealRules.map((r) => `  (${q(ruleId(r))}, ${q(r.venue)}, ${q(r.kind)}, ${r.day}, ${r.time ? q(r.time) : "NULL"}, ${q(r.color)}, ${r.discountPct ?? "NULL"}, ${q(r.label)}, ${r.verified})`).join(",\n");
+const venues = seedVenues.map((v) => `  (${q(v.slug)}, ${q(v.name)}, ${q(v.type)}::venue_type, ${q(v.address)}, ${q(v.city)}, ${q(v.zip)}, ${v.lat || "NULL"}, ${v.lng || "NULL"}, ${q(v.phone)}, ${v.hoursJson ? q(JSON.stringify(v.hoursJson)) + "::jsonb" : "NULL"}, ${q(v.notes)})`).join(",\n");
 writeFileSync("scripts/supabase-0002.sql", `-- ThriftRadarFL migrations 0002–0004 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages)
 -- Safe to run more than once. Paste into Supabase → SQL Editor → Run.
 BEGIN;
@@ -31,6 +33,11 @@ CREATE TABLE IF NOT EXISTS audit_log ( -- 0004
 ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
 ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+
+-- Seed/refresh venues (new stores added 2026-11-02 with sources in notes)
+INSERT INTO venues (slug, name, type, address, city, zip, lat, lng, phone, hours_json, notes) VALUES
+${venues}
+ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, address = EXCLUDED.address, city = EXCLUDED.city, zip = EXCLUDED.zip, lat = EXCLUDED.lat, lng = EXCLUDED.lng, phone = EXCLUDED.phone, hours_json = EXCLUDED.hours_json, notes = EXCLUDED.notes;
 
 -- Seed deal rules (upsert by rule_key; skips venues that don't exist yet)
 INSERT INTO deal_rules (rule_key, venue_id, kind, day_of_week, start_time, color, discount_pct, label, description, verified)

@@ -13,7 +13,8 @@
     "hoursJson": {
       "daily": "9:00-21:00"
     },
-    "notes": "Tag-color schedule TBD (verify with store)."
+    "notes": "Tag-color schedule TBD (verify with store).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
     "slug": "goodwill-daytona-isb",
@@ -27,7 +28,8 @@
     "lng": -81.0235,
     "phone": null,
     "hoursJson": null,
-    "notes": "Hours unverified."
+    "notes": "Not listed on goodwillcfl.org/locations as of 2026-11-02 \u2014 may be closed or mislabeled; verify before publishing.",
+    "sourceUrl": ""
   },
   {
     "slug": "goodwill-pine-hills-outlet",
@@ -43,7 +45,8 @@
     "hoursJson": {
       "daily": "8:00-17:00"
     },
-    "notes": "Sources disagree on open time (8 vs 9 AM). Restock times unverified."
+    "notes": "Sources disagree on open time (8 vs 9 AM). Restock times unverified.",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
     "slug": "goodwill-taft-outlet",
@@ -59,7 +62,8 @@
     "hoursJson": {
       "daily": "8:00-18:00"
     },
-    "notes": "Restock times unverified."
+    "notes": "Restock times unverified.",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
     "slug": "berners-auction-deland",
@@ -75,6 +79,278 @@
     "hoursJson": {
       "wed": "18:30-22:00"
     },
-    "notes": "Weekly Wednesday auction."
+    "notes": "Weekly Wednesday auction.",
+    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach"
+  },
+  {
+    "slug": "goodwill-deland",
+    "org": "gwcfl",
+    "name": "Goodwill DeLand",
+    "type": "thrift",
+    "address": "1600 North Woodland Boulevard",
+    "city": "DeLand",
+    "zip": "32720",
+    "lat": 29.05991,
+    "lng": -81.30462,
+    "phone": "(386) 265-0975",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-holly-hill",
+    "org": "gwcfl",
+    "name": "Goodwill Holly Hill",
+    "type": "thrift",
+    "address": "1577 North Nova Rd.",
+    "city": "Holly Hill",
+    "zip": "32117",
+    "lat": 29.23831,
+    "lng": -81.0573,
+    "phone": "(386) 257-3247",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Map pin approximate (geocoder matched S Nova Rd). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-orange-city",
+    "org": "gwcfl",
+    "name": "Goodwill Orange City",
+    "type": "thrift",
+    "address": "891 Harley Strickland Blvd.",
+    "city": "Orange City",
+    "zip": "32763",
+    "lat": 28.91685,
+    "lng": -81.28839,
+    "phone": "(386) 774-5533",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-sanford",
+    "org": "gwcfl",
+    "name": "Goodwill Sanford",
+    "type": "thrift",
+    "address": "300 East 3rd Street",
+    "city": "Sanford",
+    "zip": "32771",
+    "lat": 28.80997,
+    "lng": -81.2659,
+    "phone": "(407) 323-2272",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-west-sanford",
+    "org": "gwcfl",
+    "name": "Goodwill West Sanford",
+    "type": "thrift",
+    "address": "4516 FL-46",
+    "city": "Sanford",
+    "zip": "32771",
+    "lat": 28.78691,
+    "lng": -81.20577,
+    "phone": "(407) 878-1741",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Map pin approximate (geocoded). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-fern-park",
+    "org": "gwcfl",
+    "name": "Goodwill Fern Park",
+    "type": "thrift",
+    "address": "7800 S. U.S. Hwy 17-92",
+    "city": "Fern Park",
+    "zip": "32730",
+    "lat": 28.65257,
+    "lng": -81.34817,
+    "phone": "(407) 478-1000",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-casselberry",
+    "org": "gwcfl",
+    "name": "Goodwill Longwood/Casselberry",
+    "type": "thrift",
+    "address": "1795 Sunshadow Drive",
+    "city": "Casselberry",
+    "zip": "32707",
+    "lat": 0,
+    "lng": 0,
+    "phone": "(407) 695-3800",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Not on the map yet (address didn't geocode). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-oviedo",
+    "org": "gwcfl",
+    "name": "Goodwill Oviedo",
+    "type": "thrift",
+    "address": "1819 Alafaya Trail",
+    "city": "Oviedo",
+    "zip": "32765",
+    "lat": 0,
+    "lng": 0,
+    "phone": "(407) 706-0800",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Not on the map yet (address didn't geocode). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-curry-ford",
+    "org": "gwcfl",
+    "name": "Goodwill Curry Ford",
+    "type": "thrift",
+    "address": "7390 Curry Ford Rd",
+    "city": "Orlando",
+    "zip": "32822",
+    "lat": 28.51326,
+    "lng": -81.28576,
+    "phone": "(407) 447-0026",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-goldenrod",
+    "org": "gwcfl",
+    "name": "Goodwill Goldenrod",
+    "type": "thrift",
+    "address": "4780 South Goldenrod Road",
+    "city": "Orlando",
+    "zip": "32822",
+    "lat": 28.47812,
+    "lng": -81.28548,
+    "phone": "(407) 720-3313",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-south-obt",
+    "org": "gwcfl",
+    "name": "Goodwill S. OBT",
+    "type": "thrift",
+    "address": "7531 South Orange Blossom Trail",
+    "city": "Orlando",
+    "zip": "32809",
+    "lat": 28.4569,
+    "lng": -81.39887,
+    "phone": "(407) 859-4750",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-waterford-lakes",
+    "org": "gwcfl",
+    "name": "Goodwill Waterford Lakes",
+    "type": "thrift",
+    "address": "12170 Lake Underhill Road",
+    "city": "Orlando",
+    "zip": "32825",
+    "lat": 28.54668,
+    "lng": -81.20888,
+    "phone": "(407) 277-4999",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-winter-park-boutique",
+    "org": "gwcfl",
+    "name": "Goodwill Winter Park Boutique",
+    "type": "thrift",
+    "address": "750 Orange Avenue",
+    "city": "Winter Park",
+    "zip": "32789",
+    "lat": 28.59163,
+    "lng": -81.35815,
+    "phone": "(407) 628-5553",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "goodwill-apopka",
+    "org": "gwcfl",
+    "name": "Goodwill Apopka",
+    "type": "thrift",
+    "address": "1312 East Semoran Boulevard",
+    "city": "Apopka",
+    "zip": "32703",
+    "lat": 0,
+    "lng": 0,
+    "phone": "(407) 889-2965",
+    "hoursJson": {
+      "daily": "9:00-21:00"
+    },
+    "notes": "Not on the map yet (address didn't geocode). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.goodwillcfl.org/locations/"
+  },
+  {
+    "slug": "restore-west-volusia-deland",
+    "org": "habitat",
+    "name": "West Volusia Habitat ReStore",
+    "type": "thrift",
+    "address": "604 S. Spring Garden Avenue",
+    "city": "DeLand",
+    "zip": "32720",
+    "lat": 29.01882,
+    "lng": -81.32401,
+    "phone": "(386) 734-7268",
+    "hoursJson": null,
+    "notes": "Habitat for Humanity ReStore: furniture, appliances, building materials. The store's site lists conflicting hours (Tue\u2013Sat vs Mon\u2013Sat 8:30\u20135) \u2014 call ahead. Address, phone and hours from https://wvhabitat.org/the-restore/ (checked 2026-11-02).",
+    "sourceUrl": "https://wvhabitat.org/the-restore/"
+  },
+  {
+    "slug": "restore-greater-volusia-port-orange",
+    "org": "habitat",
+    "name": "Habitat ReStore (Greater Volusia)",
+    "type": "thrift",
+    "address": "3813 S. Nova Road #103 (Dunlawton Square)",
+    "city": "Port Orange",
+    "zip": "32127",
+    "lat": 29.12732,
+    "lng": -81.00489,
+    "phone": "(386) 257-9950",
+    "hoursJson": {
+      "tue-sat": "9:00-16:30",
+      "sun-mon": "closed"
+    },
+    "notes": "Habitat for Humanity ReStore: furniture, appliances, building materials, home goods. Address, phone and hours from https://www.habitatgvc.org/restore (checked 2026-11-02).",
+    "sourceUrl": "https://www.habitatgvc.org/restore"
   }
 ]

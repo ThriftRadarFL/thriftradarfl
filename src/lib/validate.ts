@@ -31,7 +31,7 @@ export function parseVenue(o: Record<string, unknown>): R<Venue> {
   const city = String(o.city ?? "").trim(); if (!city) e.push("city required");
   const type = String(o.type ?? "thrift"); if (!VENUE_TYPES.includes(type as never)) e.push("invalid type");
   if (e.length) return { ok: false, errors: e };
-  return { ok: true, value: { slug: String(o.slug || "") || slugify(name), org: String(o.org ?? ""), name, type, address: String(o.address ?? ""), city, zip: String(o.zip ?? ""), lat: num(o.lat), lng: num(o.lng), phone: o.phone ? String(o.phone) : null, hoursJson: o.hours ? { daily: String(o.hours) } : null, notes: String(o.notes ?? "") } };
+  return { ok: true, value: { slug: String(o.slug || "") || slugify(name), org: String(o.org ?? ""), name, type, address: String(o.address ?? ""), city, zip: String(o.zip ?? ""), lat: num(o.lat), lng: num(o.lng), phone: o.phone ? String(o.phone) : null, hoursJson: o.hours ? { daily: String(o.hours) } : null, notes: String(o.notes ?? ""), ...(o.sourceUrl && /^https?:\/\//.test(String(o.sourceUrl)) ? { sourceUrl: String(o.sourceUrl) } : {}) } };
 }
 export function parseDealRule(o: Record<string, unknown>): R<DealRule> {
   const e: string[] = []; const venue = String(o.venue ?? "").trim(); if (!/^[a-z0-9-]+$/.test(venue)) e.push("venue required");

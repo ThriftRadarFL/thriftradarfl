@@ -74,7 +74,7 @@ export default async function Admin({ searchParams }: SP) {
           <F n="address" l="Address" d={ev?.address} />
           <div className="grid grid-cols-2 gap-2"><F n="city" l="City" d={ev?.city} req /><F n="zip" l="ZIP" d={ev?.zip} pattern="\d{5}" title="5-digit ZIP" /><F n="lat" l="Lat" d={ev?.lat} {...LAT} /><F n="lng" l="Lng" d={ev?.lng} {...LAT} /></div>
           <div className="grid grid-cols-2 gap-2"><F n="phone" l="Phone" d={ev?.phone ?? ""} t="tel" /><F n="hours" l="Hours (daily)" d={ev?.hoursJson ? Object.values(ev.hoursJson)[0] : ""} /></div>
-          <F n="notes" l="Notes" d={ev?.notes} />
+          <F n="notes" l="Notes" d={ev?.notes} /><F n="sourceUrl" l="Source URL (where address/hours were verified)" d={ev?.sourceUrl} t="url" />
           <button className="btn-red">Save venue</button> {ev && <Link href="/admin" className="text-sm underline">New instead</Link>}</form></Panel>
 
       <Panel id="sales" title={`Sales (${sales.length})`}><ul className="text-sm">{sales.map((s) => <li key={s.slug} className={row}>

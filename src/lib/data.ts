@@ -5,7 +5,7 @@ import { hasDb } from "@/db";
 import * as pg from "./db-store";
 import { dealRules as seedDealRules, ruleId, type DealRule } from "./deal-rules";
 
-export type Venue = Omit<(typeof seedVenues)[number], "hoursJson" | "phone" | "type"> & { type: string; phone: string | null; hoursJson: Record<string, string> | null };
+export type Venue = Omit<(typeof seedVenues)[number], "hoursJson" | "phone" | "type" | "sourceUrl"> & { type: string; phone: string | null; hoursJson: Record<string, string> | null; sourceUrl?: string };
 export type SaleDay = { date: string; start: string; end: string; discountPct: number };
 export type Sale = { slug: string; title: string; type: string; city: string; zip: string; lat: number; lng: number; sourceUrl: string; paymentMethods: string[]; days: SaleDay[]; published?: boolean; description?: string; tags?: string[] };
 
