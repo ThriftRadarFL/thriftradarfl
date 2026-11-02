@@ -11,6 +11,7 @@ Shipped:
 - `/calendar`: 14-day grid of estate sales + deal days, links to iCal feed (added 2am)
 - Branded 404 page with links back to sales, calendar, deals, map (added 2:40am)
 - `/weekend`: Fri–Sun view of estate sales + deal days, in nav and sitemap (added 3am)
+- `/sales`: full list of upcoming estate sales, soonest first; in sitemap (added 3:40am)
 - Digest: signup → JSON/DB, email template, `/digest/preview`, Resend cron route (dry-run w/o key), one-click unsubscribe
 - SEO: sitemap.xml, robots.txt, OG/Twitter meta, canonical URLs, Event JSON-LD; security headers
 - 13 demo sales; `npm test` (6 passing), typecheck, lint, build all green; dev server on :3000

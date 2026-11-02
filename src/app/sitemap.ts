@@ -6,7 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [sales, venues] = await Promise.all([getSales(), getVenues()]);
   const now = new Date();
   return [
-    ...["", "/map", "/calendar", "/weekend", "/stores", "/deals", "/digest"].map((p) => ({ url: SITE_URL + p, lastModified: now, changeFrequency: "daily" as const, priority: p ? 0.7 : 1 })),
+    ...["", "/map", "/calendar", "/weekend", "/sales", "/stores", "/deals", "/digest"].map((p) => ({ url: SITE_URL + p, lastModified: now, changeFrequency: "daily" as const, priority: p ? 0.7 : 1 })),
     ...Object.keys(CITIES).map((c) => ({ url: `${SITE_URL}/city/${c}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
     ...venues.map((v) => ({ url: `${SITE_URL}/stores/${v.slug}`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.6 })),
     ...sales.map((s) => ({ url: `${SITE_URL}/sales/${s.slug}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.6 })),
