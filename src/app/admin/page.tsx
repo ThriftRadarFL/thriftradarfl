@@ -3,12 +3,14 @@ import { isAdmin } from "@/lib/auth";
 import { getSales, getVenues, listSubscribers, dataMode } from "@/lib/data";
 import { SALE_TYPES, VENUE_TYPES } from "@/lib/validate";
 import { PageHead } from "@/components/ui";
+import { importFromUrl } from "@/lib/importer";
+import type { Sale } from "@/lib/data";
 import { login, logout, saveSale, saveVenue, removeSale } from "./actions";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Admin", robots: { index: false } };
 const inp = "mt-1 block w-full border border-line px-2 py-1.5 text-sm font-normal";
 const F = ({ n, l, d, t }: { n: string; l: string; d?: string | number; t?: string }) => <label className="block text-xs font-bold">{l}<input name={n} type={t ?? "text"} defaultValue={d} className={inp} /></label>;
-type SP = { searchParams: Promise<{ err?: string; msg?: string; sale?: string; venue?: string }> };
+type SP = { searchParams: Promise<{ err?: string; msg?: string; sale?: string; venue?: string; import?: string }> };
 export default async function Admin({ searchParams }: SP) {
   const sp = await searchParams;
   if (!process.env.ADMIN_PASSWORD) return <div><PageHead title="Admin" /><p>Set <code>ADMIN_PASSWORD</code> in <code>.env.local</code> and restart to enable admin.</p></div>;
@@ -16,16 +18,21 @@ export default async function Admin({ searchParams }: SP) {
     <form action={login} className="panel max-w-sm p-4 space-y-3"><F n="password" l="Password" t="password" />
       {sp.err && <p className="text-sm text-red-700">Wrong password.</p>}<button className="btn-red w-full">Log in</button></form></div>);
   const [sales, venues, subs] = await Promise.all([getSales(), getVenues(), listSubscribers()]);
-  const es = sales.find((s) => s.slug === sp.sale); const ev = venues.find((v) => v.slug === sp.venue);
+  const found = sales.find((s) => s.slug === sp.sale);
+  let draft: Partial<Sale> | null = null, importErr = "";
+  if (sp.import) { try { draft = await importFromUrl(sp.import); } catch (e) { importErr = (e as Error).message; } }
+  const es = (found ?? draft ?? undefined) as Sale | undefined; const ev = venues.find((v) => v.slug === sp.venue);
   return (<div><PageHead title="Admin" sub="Local JSON data layer (data/*.json) — swaps to Postgres later" />
     {sp.msg && <p className="mb-3 border border-line bg-paper p-2 text-sm font-bold">{sp.msg}</p>}
     <div className="mb-3 flex flex-wrap items-center gap-3 text-sm"><form action={logout}><button className="btn-gray text-xs">Log out</button></form>
       <span>Data: <b>{dataMode}</b></span><span>Subscribers: <b>{subs.length}</b></span>
       <a href="/api/admin/subscribers" className="underline">Export CSV</a><a href="/digest/preview" className="underline" target="_blank">Preview digest email</a><a href="/api/calendar" className="underline">Calendar feed</a></div>
     <div className="grid gap-4 lg:grid-cols-2">
-      <div className="panel"><div className="panel-head">{es ? `Edit sale: ${es.slug}` : "Add sale"}</div>
+      <div className="panel"><div className="panel-head">{found ? `Edit sale: ${found.slug}` : draft ? "Add sale (imported draft — review before saving)" : "Add sale"}</div>
+        <form method="get" className="flex gap-2 border-b border-line p-3"><input name="import" placeholder="Paste EstateSales.net listing URL to prefill" className={inp + " mt-0"} defaultValue={sp.import} /><button className="btn-gray text-xs">Import</button></form>
+        {importErr && <p className="px-4 pt-2 text-sm text-red-700">Import failed: {importErr}</p>}
         <form action={saveSale} key={es?.slug ?? "new"} className="p-4 space-y-2">
-          {es && <input type="hidden" name="slug" value={es.slug} />}
+          {found && <input type="hidden" name="slug" value={found.slug} />}
           <F n="title" l="Title" d={es?.title} />
           <label className="block text-xs font-bold">Type<select name="type" defaultValue={es?.type ?? "estate"} className={inp}>{SALE_TYPES.map((t) => <option key={t}>{t}</option>)}</select></label>
           <div className="grid grid-cols-2 gap-2"><F n="city" l="City" d={es?.city} /><F n="zip" l="ZIP" d={es?.zip} /><F n="lat" l="Lat" d={es?.lat} /><F n="lng" l="Lng" d={es?.lng} /></div>

@@ -35,3 +35,11 @@ test("digest picks sales in window, escapes html", () => {
   assert.equal(d.count, 1); assert.ok(!d.html.includes("<script>x")); assert.ok(d.html.includes("&lt;script&gt;"));
   assert.equal(buildDigest(mockSales as Sale[], "2030-01-01").count, 0);
 });
+import { readFileSync } from "node:fs";
+import { saleFromHtml, isAllowedImportHost } from "../src/lib/importer";
+test("importer parses EstateSales.net JSON-LD fixture into ET days", () => {
+  const s = saleFromHtml(readFileSync("tests/fixtures-estatesale-ldjson.html", "utf8"), "https://www.estatesales.net/FL/Port-Orange/32127/5139969");
+  assert.ok(s); assert.equal(s!.city, "Port Orange"); assert.equal(s!.days!.length, 3);
+  assert.deepEqual(s!.days![0], { date: "2026-11-12", start: "09:00", end: "15:00", discountPct: 0 });
+  assert.ok(isAllowedImportHost("https://www.estatesales.net/x")); assert.ok(!isAllowedImportHost("https://evil.com/x"));
+});
