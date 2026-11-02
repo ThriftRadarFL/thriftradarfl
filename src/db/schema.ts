@@ -121,3 +121,11 @@ export const contactMessages = pgTable("contact_messages", {
   message: text("message").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
+
+export const auditLog = pgTable("audit_log", {
+  id: serial("id").primaryKey(),
+  at: timestamp("at", { withTimezone: true }).defaultNow().notNull(),
+  action: text("action").notNull(),
+  target: text("target"),
+  detail: text("detail"),
+});

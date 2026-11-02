@@ -1,4 +1,4 @@
--- ThriftRadarFL migrations 0002 + 0003 (publish flag, sale tags, editable deal rules, submissions, contact messages)
+-- ThriftRadarFL migrations 0002–0004 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages)
 -- Safe to run more than once. Paste into Supabase → SQL Editor → Run.
 BEGIN;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS published boolean DEFAULT true NOT NULL;
@@ -17,6 +17,9 @@ CREATE TABLE IF NOT EXISTS submissions (
 CREATE TABLE IF NOT EXISTS contact_messages (
   id text PRIMARY KEY NOT NULL, name text NOT NULL, email text NOT NULL, message text NOT NULL, created_at timestamptz DEFAULT now() NOT NULL);
 -- Private tables: no anon/authenticated access via the Supabase Data API (the app connects as the postgres role).
+CREATE TABLE IF NOT EXISTS audit_log ( -- 0004
+  id serial PRIMARY KEY NOT NULL, at timestamptz DEFAULT now() NOT NULL, action text NOT NULL, target text, detail text);
+ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
 ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 
@@ -49,4 +52,5 @@ CREATE SCHEMA IF NOT EXISTS drizzle;
 CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (id serial PRIMARY KEY, hash text NOT NULL, created_at bigint);
 INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '0d94fd5a7ef88472f12ac8682b9ba62891a97240a409430523fe335a0089ac17', 1793648144403 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '0d94fd5a7ef88472f12ac8682b9ba62891a97240a409430523fe335a0089ac17'); -- 0002_publish_rules_submissions_contact
 INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '76d3b8b402be3fae2c50a786d723deada6b99b812aeb796dd7ba671da1432453', 1793649227644 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '76d3b8b402be3fae2c50a786d723deada6b99b812aeb796dd7ba671da1432453'); -- 0003_sale_tags
+INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '010aad04d4073afd808e34d68e9241ec33cfb3e06272397a1e557817d9223259', 1793649333851 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '010aad04d4073afd808e34d68e9241ec33cfb3e06272397a1e557817d9223259'); -- 0004_audit_log
 COMMIT;

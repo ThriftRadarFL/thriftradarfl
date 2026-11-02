@@ -50,3 +50,4 @@ data/contact.json
 data/*.tmp
 # copied from node_modules on install/dev/build
 public/maplibre-gl-worker.mjs
+data/audit.json

@@ -7,7 +7,7 @@ const marks = entries.map((j) => { const hash = createHash("sha256").update(read
 import { dealRules, ruleId } from "../src/lib/deal-rules";
 const q = (s: string | null | undefined) => (s == null ? "NULL" : `'${s.replace(/'/g, "''")}'`);
 const rules = dealRules.map((r) => `  (${q(ruleId(r))}, ${q(r.venue)}, ${q(r.kind)}, ${r.day}, ${r.time ? q(r.time) : "NULL"}, ${q(r.color)}, ${r.discountPct ?? "NULL"}, ${q(r.label)}, ${r.verified})`).join(",\n");
-writeFileSync("scripts/supabase-0002.sql", `-- ThriftRadarFL migrations 0002 + 0003 (publish flag, sale tags, editable deal rules, submissions, contact messages)
+writeFileSync("scripts/supabase-0002.sql", `-- ThriftRadarFL migrations 0002–0004 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages)
 -- Safe to run more than once. Paste into Supabase → SQL Editor → Run.
 BEGIN;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS published boolean DEFAULT true NOT NULL;
@@ -26,6 +26,9 @@ CREATE TABLE IF NOT EXISTS submissions (
 CREATE TABLE IF NOT EXISTS contact_messages (
   id text PRIMARY KEY NOT NULL, name text NOT NULL, email text NOT NULL, message text NOT NULL, created_at timestamptz DEFAULT now() NOT NULL);
 -- Private tables: no anon/authenticated access via the Supabase Data API (the app connects as the postgres role).
+CREATE TABLE IF NOT EXISTS audit_log ( -- 0004
+  id serial PRIMARY KEY NOT NULL, at timestamptz DEFAULT now() NOT NULL, action text NOT NULL, target text, detail text);
+ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
 ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 

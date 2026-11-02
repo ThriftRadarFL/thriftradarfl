@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { isAdmin } from "@/lib/auth";
-import { getAllSales, getVenues, listSubscribers, dataMode, dbStatus, getDealRules, listSubmissions, listContacts } from "@/lib/data";
+import { getAllSales, getVenues, listSubscribers, dataMode, dbStatus, getDealRules, listSubmissions, listContacts, listAudit } from "@/lib/data";
 import { SALE_TYPES, VENUE_TYPES } from "@/lib/validate";
 import { DAYS, DEAL_KINDS } from "@/lib/deal-rules";
 import { TAGS } from "@/lib/flip-tips";
 import { PageHead } from "@/components/ui";
 import ConfirmButton from "@/components/ConfirmButton";
+import CsvImport from "./CsvImport";
 import { importFromUrl } from "@/lib/importer";
 import type { Sale } from "@/lib/data";
 import { login, logout, saveSale, saveVenue, removeSale, removeVenue, togglePublish, saveRule, removeRule, removeSub, reviewSubmission, removeContact } from "./actions";
@@ -25,7 +26,7 @@ export default async function Admin({ searchParams }: SP) {
   if (!(await isAdmin())) return (<div><PageHead title="Admin login" />
     <form action={login} className="panel max-w-sm p-4 space-y-3"><F n="password" l="Password" t="password" req />
       {sp.err && <p role="alert" className="text-sm text-red-700">Wrong password.</p>}<button className="btn-red w-full">Log in</button></form></div>);
-  const [sales, venues, subs, rules, pending, contacts] = await Promise.all([getAllSales(), getVenues(), listSubscribers(), getDealRules(), listSubmissions(), listContacts()]);
+  const [sales, venues, subs, rules, pending, contacts, log] = await Promise.all([getAllSales(), getVenues(), listSubscribers(), getDealRules(), listSubmissions(), listContacts(), listAudit(100)]);
   const found = sales.find((s) => s.slug === sp.sale);
   let draft: Partial<Sale> | null = null, importErr = "";
   if (sp.import) { try { draft = await importFromUrl(sp.import); } catch (e) { importErr = (e as Error).message; } }
@@ -36,7 +37,7 @@ export default async function Admin({ searchParams }: SP) {
     {sp.msg && <p role="status" className={`mb-3 border p-2 text-sm font-bold ${isErr ? "border-red-300 bg-red-50 text-red-800" : "border-line bg-paper"}`}>{sp.msg}</p>}
     <nav aria-label="Admin sections" className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"><form action={logout}><button className="btn-gray text-xs">Log out</button></form>
       <a href="#pending" className="underline">Pending ({pending.length})</a><a href="#sales" className="underline">Sales ({sales.length})</a><a href="#venues" className="underline">Venues ({venues.length})</a>
-      <a href="#rules" className="underline">Deal rules ({rules.length})</a><a href="#subs" className="underline">Subscribers ({subs.length})</a><a href="#messages" className="underline">Messages ({contacts.length})</a>
+      <a href="#rules" className="underline">Deal rules ({rules.length})</a><a href="#subs" className="underline">Subscribers ({subs.length})</a><a href="#messages" className="underline">Messages ({contacts.length})</a><a href="#import" className="underline">CSV import</a><a href="#audit" className="underline">Audit log</a>
       <a href="/api/admin/subscribers" className="underline">Export CSV</a><a href="/digest/preview" className="underline" target="_blank" rel="noopener">Preview digest</a><a href="/api/calendar" className="underline">Calendar feed</a></nav>
     <div className="grid gap-4 lg:grid-cols-2">
       <Panel id="pending" title={`Pending submissions (${pending.length})`}><ul className="text-sm">{pending.map((p) => <li key={p.id} className="border-b border-line px-3 py-2 last:border-0">
@@ -105,5 +106,10 @@ export default async function Admin({ searchParams }: SP) {
         <span>{s.email}</span><span className="text-xs text-gray-600">{s.area} · {s.at.slice(0, 10)}</span>
         <form action={removeSub} className="ml-auto"><input type="hidden" name="email" value={s.email} /><ConfirmButton message={`Remove ${s.email} from the digest?`}>remove</ConfirmButton></form></li>)}
         {!subs.length && <li className="px-3 py-2 text-gray-600">No subscribers yet.</li>}</ul></Panel>
+      <Panel id="import" title="Bulk import sales (CSV)"><CsvImport /></Panel>
+      <Panel id="audit" title={`Audit log (latest ${log.length})`}><ul className="max-h-96 overflow-y-auto text-xs">{log.map((e, i) => <li key={i} className={row}>
+        <time dateTime={e.at} className="text-gray-600">{new Date(e.at).toLocaleString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</time>
+        <b>{e.action}</b><span className="min-w-0 truncate">{e.target}</span>{e.detail && <span className="min-w-0 truncate text-gray-600">{e.detail}</span>}</li>)}
+        {!log.length && <li className="px-3 py-2 text-gray-600">No admin actions yet.</li>}</ul></Panel>
     </div></div>);
 }

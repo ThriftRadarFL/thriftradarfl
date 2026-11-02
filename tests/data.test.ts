@@ -60,3 +60,7 @@ test("concurrent writes don't corrupt JSON", async () => {
 test("corrupt JSON file falls back to seed instead of throwing", async () => {
   writeFileSync(path.join(dir, "venues.json"), "{not json"); assert.ok((await D.getVenues()).length > 0);
 });
+test("audit log: newest first, never throws", async () => {
+  await D.audit("a.one", "t1"); await D.audit("a.two", "t2", "x".repeat(900));
+  const l = await D.listAudit(); assert.equal(l[0].action, "a.two"); assert.equal(l[0].detail.length, 500); assert.equal(l[1].target, "t1");
+});

@@ -29,6 +29,13 @@
       "when": 1793649227644,
       "tag": "0003_sale_tags",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793649333851,
+      "tag": "0004_audit_log",
+      "breakpoints": true
     }
   ]
 }

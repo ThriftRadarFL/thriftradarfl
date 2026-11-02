@@ -123,3 +123,12 @@ export const CITIES: Record<string, string> = {
   "port-orange": "Port Orange", "daytona-beach": "Daytona Beach", deland: "DeLand", "new-smyrna-beach": "New Smyrna Beach", "ormond-beach": "Ormond Beach",
 };
 export const dataMode = () => (hasDb && Date.now() >= dbDownUntil ? "postgres" : "json");
+
+// Audit log of admin actions (newest first). Never throws — auditing must not block the action.
+export type AuditEntry = { at: string; action: string; target: string; detail: string };
+const auditFile = path.join(DATA_DIR, "audit.json");
+export async function audit(action: string, target = "", detail = "") {
+  const e: AuditEntry = { at: new Date().toISOString(), action, target, detail: detail.slice(0, 500) };
+  try { await viaDb(() => pg.dbAudit(e), () => mutate<AuditEntry[]>(auditFile, [], (l) => [e, ...l].slice(0, 2000))); } catch (err) { console.warn("[audit]", (err as Error).message); }
+}
+export const listAudit = (limit = 200) => viaDb(() => pg.dbListAudit(limit), async () => (await readJson<AuditEntry[]>(auditFile, [])).slice(0, limit));

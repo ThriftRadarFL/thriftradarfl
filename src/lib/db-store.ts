@@ -75,3 +75,9 @@ export async function dbListContacts(): Promise<ContactMsg[]> {
 }
 export async function dbAddContact(m: ContactMsg) { await D().insert(t.contactMessages).values({ ...m, createdAt: new Date(m.at) }); }
 export async function dbDeleteContact(id: string) { await D().delete(t.contactMessages).where(eq(t.contactMessages.id, id)); }
+
+export async function dbAudit(e: { at: string; action: string; target: string; detail: string }) { await D().insert(t.auditLog).values({ ...e, at: new Date(e.at) }); }
+export async function dbListAudit(limit = 200) {
+  const r = await D().select().from(t.auditLog).orderBy(sql`${t.auditLog.at} desc`).limit(limit);
+  return r.map((x) => ({ at: x.at.toISOString(), action: x.action, target: x.target ?? "", detail: x.detail ?? "" }));
+}

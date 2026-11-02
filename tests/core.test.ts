@@ -77,3 +77,10 @@ test("tags: whitelist, dedupe, title-derived; every tag has a tip", () => {
   assert.ok(ebaySoldUrl("vinyl records").includes("LH_Sold=1"));
   const r = parseSale({ title: "x", city: "DeLand", days: "2099-01-01 08:00 12:00", tags: "art,bogus" }); assert.ok(r.ok && r.value.tags?.join() === "art");
 });
+import { parseCsv, csvToRecords, SALE_CSV_TEMPLATE } from "../src/lib/csv";
+test("csv: quotes, escaped quotes, CRLF, embedded newlines", () => {
+  assert.deepEqual(parseCsv('a,b\r\n"x, y","he said ""hi"""\n"multi\nline",z\n'), [["a", "b"], ["x, y", 'he said "hi"'], ["multi\nline", "z"]]);
+  const { records, errors } = csvToRecords(SALE_CSV_TEMPLATE); assert.equal(errors.length, 0); assert.equal(records.length, 1);
+  const r = parseSale(records[0]); assert.ok(r.ok); if (r.ok) { assert.equal(r.value.days.length, 2); assert.equal(r.value.days[1].discountPct, 50); assert.deepEqual(r.value.tags, ["furniture", "tools"]); }
+  assert.ok(csvToRecords("foo,bar\n1,2").errors.some((e) => e.includes('missing column "title"')));
+});
