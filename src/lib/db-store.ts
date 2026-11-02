@@ -13,12 +13,12 @@ export async function dbGetSales(): Promise<Sale[]> {
   if (!rows.length) return [];
   const days = await D().select().from(t.saleDays).where(inArray(t.saleDays.saleId, rows.map((r) => r.id))).orderBy(asc(t.saleDays.date));
   return rows.map((r) => ({ slug: r.slug, title: r.title, type: r.type, city: r.city, zip: r.zip ?? "", lat: r.lat ?? 0, lng: r.lng ?? 0,
-    sourceUrl: r.sourceUrl ?? "", paymentMethods: r.paymentMethods ?? [], published: r.published, ...(r.description ? { description: r.description } : {}),
+    sourceUrl: r.sourceUrl ?? "", paymentMethods: r.paymentMethods ?? [], published: r.published, ...(r.tags?.length ? { tags: r.tags } : {}), ...(r.description ? { description: r.description } : {}),
     days: days.filter((d) => d.saleId === r.id).map((d) => ({ date: String(d.date), start: hm(d.startTime), end: hm(d.endTime), discountPct: d.discountPct })) }));
 }
 export async function dbUpsertSale(s: Sale) {
   await D().transaction(async (tx) => {
-    const vals = { slug: s.slug, title: s.title, type: s.type as (typeof t.saleType.enumValues)[number], city: s.city, zip: s.zip, lat: s.lat, lng: s.lng, sourceUrl: s.sourceUrl, paymentMethods: s.paymentMethods, published: s.published !== false, description: s.description ?? null, ...(s.published === false && s.sourceUrl === "" ? { source: "submitted" as const } : {}) };
+    const vals = { slug: s.slug, title: s.title, type: s.type as (typeof t.saleType.enumValues)[number], city: s.city, zip: s.zip, lat: s.lat, lng: s.lng, sourceUrl: s.sourceUrl, paymentMethods: s.paymentMethods, published: s.published !== false, tags: s.tags ?? null, description: s.description ?? null, ...(s.published === false && s.sourceUrl === "" ? { source: "submitted" as const } : {}) };
     const [r] = await tx.insert(t.sales).values(vals).onConflictDoUpdate({ target: t.sales.slug, set: vals }).returning({ id: t.sales.id });
     await tx.delete(t.saleDays).where(eq(t.saleDays.saleId, r.id));
     if (s.days.length) await tx.insert(t.saleDays).values(s.days.map((d) => ({ saleId: r.id, date: d.date, startTime: d.start, endTime: d.end, discountPct: d.discountPct })));

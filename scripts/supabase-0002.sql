@@ -1,8 +1,9 @@
--- ThriftRadarFL migration 0002 (publish flag, editable deal rules, submissions, contact messages)
+-- ThriftRadarFL migrations 0002 + 0003 (publish flag, sale tags, editable deal rules, submissions, contact messages)
 -- Safe to run more than once. Paste into Supabase → SQL Editor → Run.
 BEGIN;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS published boolean DEFAULT true NOT NULL;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS description text;
+ALTER TABLE sales ADD COLUMN IF NOT EXISTS tags text[]; -- 0003
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS rule_key text;
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS label text;
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS verified boolean DEFAULT false NOT NULL;
@@ -43,8 +44,9 @@ JOIN venues ve ON ve.slug = v.venue
 ON CONFLICT (rule_key) DO UPDATE SET kind = EXCLUDED.kind, day_of_week = EXCLUDED.day_of_week, start_time = EXCLUDED.start_time, color = EXCLUDED.color,
   discount_pct = EXCLUDED.discount_pct, label = EXCLUDED.label, description = EXCLUDED.description, verified = EXCLUDED.verified;
 
--- Record in Drizzle's journal so a later `npm run db:migrate` doesn't re-apply 0002
+-- Record in Drizzle's journal so a later `npm run db:migrate` doesn't re-apply these
 CREATE SCHEMA IF NOT EXISTS drizzle;
 CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (id serial PRIMARY KEY, hash text NOT NULL, created_at bigint);
-INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '0d94fd5a7ef88472f12ac8682b9ba62891a97240a409430523fe335a0089ac17', 1793648144403 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '0d94fd5a7ef88472f12ac8682b9ba62891a97240a409430523fe335a0089ac17');
+INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '0d94fd5a7ef88472f12ac8682b9ba62891a97240a409430523fe335a0089ac17', 1793648144403 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '0d94fd5a7ef88472f12ac8682b9ba62891a97240a409430523fe335a0089ac17'); -- 0002_publish_rules_submissions_contact
+INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '76d3b8b402be3fae2c50a786d723deada6b99b812aeb796dd7ba671da1432453', 1793649227644 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '76d3b8b402be3fae2c50a786d723deada6b99b812aeb796dd7ba671da1432453'); -- 0003_sale_tags
 COMMIT;

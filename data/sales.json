@@ -94,6 +94,10 @@
         "end": "22:00",
         "discountPct": 0
       }
+    ],
+    "tags": [
+      "furniture",
+      "tools"
     ]
   },
   {
@@ -177,6 +181,10 @@
         "end": "14:00",
         "discountPct": 50
       }
+    ],
+    "tags": [
+      "mid-century",
+      "art"
     ]
   },
   {
@@ -233,6 +241,10 @@
         "end": "13:00",
         "discountPct": 50
       }
+    ],
+    "tags": [
+      "mid-century",
+      "barware"
     ]
   },
   {
@@ -261,6 +273,10 @@
         "end": "14:00",
         "discountPct": 30
       }
+    ],
+    "tags": [
+      "art",
+      "nautical"
     ]
   },
   {
@@ -282,6 +298,10 @@
         "end": "13:00",
         "discountPct": 0
       }
+    ],
+    "tags": [
+      "books",
+      "antiques"
     ]
   },
   {
@@ -311,6 +331,10 @@
         "end": "15:00",
         "discountPct": 50
       }
+    ],
+    "tags": [
+      "furniture",
+      "jewelry"
     ]
   },
   {
@@ -332,6 +356,10 @@
         "end": "12:00",
         "discountPct": 0
       }
+    ],
+    "tags": [
+      "tools",
+      "fishing"
     ]
   },
   {
@@ -360,6 +388,9 @@
         "end": "22:00",
         "discountPct": 0
       }
+    ],
+    "tags": [
+      "collectibles"
     ]
   }
 ]

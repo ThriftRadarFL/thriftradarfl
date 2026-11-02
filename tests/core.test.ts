@@ -69,3 +69,11 @@ test("JSON-LD: Event has ET offsets, absolute URLs; Store has address", () => {
 test("digest email uses PNG logo (SVG is blocked by many mail clients)", () => {
   const d = buildDigest(mockSales as Sale[], "2026-11-10"); assert.ok(d.html.includes("/logo-email.png")); assert.ok(!d.html.includes("logo.svg"));
 });
+import { cleanTags, tagsFromTitle, FLIP_TIPS, TAGS, ebaySoldUrl } from "../src/lib/flip-tips";
+test("tags: whitelist, dedupe, title-derived; every tag has a tip", () => {
+  assert.deepEqual(cleanTags("Tools, tools, nonsense, JEWELRY"), ["tools", "jewelry"]);
+  assert.deepEqual(tagsFromTitle("Mid-Century Estate — Teak & Barware"), ["mid-century", "barware"]);
+  for (const t of TAGS) assert.ok(FLIP_TIPS[t].length > 40, t);
+  assert.ok(ebaySoldUrl("vinyl records").includes("LH_Sold=1"));
+  const r = parseSale({ title: "x", city: "DeLand", days: "2099-01-01 08:00 12:00", tags: "art,bogus" }); assert.ok(r.ok && r.value.tags?.join() === "art");
+});

@@ -10,8 +10,9 @@ async function limited(key: string, max = 5) {
 }
 const back = (path: string, err: string): never => redirect(`${path}?err=${encodeURIComponent(err)}`);
 export async function submitSale(fd: FormData) {
-  const o = Object.fromEntries([...fd.entries()].map(([k, v]) => [k, String(v)]));
+  const o: Record<string, string> = Object.fromEntries([...fd.entries()].map(([k, v]) => [k, String(v)]));
   if (o.website) redirect("/submit?ok=1"); // honeypot
+  o.tags = fd.getAll("tags").map(String).join(",");
   if (await limited("submit")) back("/submit", "Too many submissions — please try again later.");
   const email = (o.email ?? "").trim(); if (!isEmail(email)) back("/submit", "Please enter a valid email so we can confirm details.");
   const days = [1, 2, 3].map((i) => o[`date${i}`] ? `${o[`date${i}`]} ${o[`start${i}`] || "08:00"} ${o[`end${i}`] || "14:00"} ${o[`pct${i}`] || 0}` : "").filter(Boolean).join("\n");

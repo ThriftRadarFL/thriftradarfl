@@ -16,7 +16,9 @@ export const seedVenues = [
 export const seedTags = ["furniture", "mid-century", "tools", "jewelry", "vinyl", "art", "collectibles", "clothing"];
 
 // Mock sale for demo (example based on a public EstateSales.net listing)
-export const mockSales = [
+import { tagsFromTitle } from "./flip-tips";
+// Tags are derived only from words in each title (no invented contents).
+export const mockSales = ([
   { slug: "precious-finds-port-orange-2026-11", title: "Precious Finds in Port Orange", type: "estate" as const, city: "Port Orange", zip: "32127", lat: 29.115, lng: -81.03,
     sourceUrl: "https://www.estatesales.net/FL/Port-Orange/32127/5139969", paymentMethods: ["cash", "venmo", "zelle"],
     days: [ { date: "2026-11-12", start: "09:00", end: "15:00", discountPct: 0 }, { date: "2026-11-13", start: "09:00", end: "15:00", discountPct: 20 }, { date: "2026-11-14", start: "09:00", end: "15:00", discountPct: 50 } ] },
@@ -45,4 +47,4 @@ export const mockSales = [
     days: [ { date: "2026-11-21", start: "07:00", end: "12:00", discountPct: 0 } ] },
   { slug: "berners-auction-thanksgiving-week-deland-2026-11", title: "Berner's Auction — Pre-Holiday Collectibles Night", type: "auction" as const, city: "DeLand", zip: "32724", lat: 29.0065, lng: -81.287, sourceUrl: "https://www.estatesales.net/FL/Daytona-Beach", paymentMethods: ["cash", "card"],
     days: [ { date: "2026-11-18", start: "18:30", end: "22:00", discountPct: 0 }, { date: "2026-11-25", start: "18:30", end: "22:00", discountPct: 0 } ] },
-];
+]).map((s) => ({ ...s, tags: tagsFromTitle(s.title) as string[] }));

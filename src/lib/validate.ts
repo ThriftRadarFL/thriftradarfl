@@ -1,3 +1,4 @@
+import { cleanTags } from "./flip-tips";
 import { DEAL_KINDS, KIND_COLOR, ruleId, type DealKind, type DealRule } from "./deal-rules";
 import type { Sale, SaleDay, Venue } from "./data";
 export const SALE_TYPES = ["estate", "auction", "thrift", "outlet_bins", "yard"] as const;
@@ -23,7 +24,7 @@ export function parseSale(o: Record<string, unknown>): R<Sale> {
   const sourceUrl = String(o.sourceUrl ?? ""); if (sourceUrl && !/^https?:\/\//.test(sourceUrl)) e.push("sourceUrl must be http(s)");
   if (e.length) return { ok: false, errors: e };
   const pm = Array.isArray(o.paymentMethods) ? (o.paymentMethods as string[]) : String(o.paymentMethods ?? "cash").split(",").map((x) => x.trim()).filter(Boolean);
-  return { ok: true, value: { slug: String(o.slug || "") || slugify(`${title}-${days[0].date.slice(0, 7)}`), title, type, city, zip: String(o.zip ?? ""), lat: num(o.lat), lng: num(o.lng), sourceUrl, paymentMethods: pm, days } };
+  return { ok: true, value: { slug: String(o.slug || "") || slugify(`${title}-${days[0].date.slice(0, 7)}`), title, type, city, zip: String(o.zip ?? ""), lat: num(o.lat), lng: num(o.lng), sourceUrl, paymentMethods: pm, days, ...(o.tags != null && cleanTags(o.tags).length ? { tags: cleanTags(o.tags) } : {}) } };
 }
 export function parseVenue(o: Record<string, unknown>): R<Venue> {
   const e: string[] = []; const name = String(o.name ?? "").trim(); if (!name) e.push("name required");

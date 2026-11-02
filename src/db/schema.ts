@@ -56,6 +56,7 @@ export const sales = pgTable("sales", {
   status: saleStatus("status").default("upcoming").notNull(),
   featuredUntil: timestamp("featured_until", { withTimezone: true }),
   published: boolean("published").default(true).notNull(),
+  tags: text("tags").array(),
   description: text("description"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });

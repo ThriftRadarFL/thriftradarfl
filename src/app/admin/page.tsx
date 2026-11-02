@@ -3,6 +3,7 @@ import { isAdmin } from "@/lib/auth";
 import { getAllSales, getVenues, listSubscribers, dataMode, dbStatus, getDealRules, listSubmissions, listContacts } from "@/lib/data";
 import { SALE_TYPES, VENUE_TYPES } from "@/lib/validate";
 import { DAYS, DEAL_KINDS } from "@/lib/deal-rules";
+import { TAGS } from "@/lib/flip-tips";
 import { PageHead } from "@/components/ui";
 import ConfirmButton from "@/components/ConfirmButton";
 import { importFromUrl } from "@/lib/importer";
@@ -59,6 +60,7 @@ export default async function Admin({ searchParams }: SP) {
           <label className="block text-xs font-bold">Type<select name="type" defaultValue={es?.type ?? "estate"} className={inp}>{SALE_TYPES.map((t) => <option key={t}>{t}</option>)}</select></label>
           <div className="grid grid-cols-2 gap-2"><F n="city" l="City" d={es?.city} req /><F n="zip" l="ZIP" d={es?.zip} pattern="\d{5}" title="5-digit ZIP" /><F n="lat" l="Lat" d={es?.lat} {...LAT} /><F n="lng" l="Lng" d={es?.lng} {...LAT} /></div>
           <F n="sourceUrl" l="Source URL" d={es?.sourceUrl} t="url" /><F n="paymentMethods" l="Payment (comma-sep)" d={es?.paymentMethods?.join(", ") ?? "cash"} />
+          <F n="tags" l={`Items to look for (comma-sep: ${TAGS.join(", ")})`} d={es?.tags?.join(", ")} />
           <label className="block text-xs font-bold">Description<textarea name="description" rows={2} maxLength={2000} defaultValue={es?.description} className={inp} /></label>
           <label className="block text-xs font-bold">Days — one per line: YYYY-MM-DD HH:MM HH:MM [discount%]<span className="text-red-700"> *</span><textarea name="days" rows={4} required defaultValue={es?.days?.map((d) => `${d.date} ${d.start} ${d.end} ${d.discountPct}`).join("\n")} className={inp + " font-mono"} /></label>
           <label className="flex items-center gap-2 text-xs font-bold"><input type="hidden" name="published" value="false" /><input type="checkbox" name="published" value="true" defaultChecked={es?.published !== false} /> Published (visible on the site)</label>

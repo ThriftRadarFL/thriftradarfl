@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getSales, CITIES, citySlug } from "@/lib/data";
 import { PageHead, DayBox, Discount, typeLabel } from "@/components/ui";
 import FavButton from "@/components/FavButton";
+import { cleanTags, TAG_LABEL } from "@/lib/flip-tips";
 const chip: Record<string, string> = { estate: "bg-coral", auction: "bg-royal", thrift: "bg-teal", outlet_bins: "bg-cta", yard: "bg-[#6b4fa0]" };
 const TYPES = ["estate", "auction", "yard", "thrift", "outlet_bins"];
 export default async function Home({ searchParams }: { searchParams: Promise<{ city?: string; type?: string; past?: string }> }) {
@@ -28,7 +29,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
       <div className="flex items-start gap-2 border-b border-line px-3 py-2">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2"><span className={`pill ${chip[s.type] ?? "bg-gray-500"}`}>{typeLabel[s.type] ?? s.type}</span><span className="text-xs text-gray-600">{s.city}, FL {s.zip}</span></div>
-          <Link href={`/sales/${s.slug}`} className="mt-0.5 block font-bold text-ink hover:text-royal">{s.title}</Link></div>
+          <Link href={`/sales/${s.slug}`} className="mt-0.5 block font-bold text-ink hover:text-royal">{s.title}</Link>
+          {!!s.tags?.length && <div className="mt-1 flex flex-wrap gap-1">{cleanTags(s.tags).map((t) => <span key={t} className="rounded-sm border border-line bg-paper px-1.5 text-[11px] text-gray-700">{TAG_LABEL[t]}</span>)}</div>}</div>
         <FavButton slug={s.slug} title={s.title} compact /><Link href={`/sales/${s.slug}`} className="btn-red px-3 py-1 text-xs" aria-label={`View ${s.title}`}>View</Link></div>
       <div className="flex flex-wrap gap-1.5 px-3 py-2">{s.days.map((d) => (<div key={d.date} className="flex items-center gap-1.5 border border-line pr-2">
         <DayBox date={d.date} /><div className="text-xs leading-tight"><div className="font-bold">{d.start}–{d.end}</div><div className="mt-0.5"><Discount pct={d.discountPct} /></div></div></div>))}</div>

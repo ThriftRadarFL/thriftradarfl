@@ -6,6 +6,7 @@ import { saleJsonLd } from "@/lib/jsonld";
 import { PageHead, DayBox, Discount, typeLabel } from "@/components/ui";
 import FavButton from "@/components/FavButton";
 import ShareButtons from "@/components/ShareButtons";
+import { cleanTags, TAG_LABEL, FLIP_TIPS, ebaySoldUrl } from "@/lib/flip-tips";
 type P = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: P) {
   const s = await getSale((await params).slug); if (!s) return { title: "Sale not found", robots: { index: false } };
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: P) {
 }
 export default async function Sale({ params }: P) {
   const { slug } = await params; const s = await getSale(slug); if (!s) notFound();
-  const url = `${SITE_URL}/sales/${s.slug}`; const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.city}, FL ${s.zip}`)}`;
+  const tags = cleanTags(s.tags ?? []); const url = `${SITE_URL}/sales/${s.slug}`; const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.city}, FL ${s.zip}`)}`;
   return (<div><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(saleJsonLd(s)).replace(/</g, "\\u003c") }} />
     <PageHead title={s.title} sub={`${typeLabel[s.type] ?? s.type} · ${s.city}, FL ${s.zip}`} />
     <nav aria-label="Breadcrumb" className="-mt-2 mb-3 truncate text-xs text-gray-600"><Link href="/" className="hover:underline">Home</Link> › <Link href="/sales" className="hover:underline">Sales</Link> › <span aria-current="page">{s.title}</span></nav>
@@ -24,6 +25,11 @@ export default async function Sale({ params }: P) {
         <section className="panel"><h2 className="panel-head">Sale schedule</h2>
           <ul>{s.days.map((d) => <li key={d.date} className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-line px-4 py-3 last:border-0">
             <DayBox date={d.date} /><span className="font-bold">{d.start} – {d.end}</span><span className="ml-auto"><Discount pct={d.discountPct} /></span></li>)}</ul></section>
+        {tags.length > 0 && <section className="panel"><h2 className="panel-head">Items to look for</h2>
+          <ul className="flex flex-wrap gap-1.5 border-b border-line p-3">{tags.map((t) => <li key={t}><Link href={`/search?q=${encodeURIComponent(t)}`} className="pill bg-royal hover:bg-royal-dark">{TAG_LABEL[t]}</Link></li>)}</ul>
+          <div className="divide-y divide-line">{tags.map((t) => <div key={t} className="p-4 text-sm"><h3 className="font-bold text-royal">Flip tip · {TAG_LABEL[t]}</h3><p className="mt-1">{FLIP_TIPS[t]}</p>
+            <a href={ebaySoldUrl(`${TAG_LABEL[t]} ${t === "mid-century" ? "furniture" : ""}`.trim())} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-royal underline">Check recent eBay sold prices ↗</a></div>)}</div>
+          <p className="border-t border-line px-4 py-2 text-[11px] text-gray-600">Tags come from the listing title/description. Tips are general resale know-how, not price guarantees.</p></section>}
         {s.description && <section className="panel"><h2 className="panel-head">About this sale</h2><p className="whitespace-pre-line p-4 text-sm">{s.description}</p></section>}
       </div>
       <aside className="panel self-start"><h2 className="panel-head">Details</h2><div className="space-y-3 p-4 text-sm">

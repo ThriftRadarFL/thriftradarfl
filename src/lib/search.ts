@@ -8,7 +8,7 @@ export function matches(fields: (string | undefined | null)[], q: string) {
 export function searchAll(q: string, sales: Sale[], venues: Venue[]) {
   const type = (t: string) => t.replace("_", " ");
   return {
-    sales: sales.filter((s) => matches([s.title, s.city, s.zip, type(s.type), s.description, ...s.paymentMethods, ...s.days.map((d) => d.date)], q)),
+    sales: sales.filter((s) => matches([s.title, s.city, s.zip, type(s.type), s.description, ...(s.tags ?? []), ...s.paymentMethods, ...s.days.map((d) => d.date)], q)),
     venues: venues.filter((v) => matches([v.name, v.city, v.zip, v.address, type(v.type), v.notes], q)),
   };
 }
