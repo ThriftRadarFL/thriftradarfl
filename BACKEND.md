@@ -31,7 +31,8 @@ Deal rules source of truth for now: `src/lib/deal-rules.ts` (seeded into DB; UNV
 | GET | `/api/admin/subscribers` | admin | CSV export |
 | POST | `/api/admin/import` | admin | `{url}` → draft Sale from listing JSON-LD (not saved) |
 | GET | `/api/ics/[slug]` | – | RFC 5545 (VTIMEZONE, folding, escaping), download |
-| GET | `/api/calendar?city=` | – | subscribable feed of upcoming sales |
+| GET | `/api/calendar?city=&deals=1` | – | subscribable feed of upcoming sales (`deals=1` adds weekly deal days) |
+| GET | `/api/calendar/deals?venue=&city=&verified=1&download=1` | – | weekly store deal days as RRULE events (stable UIDs); unknown venue 404 |
 | GET | `/api/cron/digest?dry=1&from=` | `CRON_SECRET` bearer | dry-run without RESEND_API_KEY |
 | GET/POST | `/api/unsubscribe?e=&t=` | HMAC token | one-click (RFC 8058) |
 Pages: `/`, `/?city=&type=`, `/map` (keyless SVG plot), `/stores`, `/stores/[slug]`, `/sales/[slug]` (JSON-LD Event), `/deals`, `/city/[city]` ×5, `/digest`, `/digest/preview`, `/admin`, `/sitemap.xml`, `/robots.txt`.

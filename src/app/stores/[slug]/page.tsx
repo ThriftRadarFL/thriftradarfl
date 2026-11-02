@@ -6,6 +6,7 @@ import { DAYS } from "@/lib/deal-rules";
 import { venueJsonLd } from "@/lib/jsonld";
 import { SITE_URL } from "@/lib/site";
 import ShareButtons from "@/components/ShareButtons";
+import CalendarLinks from "@/components/CalendarLinks";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const v = await getVenue((await params).slug); if (!v) return { title: "Store not found", robots: { index: false } };
   return { title: `${v.name} — hours, deal days & address`, description: `${v.name} at ${v.address}, ${v.city}, FL: hours, color-tag and half-off days.`, alternates: { canonical: `/stores/${v.slug}` } };
@@ -27,6 +28,7 @@ export default async function Store({ params }: { params: Promise<{ slug: string
         <tbody>{hours.length ? hours.map(([k, h]) => <tr key={k} className="border-b border-line"><td className="px-4 py-2 font-bold">{dayKey(k)}</td><td className="px-4 py-2">{hours12(h)}</td></tr>)
           : <tr><td className="px-4 py-3 text-gray-600">Hours not verified yet — call ahead</td></tr>}</tbody></table>
         <div className="panel-head border-t border-line">Deal days</div><ul className="text-sm">{!mine.length && <li className="px-4 py-2 text-gray-600">No deal days listed.</li>}{mine.map((r) => <li key={r.id} className="border-b border-line px-4 py-2">
-          <b>{DAYS[r.day]}</b> {r.label}{r.time && ` · ${t12(r.time)}`}{!r.verified && <span className="ml-1 text-xs text-gray-600">(unverified)</span>}</li>)}</ul></div>
+          <b>{DAYS[r.day]}</b> {r.label}{r.time && ` · ${t12(r.time)}`}{!r.verified && <span className="ml-1 text-xs text-gray-600">(unverified)</span>}</li>)}</ul>
+        {mine.length > 0 && <div className="p-3"><CalendarLinks path={`/api/calendar/deals?venue=${v.slug}`} label="this store's deals" /><p className="mt-1 text-xs text-gray-600">Repeats weekly; updates automatically if the schedule changes.</p></div>}</div>
     </div></div>);
 }

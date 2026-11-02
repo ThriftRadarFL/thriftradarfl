@@ -12,7 +12,7 @@ export default async function Calendar() {
   const start = new Date(fmt(new Date()) + "T12:00:00");
   const days = Array.from({ length: 14 }, (_, i) => { const d = new Date(start); d.setDate(d.getDate() + i); return d; });
   return (<div><PageHead title="Calendar" sub="Estate sales and store deal days for the next two weeks" />
-    <p className="mb-3 text-sm">Subscribe in your calendar app: <a className="font-bold text-royal hover:underline" href="/api/calendar">/api/calendar</a> (iCal feed)</p>
+    <p className="mb-3 text-sm">Subscribe in your calendar app: <a className="font-bold text-royal hover:underline" href="/api/calendar">estate sales</a> · <a className="font-bold text-royal hover:underline" href="/api/calendar/deals">store deal days</a> · <a className="font-bold text-royal hover:underline" href="/api/calendar?deals=1">both</a> (iCal feeds)</p>
     <div className="panel"><div className="panel-head">Next 14 days</div>
       <div className="grid grid-cols-1 gap-px bg-line sm:grid-cols-7">{days.map((d, i) => {
         const iso = fmt(d); const daySales = sales.filter((s) => s.days.some((x) => x.date === iso));
