@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { HttpError } from "./api";
 import { seedVenues, mockSales } from "./seed-data";
 import { hasDb } from "@/db";
 import * as pg from "./db-store";
@@ -16,15 +17,22 @@ const venuesFile = path.join(DATA_DIR, "venues.json");
 async function readJson<T>(file: string, fallback: T): Promise<T> {
   try { return JSON.parse(await fs.readFile(file, "utf8")) as T; } catch { return fallback; }
 }
+// On read-only serverless filesystems (Vercel, EROFS/EACCES) JSON writes can't persist: surface a clear 503 instead of a 500.
+export function storageError(e: unknown): Error {
+  const code = (e as { code?: string })?.code;
+  if (code === "EROFS" || code === "EACCES" || code === "EPERM" || code === "ENOENT") return new HttpError(503, "Saving is temporarily unavailable: the database is offline and this server's storage is read-only. Please try again later.", { code });
+  return e as Error;
+}
 let chain: Promise<unknown> = Promise.resolve();
 // Read-modify-write is serialized (one global queue) and atomic (tmp file + rename) so concurrent writes never lose updates or corrupt JSON.
 function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: T; result?: R } | T): Promise<R> {
   const run = async () => {
     const cur = await readJson<T>(file, fallback); const out = fn(cur);
     const { next, result } = (out && typeof out === "object" && "next" in (out as object) ? out : { next: out }) as { next: T; result?: R };
-    await fs.mkdir(DATA_DIR, { recursive: true });
     const tmp = `${file}.${process.pid}.${Math.random().toString(36).slice(2)}.tmp`;
-    await fs.writeFile(tmp, JSON.stringify(next, null, 2) + "\n"); await fs.rename(tmp, file); return result as R;
+    try { await fs.mkdir(DATA_DIR, { recursive: true }); await fs.writeFile(tmp, JSON.stringify(next, null, 2) + "\n"); await fs.rename(tmp, file); }
+    catch (e) { await fs.unlink(tmp).catch(() => {}); throw storageError(e); }
+    return result as R;
   };
   const p = chain.then(run, run); chain = p.catch(() => {}); return p;
 }

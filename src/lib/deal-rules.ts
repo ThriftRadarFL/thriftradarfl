@@ -3,12 +3,13 @@ export type DealKind = "color_tag" | "half_off" | "senior_day" | "restock" | "bi
 export type DealRule = { id?: string; venue: string; day: number; kind: DealKind; label: string; color: string; time?: string; discountPct?: number; verified: boolean };
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export const dealRules: DealRule[] = [
-  { venue: "goodwill-port-orange", day: 0, kind: "color_tag", label: "Color-of-week tag 50% off", discountPct: 50, color: "bg-teal", verified: false },
+  { venue: "goodwill-port-orange", day: 0, kind: "color_tag", label: "Color of the Week 50% off (color changes Sundays, posted in store)", discountPct: 50, color: "bg-teal", verified: true },
+  { venue: "goodwill-port-orange", day: 1, kind: "senior_day", label: "Seniors 55+ discount (ask in store for amount)", color: "bg-gray-500", verified: true },
+  { venue: "goodwill-port-orange", day: 3, kind: "senior_day", label: "Military 10% off", discountPct: 10, color: "bg-gray-500", verified: true },
+  { venue: "goodwill-daytona-isb", day: 0, kind: "color_tag", label: "Color of the Week 50% off (color changes Sundays, posted in store)", discountPct: 50, color: "bg-teal", verified: true },
+  { venue: "goodwill-daytona-isb", day: 1, kind: "senior_day", label: "Seniors 55+ discount (ask in store for amount)", color: "bg-gray-500", verified: true },
+  { venue: "goodwill-daytona-isb", day: 3, kind: "senior_day", label: "Military 10% off", discountPct: 10, color: "bg-gray-500", verified: true },
   { venue: "goodwill-port-orange", day: 2, kind: "restock", label: "Fresh housewares floor (AM)", color: "bg-royal", time: "09:00", verified: false },
-  { venue: "goodwill-port-orange", day: 3, kind: "senior_day", label: "Senior/Military 10% off", discountPct: 10, color: "bg-gray-500", verified: false },
-  { venue: "goodwill-port-orange", day: 6, kind: "color_tag", label: "Rotating tag color 50% off", discountPct: 50, color: "bg-teal", verified: false },
-  { venue: "goodwill-daytona-isb", day: 1, kind: "color_tag", label: "Color-tag 50% off", discountPct: 50, color: "bg-teal", verified: false },
-  { venue: "goodwill-daytona-isb", day: 3, kind: "senior_day", label: "Senior day 10% off (55+)", discountPct: 10, color: "bg-gray-500", verified: false },
   { venue: "goodwill-daytona-isb", day: 5, kind: "half_off", label: "Half-off clothing", discountPct: 50, color: "bg-coral", verified: false },
   { venue: "goodwill-pine-hills-outlet", day: 1, kind: "restock", label: "Heavy bin restock (AM)", color: "bg-royal", time: "08:00", verified: false },
   { venue: "goodwill-pine-hills-outlet", day: 4, kind: "dollar_day", label: "Bins $/lb discount day", color: "bg-coral", verified: false },

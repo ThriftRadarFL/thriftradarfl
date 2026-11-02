@@ -5,6 +5,8 @@ import { addSubmission, addContact } from "@/lib/data";
 import { parseSale, parseContact, isEmail, CAPS } from "@/lib/validate";
 import { clientIp, limitHit, honeypotTripped, LIMITS } from "@/lib/security";
 async function limited(name: keyof typeof LIMITS) { return limitHit(name, clientIp(await headers())).limited; }
+const UNAVAILABLE = "Sorry — we couldn't save that right now (storage temporarily unavailable). Please try again later or email us.";
+async function safeWrite(path: string, fn: () => Promise<unknown>) { let failed = false; try { await fn(); } catch (e) { console.error("[write]", e); failed = true; } if (failed) back(path, UNAVAILABLE); }
 const back = (path: string, err: string): never => redirect(`${path}?err=${encodeURIComponent(err)}`);
 export async function submitSale(fd: FormData) {
   const o: Record<string, string> = Object.fromEntries([...fd.entries()].map(([k, v]) => [k, String(v)]));
@@ -19,7 +21,7 @@ export async function submitSale(fd: FormData) {
   if (!r.ok) return;
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
   if (r.value.days.every((d) => d.date < today)) back("/submit", "All sale dates are in the past.");
-  await addSubmission({ ...r.value, slug: `${r.value.slug}-${Date.now().toString(36).slice(-4)}`, description: (o.description ?? "").trim().slice(0, CAPS.description) }, email);
+  await safeWrite("/submit", () => addSubmission({ ...r.value, slug: `${r.value.slug}-${Date.now().toString(36).slice(-4)}`, description: (o.description ?? "").trim().slice(0, CAPS.description) }, email));
   redirect("/submit?ok=1");
 }
 export async function sendContact(fd: FormData) {
@@ -27,5 +29,5 @@ export async function sendContact(fd: FormData) {
   if (honeypotTripped(fd)) redirect("/contact?ok=1");
   if (await limited("contact")) back("/contact", "Too many messages — please try again later.");
   const r = parseContact(o); if (!r.ok) back("/contact", r.errors.join("; ")); if (!r.ok) return;
-  await addContact(r.value); redirect("/contact?ok=1");
+  await safeWrite("/contact", () => addContact(r.value)); redirect("/contact?ok=1");
 }
