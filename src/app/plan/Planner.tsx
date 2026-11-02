@@ -15,7 +15,7 @@ export default function Planner({ sales, today }: { sales: S[]; today: string })
   const route = orderStops(chosen, start ?? undefined); const url = googleMapsRoute(route, start ?? undefined);
   const locate = () => { if (!navigator.geolocation) return setGeoMsg("Location isn't available in this browser.");
     setGeoMsg("Finding you…"); navigator.geolocation.getCurrentPosition((p) => { setStart({ lat: p.coords.latitude, lng: p.coords.longitude }); setGeoMsg("Starting from your location."); }, () => setGeoMsg("Couldn't get your location — route starts at the northernmost sale."), { timeout: 10000 }); };
-  if (favs === null) return <p className="panel p-4 text-sm text-gray-600">Loading your saved sales…</p>;
+  if (favs === null) return <div className="grid min-h-[420px] gap-4 md:grid-cols-3" aria-busy="true"><div className="panel animate-pulse" /><div className="panel animate-pulse md:col-span-2" /><span className="sr-only">Loading your saved sales…</span></div>;
   if (!saved.length) return <p className="panel p-4 text-sm">Save a few sales first (tap <span aria-hidden="true">♡</span> on any sale), then come back to plan your route. <Link href="/sales" className="link">Browse sales</Link></p>;
   return (<div className="grid gap-4 md:grid-cols-3">
     <section className="panel md:col-span-1 self-start"><h2 className="panel-head">1 · Pick a day &amp; stops</h2><div className="space-y-3 p-4 text-sm">

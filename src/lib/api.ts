@@ -1,4 +1,4 @@
-// Shared API helpers: JSON errors, body parsing with size cap, simple in-memory rate limit.
+// Shared API helpers: JSON errors, body parsing with size cap, rate limit (see security.ts).
 export class HttpError extends Error { constructor(public status: number, message: string, public details?: unknown) { super(message); } }
 export const json = (data: unknown, status = 200) => Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
 export async function readBody(req: Request, maxBytes = 32_000): Promise<Record<string, unknown>> {
@@ -7,16 +7,15 @@ export async function readBody(req: Request, maxBytes = 32_000): Promise<Record<
   if (!text) return {};
   try { const v = JSON.parse(text); if (!v || typeof v !== "object" || Array.isArray(v)) throw 0; return v; } catch { throw new HttpError(400, "invalid JSON body"); }
 }
-const hits = new Map<string, number[]>();
-export function rateLimit(req: Request, key: string, max = 10, windowMs = 60_000) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || req.headers.get("x-real-ip") || "local";
-  const k = `${key}:${ip}`; const now = Date.now(); const arr = (hits.get(k) ?? []).filter((t) => now - t < windowMs);
-  arr.push(now); hits.set(k, arr); if (arr.length > max) throw new HttpError(429, "too many requests");
+import { clientIp, limitHit, LIMITS } from "./security";
+export function rateLimit(req: Request, name: keyof typeof LIMITS) {
+  const r = limitHit(name, clientIp(req.headers)); if (r.limited) throw new HttpError(429, "too many requests", { retryAfterSec: r.retryAfterSec });
 }
 export function handle<A extends unknown[]>(fn: (...a: A) => Promise<Response>) {
   return async (...a: A) => {
     try { return await fn(...a); }
     catch (e) {
+      if (e instanceof HttpError && e.status === 429) return Response.json({ error: e.message }, { status: 429, headers: { "Cache-Control": "no-store", "Retry-After": String((e.details as { retryAfterSec?: number })?.retryAfterSec ?? 60) } });
       if (e instanceof HttpError) return json({ error: e.message, ...(e.details ? { details: e.details } : {}) }, e.status);
       console.error("[api]", e); return json({ error: "internal error" }, 500);
     }

@@ -8,6 +8,8 @@ import { SITE_URL } from "@/lib/site";
 export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
+  // Fail closed in production when CRON_SECRET is missing; open only in local dev for dry runs.
+  if (!secret && process.env.NODE_ENV === "production") return json({ error: "CRON_SECRET not configured" }, 401);
   if (secret && req.headers.get("authorization") !== `Bearer ${secret}`) return json({ error: "unauthorized" }, 401);
   const u = new URL(req.url); const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
   const d = buildDigest(await getSales(), u.searchParams.get("from") ?? today, undefined, await getDealRules()); const subs = await listSubscribers();

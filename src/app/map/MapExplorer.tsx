@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SaleMap from "@/components/SaleMap";
 import { milesBetween, type LatLng } from "@/lib/geo";
 export type Pin = { key: string; href: string; name: string; type: string; city: string; lat: number; lng: number; dates: string[]; kind: "sale" | "store" };
@@ -10,6 +10,11 @@ const sel = "mt-1 block w-full border border-line bg-white px-2 py-2 text-sm fon
 export default function MapExplorer({ pins, apiKey, today }: { pins: Pin[]; apiKey?: string; today: string }) {
   const [day, setDay] = useState(""); const [type, setType] = useState(""); const [city, setCity] = useState(""); const [stores, setStores] = useState(true);
   const [me, setMe] = useState<LatLng | null>(null); const [msg, setMsg] = useState("");
+  // MapLibre is ~800 KB of JS: load it automatically on wide screens after idle, on phones only when asked (keeps mobile fast).
+  const [live, setLive] = useState(false);
+  useEffect(() => { if (!apiKey || !matchMedia("(min-width: 768px)").matches) return;
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
+    if (w.requestIdleCallback) w.requestIdleCallback(() => setLive(true), { timeout: 2500 }); else setTimeout(() => setLive(true), 1200); }, [apiKey]);
   const days = useMemo(() => [...new Set(pins.flatMap((p) => p.dates))].filter((d) => d >= today).sort(), [pins, today]);
   const types = useMemo(() => [...new Set(pins.map((p) => p.type))], [pins]); const cities = useMemo(() => [...new Set(pins.map((p) => p.city))].sort(), [pins]);
   const shown = useMemo(() => pins.filter((p) => (p.kind === "store" ? stores : !day || p.dates.includes(day))
@@ -30,7 +35,7 @@ export default function MapExplorer({ pins, apiKey, today }: { pins: Pin[]; apiK
       <p role="status" aria-live="polite" className="col-span-2 text-xs text-gray-600 sm:col-span-5">{shown.length} of {pins.length} pins{msg ? ` · ${msg}` : ""}</p></form>
     <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
       <div className="panel min-w-0 overflow-hidden md:col-span-2"><h2 className="panel-head">Map</h2>
-        {apiKey ? <SaleMap apiKey={apiKey} pins={mapPins} me={me} /> : <SvgPlot pins={shown} />}</div>
+        {apiKey && live ? <SaleMap apiKey={apiKey} pins={mapPins} me={me} /> : <><SvgPlot pins={shown} />{apiKey && <button type="button" onClick={() => setLive(true)} className="btn-gray m-3">🗺 Load street map</button>}</>}</div>
       <section className="panel min-w-0 self-start"><h2 className="panel-head">{me ? "Nearest first" : "North to south"} ({withDist.length})</h2>
         <ul className="max-h-[520px] divide-y divide-line overflow-y-auto text-sm">{withDist.map((p) => <li key={p.key} className="flex min-h-11 items-center gap-2 px-3">
           <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: fill[p.type] ?? "#888" }} aria-hidden="true" />
@@ -47,6 +52,6 @@ function SvgPlot({ pins }: { pins: Pin[] }) {
   const W = 800, H = Math.max(200, Math.round(W * ((maxLat - minLat) / ((maxLng - minLng) * Math.cos((minLat * Math.PI) / 180)))));
   const X = (lng: number) => ((lng - minLng) / (maxLng - minLng)) * W, Y = (lat: number) => ((maxLat - lat) / (maxLat - minLat)) * H;
   return (<><svg viewBox={`0 0 ${W} ${H}`} className="block h-auto max-h-[520px] w-full bg-[#eaf2f8]" role="img" aria-label="Plot of sales and stores by location">
-    {pins.map((p) => <a key={p.key} href={p.href}><circle cx={X(p.lng)} cy={Y(p.lat)} r="9" fill={fill[p.type] ?? "#888"} stroke="#fff" strokeWidth="2"><title>{p.name}</title></circle></a>)}</svg>
+    {pins.map((p) => <a key={p.key} href={p.href}><circle cx={X(p.lng)} cy={Y(p.lat)} r="11" fill={fill[p.type] ?? "#888"} stroke="#fff" strokeWidth="2"><title>{p.name}</title></circle></a>)}</svg>
     <p className="px-3 py-1 text-[11px] text-gray-600">Approximate positions — tap a dot for details.</p></>);
 }
