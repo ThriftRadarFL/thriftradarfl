@@ -79,7 +79,7 @@ export default async function Admin({ searchParams }: SP) {
 
       <Panel id="sales" title={`Sales (${sales.length})`}><ul className="text-sm">{sales.map((s) => <li key={s.slug} className={row}>
         <Link href={`/admin?sale=${s.slug}`} className="hover:underline">{s.title}</Link><span className="text-xs text-gray-600">{s.days[0]?.date}</span>
-        {s.published === false && <span className="pill bg-gray-500">draft</span>}
+        {s.published === false && <span className="pill bg-gray-700">draft</span>}
         <span className="ml-auto flex gap-3"><form action={togglePublish}><input type="hidden" name="slug" value={s.slug} /><input type="hidden" name="published" value={String(s.published === false)} /><button className="text-xs underline">{s.published === false ? "publish" : "unpublish"}</button></form>
           <form action={removeSale}><input type="hidden" name="slug" value={s.slug} /><ConfirmButton message={`Delete sale "${s.title}"? This cannot be undone.`}>delete</ConfirmButton></form></span></li>)}
         {!sales.length && <li className="px-3 py-2 text-gray-600">No sales yet.</li>}</ul></Panel>

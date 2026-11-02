@@ -13,7 +13,7 @@ export default async function Deals() {
       <div className="grid grid-cols-1 gap-px bg-line sm:grid-cols-7">{order.map((d) => <div key={d} className={`bg-white sm:min-h-48 ${d === today ? "ring-2 ring-cta ring-inset" : ""}`}>
         <div className="bg-paper border-b border-line px-2 py-1 text-xs font-bold text-royal">{DAYS[d]}{d === today && " · today"}</div>
         <div className="p-1.5 space-y-1">{dealRules.filter((r) => r.day === d).map((r) => <div key={r.id} className={`pill ${r.color} block whitespace-normal`}>
-          {r.label}{r.time && ` ${r.time}`}<div className="text-[10px] font-normal opacity-90">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}</div></div>)}</div></div>
+          {r.label}{r.time && ` ${r.time}`}<div className="text-[11px] font-normal">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}</div></div>)}</div></div>
     <div className="panel mt-4"><div className="panel-head">By store</div><ul>{venues.map((v) => <li key={v.slug} className="border-b border-line px-4 py-2 text-sm last:border-0">
       <Link href={`/stores/${v.slug}`} className="font-bold text-royal hover:underline">{v.name}</Link> <span className="text-gray-600">· {v.city}</span>
       <div>{dealRules.filter((r) => r.venue === v.slug).map((r) => `${DAYS[r.day]}: ${r.label}${r.verified ? "" : " (unverified)"}`).join(" · ") || "No rules yet"}</div></li>)}</ul></div></div>);

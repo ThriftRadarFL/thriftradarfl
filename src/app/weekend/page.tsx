@@ -24,7 +24,7 @@ export default async function Weekend() {
             <b className="text-royal">{s.title}</b><div className="text-xs text-gray-600">{s.city} · {x.start}–{x.end}{x.discountPct ? ` · ${x.discountPct}% off` : ""}</div></Link>; })}
           {!daySales.length && <div className="text-xs text-gray-600">No sales listed yet</div>}
           <div className="pt-2 text-xs font-bold uppercase text-gray-600">Deal days ({deals.length})</div>
-          {deals.map((r) => <div key={r.venue + r.label} className={`pill ${r.color} block whitespace-normal`}>{r.label}<div className="text-[10px] font-normal opacity-90">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}
+          {deals.map((r) => <div key={r.venue + r.label} className={`pill ${r.color} block whitespace-normal`}>{r.label}<div className="text-[11px] font-normal">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}
           {!deals.length && <div className="text-xs text-gray-600">No deal days</div>}
         </div></div>; })}</div>
     <p className="mt-4 text-sm">Want this in your inbox? <Link className="font-bold text-royal hover:underline" href="/digest">Get the weekly digest</Link>.</p></div>);

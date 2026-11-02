@@ -3,7 +3,17 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { ADMIN_COOKIE, adminToken, isAdmin, checkPassword } from "@/lib/auth";
-import { upsertSale, upsertVenue, deleteSale, deleteVenue, setSalePublished, upsertDealRule, deleteDealRule, removeSubscriber, resolveSubmission, deleteContact, audit, getAllSales } from "@/lib/data";
+import * as data from "@/lib/data";
+// Writes that fail (e.g. read-only serverless storage while the DB is down) redirect back with an inline "Not saved" banner instead of a crash page.
+const STORAGE_MSG = "Not saved: storage is temporarily unavailable (database offline and server disk is read-only). Try again shortly.";
+function safe<A extends unknown[], R>(fn: (...a: A) => Promise<R>) {
+  return async (...a: A): Promise<R> => { let r: R; try { r = await fn(...a); } catch (e) { console.error("[admin write]", e); redirect(`/admin?msg=${encodeURIComponent(STORAGE_MSG)}`); } return r!; };
+}
+const upsertSale = safe(data.upsertSale), upsertVenue = safe(data.upsertVenue), deleteSale = safe(data.deleteSale), deleteVenue = safe(data.deleteVenue),
+  setSalePublished = safe(data.setSalePublished), upsertDealRule = safe(data.upsertDealRule), deleteDealRule = safe(data.deleteDealRule),
+  removeSubscriber = safe(data.removeSubscriber), resolveSubmission = safe(data.resolveSubmission), deleteContact = safe(data.deleteContact);
+const audit = (...a: Parameters<typeof data.audit>) => data.audit(...a).catch((e) => console.error("[audit]", e));
+const getAllSales = data.getAllSales;
 import { csvToRecords } from "@/lib/csv";
 import { parseSale, parseVenue, parseDealRule } from "@/lib/validate";
 export async function login(fd: FormData) {

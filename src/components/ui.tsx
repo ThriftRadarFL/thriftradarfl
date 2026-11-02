@@ -10,7 +10,7 @@ export function DayBox({ date }: { date: string }) {
     <span className="text-[10px] uppercase text-gray-600">{d.toLocaleDateString("en-US", { month: "short" })}</span></div>);
 }
 export function Discount({ pct }: { pct?: number | null }) {
-  if (!pct) return <span className="pill bg-gray-500">Full price</span>;
+  if (!pct) return <span className="pill bg-gray-700">Full price</span>;
   return <span className={`pill ${pct >= 50 ? "bg-coral" : "bg-teal"}`}>{pct}% OFF</span>;
 }
 export const typeLabel: Record<string, string> = { estate: "Estate Sale", auction: "Auction", thrift: "Thrift", outlet_bins: "Outlet Bins", yard: "Yard Sale", auction_house: "Auction House" };

@@ -21,7 +21,7 @@ export default async function Calendar() {
           <div className="p-1.5 space-y-1">
             {daySales.map((s) => { const x = s.days.find((y) => y.date === iso)!; return <Link key={s.slug} href={`/sales/${s.slug}`} className="block rounded border border-line bg-white p-1 text-[11px] hover:border-royal">
               <b className="text-royal">{s.title}</b><div className="text-gray-600">{s.city} · {x.start}–{x.end}{x.discountPct ? ` · ${x.discountPct}% off` : ""}</div></Link>; })}
-            {deals.map((r) => <div key={r.venue + r.label} className={`pill ${r.color} block whitespace-normal`}>{r.label}<div className="text-[10px] font-normal opacity-90">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}
+            {deals.map((r) => <div key={r.venue + r.label} className={`pill ${r.color} block whitespace-normal`}>{r.label}<div className="text-[11px] font-normal">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}
             {!daySales.length && !deals.length && <div className="text-[11px] text-gray-600">Nothing listed</div>}
           </div></div>; })}</div></div></div>);
 }

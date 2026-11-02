@@ -5,7 +5,7 @@ import { addSubmission, addContact } from "@/lib/data";
 import { parseSale, parseContact, isEmail, CAPS } from "@/lib/validate";
 import { clientIp, limitHit, honeypotTripped, LIMITS } from "@/lib/security";
 async function limited(name: keyof typeof LIMITS) { return limitHit(name, clientIp(await headers())).limited; }
-const UNAVAILABLE = "Sorry — we couldn't save that right now (storage temporarily unavailable). Please try again later or email us.";
+const UNAVAILABLE = "Sorry — we couldn't save that right now (storage temporarily unavailable). Please try again in a few minutes.";
 async function safeWrite(path: string, fn: () => Promise<unknown>) { let failed = false; try { await fn(); } catch (e) { console.error("[write]", e); failed = true; } if (failed) back(path, UNAVAILABLE); }
 const back = (path: string, err: string): never => redirect(`${path}?err=${encodeURIComponent(err)}`);
 export async function submitSale(fd: FormData) {

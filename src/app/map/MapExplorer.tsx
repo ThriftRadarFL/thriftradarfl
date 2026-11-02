@@ -51,7 +51,7 @@ function SvgPlot({ pins }: { pins: Pin[] }) {
   const [minLng, maxLng] = [Math.min(...pins.map((p) => p.lng)) - 0.05, Math.max(...pins.map((p) => p.lng)) + 0.05];
   const W = 800, H = Math.max(200, Math.round(W * ((maxLat - minLat) / ((maxLng - minLng) * Math.cos((minLat * Math.PI) / 180)))));
   const X = (lng: number) => ((lng - minLng) / (maxLng - minLng)) * W, Y = (lat: number) => ((maxLat - lat) / (maxLat - minLat)) * H;
-  return (<><svg viewBox={`0 0 ${W} ${H}`} className="block h-auto max-h-[520px] w-full bg-[#eaf2f8]" role="img" aria-label="Plot of sales and stores by location">
+  return (<><svg viewBox={`0 0 ${W} ${H}`} className="block h-auto max-h-[520px] w-full bg-[#eaf2f8]" role="group" aria-label="Plot of sales and stores by location">
     {pins.map((p) => <a key={p.key} href={p.href}><circle cx={X(p.lng)} cy={Y(p.lat)} r="11" fill={fill[p.type] ?? "#888"} stroke="#fff" strokeWidth="2"><title>{p.name}</title></circle></a>)}</svg>
     <p className="px-3 py-1 text-[11px] text-gray-600">Approximate positions — tap a dot for details.</p></>);
 }

@@ -28,7 +28,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
     <div className="grid gap-3 lg:grid-cols-2">{sales.map((s) => (<article key={s.slug} className="panel flex flex-col">
       <div className="flex items-start gap-2 border-b border-line px-3 py-2">
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2"><span className={`pill ${chip[s.type] ?? "bg-gray-500"}`}>{typeLabel[s.type] ?? s.type}</span><span className="text-xs text-gray-600">{s.city}, FL {s.zip}</span></div>
+          <div className="flex items-center gap-2"><span className={`pill ${chip[s.type] ?? "bg-gray-700"}`}>{typeLabel[s.type] ?? s.type}</span><span className="text-xs text-gray-600">{s.city}, FL {s.zip}</span></div>
           <Link href={`/sales/${s.slug}`} className="mt-0.5 block font-bold text-ink hover:text-royal">{s.title}</Link>
           {!!s.tags?.length && <div className="mt-1 flex flex-wrap gap-1">{cleanTags(s.tags).map((t) => <span key={t} className="rounded-sm border border-line bg-paper px-1.5 text-[11px] text-gray-700">{TAG_LABEL[t]}</span>)}</div>}</div>
         <FavButton slug={s.slug} title={s.title} compact /><Link href={`/sales/${s.slug}`} className="btn-red px-3 py-1 text-xs" aria-label={`View ${s.title}`}>View</Link></div>
