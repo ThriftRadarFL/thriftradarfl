@@ -11,7 +11,12 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "data:export": "tsx scripts/export-json.ts",
+    "data:smoke": "tsx scripts/smoke-data.ts",
+    "check": "npm run typecheck && npm test && npm run lint"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",

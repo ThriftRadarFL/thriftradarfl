@@ -1,9 +1,14 @@
 import Link from "next/link";
-import { getSales } from "@/lib/data";
+import { getSales, CITIES, citySlug } from "@/lib/data";
 import { PageHead, DayBox, Discount, typeLabel } from "@/components/ui";
 const chip: Record<string, string> = { estate: "bg-coral", auction: "bg-royal", thrift: "bg-teal", outlet_bins: "bg-cta", yard: "bg-[#6b4fa0]" };
-export default async function Home() {
-  const sales = [...(await getSales())].sort((a, b) => a.days[0].date.localeCompare(b.days[0].date));
+const TYPES = ["estate", "auction", "yard", "thrift", "outlet_bins"];
+export default async function Home({ searchParams }: { searchParams: Promise<{ city?: string; type?: string; past?: string }> }) {
+  const sp = await searchParams; const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+  const all = [...(await getSales())].sort((a, b) => a.days[0].date.localeCompare(b.days[0].date));
+  const sales = all.filter((s) => (sp.past || s.days.some((d) => d.date >= today)) && (!sp.city || citySlug(s.city) === sp.city) && (!sp.type || s.type === sp.type));
+  const q = (k: string, v?: string) => { const n = new URLSearchParams(Object.entries({ ...sp, [k]: v }).filter(([, x]) => x) as [string, string][]); const str = n.toString(); return str ? `/?${str}` : "/"; };
+  const fl = (on: boolean) => `px-2 py-1 border text-xs font-bold ${on ? "bg-royal text-white border-royal" : "bg-white border-line hover:border-royal"}`;
   const best = (s: (typeof sales)[number]) => Math.max(...s.days.map((d) => d.discountPct ?? 0));
   const featured = sales.filter((s) => best(s) >= 50).slice(0, 4);
   const cities = new Set(sales.map((s) => s.city)).size;
@@ -12,6 +17,12 @@ export default async function Home() {
     {featured.length > 0 && <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1 border border-cta-dark bg-cta px-4 py-2 text-sm text-white">
       <span className="font-bold uppercase tracking-wide">Half-off days:</span>
       {featured.map((s) => <Link key={s.slug} href={`/sales/${s.slug}`} className="font-bold underline-offset-2 hover:underline">{s.title} <span className="font-normal text-red-100">· {s.city}</span></Link>)}</div>}
+    <div className="mb-3 flex flex-wrap items-center gap-1.5" aria-label="Filters"><span className="mr-1 text-xs font-bold uppercase text-gray-500">City</span>
+      <Link href={q("city")} className={fl(!sp.city)}>All</Link>{Object.entries(CITIES).map(([k, n]) => <Link key={k} href={q("city", k)} className={fl(sp.city === k)}>{n}</Link>)}
+      <span className="ml-3 mr-1 text-xs font-bold uppercase text-gray-500">Type</span><Link href={q("type")} className={fl(!sp.type)}>All</Link>
+      {TYPES.map((t) => <Link key={t} href={q("type", t)} className={fl(sp.type === t)}>{typeLabel[t]}</Link>)}
+      <a href={`/api/calendar${sp.city ? `?city=${sp.city}` : ""}`} className="ml-auto text-xs underline">Subscribe (calendar feed)</a></div>
+    {sales.length === 0 && <p className="panel p-4 text-sm">No upcoming sales match these filters. <Link href="/" className="underline">Clear filters</Link></p>}
     <div className="grid gap-3 lg:grid-cols-2">{sales.map((s) => (<article key={s.slug} className="panel flex flex-col">
       <div className="flex items-start gap-2 border-b border-line px-3 py-2">
         <div className="min-w-0 flex-1">
