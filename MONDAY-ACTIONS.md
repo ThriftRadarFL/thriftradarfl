@@ -1,22 +1,14 @@
-# Monday Actions — only steps that need YOUR login (~30–40 min)
+# Monday Actions — only steps that need YOUR login
 
-Try it first: `cd /workspace/thriftradarfl && npm run dev` → http://localhost:3000 · admin at `/admin` (pw `change-me` in `.env.local`)
+Everything else is built and committed locally (see `OVERNIGHT.md` → "What's built"). Try it: `npm run dev` → http://localhost:3000 (admin at `/admin`).
 
-- [ ] **1. Admin password** — in `.env.local` set `ADMIN_PASSWORD=<strong>` (also `CRON_SECRET=<random>`: `openssl rand -hex 24`)
-- [ ] **2. GitHub** — create empty private repo `thriftradarfl`, then:
+- [ ] **1. GitHub push** — create empty private repo `thriftradarfl`, then:
   ```
   git remote add origin git@github.com:<you>/thriftradarfl.git
   git push -u origin master
   ```
-- [ ] **3. Supabase** — new project (US East). Settings → Database → Connection string → **Transaction pooler** URI → `.env.local`:
-  `DATABASE_URL=postgres://...:6543/postgres` (+ `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` from Settings → API). Then:
-  ```
-  npm run db:migrate
-  npm run db:seed
-  npm run data:smoke   # should print "mode: postgres" and all ok
-  ```
-- [ ] **4. Vercel** — Import GitHub repo → Environment Variables: `DATABASE_URL`, `ADMIN_PASSWORD`, `CRON_SECRET`, `NEXT_PUBLIC_SITE_URL=https://<your-domain>` → Deploy. (Cron in `vercel.json` auto-registers.)
-- [ ] **5. MapTiler** — cloud.maptiler.com → API key → `NEXT_PUBLIC_MAPTILER_KEY` (local + Vercel).
-- [ ] **6. Resend** — resend.com → API key → `RESEND_API_KEY`; add + verify your domain (DNS) → `DIGEST_FROM="ThriftRadarFL <digest@yourdomain>"`. Test: `curl -H "Authorization: Bearer $CRON_SECRET" https://<site>/api/cron/digest?dry=1`
-- [ ] **7. Verify deal days** — `/deals` schedules are **unverified demo**; call stores or check signage before launch.
-- [ ] **8. Tell Grok Bot "logins done"** → interactive map, Supabase Auth, go-live checks.
+- [ ] **2. Vercel deploy** — Import the repo → Environment Variables: `DATABASE_URL`, `ADMIN_PASSWORD`, `CRON_SECRET`, `NEXT_PUBLIC_SITE_URL=https://<your-domain>`, `NEXT_PUBLIC_MAPTILER_KEY`, `RESEND_API_KEY`, `DIGEST_FROM` → Deploy. Cron in `vercel.json` auto-registers.
+  - **Which `DATABASE_URL`:** use Supabase → Connect → **Transaction pooler** (`...pooler.supabase.com:6543`, user `postgres.<project-ref>`) for Vercel (serverless). Session pooler (`:5432` on the same host) also works; the direct host `db.<ref>.supabase.co:5432` is IPv6-only unless you buy the IPv4 add-on, so don't use it on Vercel.
+  - From the bot's box, all three (pooler 6543, pooler 5432, direct 5432) time out or return `PROTOCOL_ERROR` — the box's network blocks raw Postgres. That's a box limitation, not a wrong URL. The site falls back to JSON there automatically; after deploying, check `https://<site>/api/health` shows `"dataMode":"postgres"`.
+- [ ] **3. Resend custom domain** — resend.com → Domains → add your domain → add the DNS records → once verified set `DIGEST_FROM="ThriftRadarFL <digest@yourdomain>"` (until then it sends from `onboarding@resend.dev`, which only delivers to your own Resend account email). Test: `curl -H "Authorization: Bearer $CRON_SECRET" https://<site>/api/cron/digest?dry=1`
+- [ ] **4. Verify deal days** — `/deals` schedules marked *unverified* need a call or a store visit. Then tick **Verified** per rule in `/admin#rules` (or edit/delete them there).
