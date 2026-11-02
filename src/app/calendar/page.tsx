@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PageHead } from "@/components/ui";
 import { getSales, getVenues, getDealRules } from "@/lib/data";
 import { DAYS } from "@/lib/deal-rules";
-export const metadata = { title: "Calendar — estate sales & deal days, next 14 days" };
+export const metadata = { title: "Calendar — estate sales & deal days, next 14 days", description: "14-day calendar of Central Florida estate sales and thrift deal days, with a subscribable iCal feed.", alternates: { canonical: "/calendar" } };
 export const dynamic = "force-dynamic";
 const fmt = (d: Date) => d.toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 export default async function Calendar() {
@@ -22,6 +22,6 @@ export default async function Calendar() {
             {daySales.map((s) => { const x = s.days.find((y) => y.date === iso)!; return <Link key={s.slug} href={`/sales/${s.slug}`} className="block rounded border border-line bg-white p-1 text-[11px] hover:border-royal">
               <b className="text-royal">{s.title}</b><div className="text-gray-600">{s.city} · {x.start}–{x.end}{x.discountPct ? ` · ${x.discountPct}% off` : ""}</div></Link>; })}
             {deals.map((r) => <div key={r.venue + r.label} className={`pill ${r.color} block whitespace-normal`}>{r.label}<div className="text-[10px] font-normal opacity-90">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}
-            {!daySales.length && !deals.length && <div className="text-[11px] text-gray-400">Nothing listed</div>}
+            {!daySales.length && !deals.length && <div className="text-[11px] text-gray-600">Nothing listed</div>}
           </div></div>; })}</div></div></div>);
 }

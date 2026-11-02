@@ -24,13 +24,13 @@ export default async function MapPage() {
       {mapKey ? <SaleMap apiKey={mapKey} pins={geo.map((p) => ({ key: p.key, href: p.href, name: p.name, lat: p.lat, lng: p.lng, color: fill[p.type] ?? "#888" }))} /> : <><svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full max-h-[520px] bg-[#eaf2f8]" role="img" aria-label="Plot of sales and stores by location">
         {labels.map(([city, c]) => <text key={city} x={X(c.lng / c.n) + 10} y={Y(c.lat / c.n) - 10} fontSize="14" fill="#555" fontWeight="bold">{city}</text>)}
         {geo.map((p) => <a key={p.key} href={p.href}><circle cx={X(p.lng)} cy={Y(p.lat)} r="8" fill={fill[p.type] ?? "#888"} stroke="#fff" strokeWidth="2"><title>{p.name}</title></circle></a>)}
-      </svg><p className="px-3 py-1 text-[11px] text-gray-500">Approximate positions. Interactive street map coming soon.</p></>}</div>
+      </svg><p className="px-3 py-1 text-[11px] text-gray-600">Approximate positions — tap a dot for details. Exact addresses are on each listing.</p></>}</div>
     <div className="grid gap-3 md:grid-cols-4">
       <div className="md:col-span-3 grid gap-3 sm:grid-cols-2">{byCity.map(([city, ps]) => (<div key={city} className="panel">
         <div className="panel-head flex justify-between"><span>{city}</span><span className="font-normal">{ps.length}</span></div>
         <ul className="divide-y divide-line text-sm">{ps.map((p) => <li key={p.key} className="flex items-center gap-2 px-3 py-1.5">
           <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${dot[p.type] ?? "bg-gray-400"}`} /><Link href={p.href} className="truncate hover:text-royal">{p.name}</Link>
-          <span className="ml-auto shrink-0 text-[11px] text-gray-500">{typeLabel[p.type] ?? p.type}</span></li>)}</ul></div>))}</div>
+          <span className="ml-auto shrink-0 text-[11px] text-gray-600">{typeLabel[p.type] ?? p.type}</span></li>)}</ul></div>))}</div>
       <div className="panel self-start"><div className="panel-head">Legend</div><ul className="space-y-1.5 p-3 text-sm">
         {[["estate", "Estate sale"], ["auction", "Auction"], ["thrift", "Thrift store"], ["outlet_bins", "Outlet bins"], ["yard", "Yard sale"]].map(([t, l]) =>
           <li key={t} className="flex items-center gap-2"><span className={`h-3 w-3 rounded-full ${dot[t]}`} />{l}</li>)}</ul></div>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CITIES, getSales, getVenues } from "@/lib/data";
 import { PageHead } from "@/components/ui";
-export const metadata = { title: "Cities — Central Florida estate sales & thrift deals", alternates: { canonical: "/city" } };
+export const metadata = { title: "Cities — Central Florida estate sales & thrift deals", description: "Browse estate sales and thrift stores by city: Port Orange, Daytona Beach, DeLand, New Smyrna Beach, Ormond Beach.", alternates: { canonical: "/city" } };
 export const dynamic = "force-dynamic";
 export default async function Cities() {
   const [sales, venues] = await Promise.all([getSales(), getVenues()]);

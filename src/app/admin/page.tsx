@@ -39,16 +39,16 @@ export default async function Admin({ searchParams }: SP) {
       <a href="/api/admin/subscribers" className="underline">Export CSV</a><a href="/digest/preview" className="underline" target="_blank" rel="noopener">Preview digest</a><a href="/api/calendar" className="underline">Calendar feed</a></nav>
     <div className="grid gap-4 lg:grid-cols-2">
       <Panel id="pending" title={`Pending submissions (${pending.length})`}><ul className="text-sm">{pending.map((p) => <li key={p.id} className="border-b border-line px-3 py-2 last:border-0">
-        <b>{p.sale.title}</b> <span className="text-xs text-gray-500">{p.sale.city} · {p.sale.days.map((d) => d.date).join(", ")} · from {p.email}</span>
+        <b>{p.sale.title}</b> <span className="text-xs text-gray-600">{p.sale.city} · {p.sale.days.map((d) => d.date).join(", ")} · from {p.email}</span>
         {p.sale.description && <p className="text-xs text-gray-600">{p.sale.description}</p>}
         {p.sale.sourceUrl && <a href={p.sale.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-xs underline">source</a>}
         <div className="mt-1 flex gap-3"><form action={reviewSubmission}><input type="hidden" name="id" value={p.id} /><input type="hidden" name="approve" value="true" /><button className="text-xs font-bold text-teal hover:underline">Approve &amp; publish</button></form>
           <form action={reviewSubmission}><input type="hidden" name="id" value={p.id} /><input type="hidden" name="approve" value="false" /><ConfirmButton message={`Reject "${p.sale.title}"?`}>Reject</ConfirmButton></form></div></li>)}
-        {!pending.length && <li className="px-3 py-2 text-gray-500">No submissions waiting.</li>}</ul></Panel>
+        {!pending.length && <li className="px-3 py-2 text-gray-600">No submissions waiting.</li>}</ul></Panel>
       <Panel id="messages" title={`Contact messages (${contacts.length})`}><ul className="text-sm">{[...contacts].reverse().map((c) => <li key={c.id} className="border-b border-line px-3 py-2 last:border-0">
-        <b>{c.name}</b> <a className="text-xs underline" href={`mailto:${c.email}`}>{c.email}</a> <span className="text-xs text-gray-500">{c.at.slice(0, 16).replace("T", " ")}</span>
+        <b>{c.name}</b> <a className="text-xs underline" href={`mailto:${c.email}`}>{c.email}</a> <span className="text-xs text-gray-600">{c.at.slice(0, 16).replace("T", " ")}</span>
         <p className="whitespace-pre-wrap text-xs">{c.message}</p><form action={removeContact}><input type="hidden" name="id" value={c.id} /><ConfirmButton message="Delete this message?">delete</ConfirmButton></form></li>)}
-        {!contacts.length && <li className="px-3 py-2 text-gray-500">No messages.</li>}</ul></Panel>
+        {!contacts.length && <li className="px-3 py-2 text-gray-600">No messages.</li>}</ul></Panel>
 
       <Panel title={found ? `Edit sale: ${found.slug}` : draft ? "Add sale (imported draft — review before saving)" : "Add sale"}>
         <form method="get" className="flex gap-2 border-b border-line p-3"><label className="sr-only" htmlFor="import">Listing URL</label><input id="import" name="import" type="url" placeholder="Paste EstateSales.net listing URL to prefill" className={inp + " mt-0"} defaultValue={sp.import} /><button className="btn-gray text-xs">Import</button></form>
@@ -75,15 +75,15 @@ export default async function Admin({ searchParams }: SP) {
           <button className="btn-red">Save venue</button> {ev && <Link href="/admin" className="text-sm underline">New instead</Link>}</form></Panel>
 
       <Panel id="sales" title={`Sales (${sales.length})`}><ul className="text-sm">{sales.map((s) => <li key={s.slug} className={row}>
-        <Link href={`/admin?sale=${s.slug}`} className="hover:underline">{s.title}</Link><span className="text-xs text-gray-500">{s.days[0]?.date}</span>
+        <Link href={`/admin?sale=${s.slug}`} className="hover:underline">{s.title}</Link><span className="text-xs text-gray-600">{s.days[0]?.date}</span>
         {s.published === false && <span className="pill bg-gray-500">draft</span>}
         <span className="ml-auto flex gap-3"><form action={togglePublish}><input type="hidden" name="slug" value={s.slug} /><input type="hidden" name="published" value={String(s.published === false)} /><button className="text-xs underline">{s.published === false ? "publish" : "unpublish"}</button></form>
           <form action={removeSale}><input type="hidden" name="slug" value={s.slug} /><ConfirmButton message={`Delete sale "${s.title}"? This cannot be undone.`}>delete</ConfirmButton></form></span></li>)}
-        {!sales.length && <li className="px-3 py-2 text-gray-500">No sales yet.</li>}</ul></Panel>
+        {!sales.length && <li className="px-3 py-2 text-gray-600">No sales yet.</li>}</ul></Panel>
       <Panel title={`Venues (${venues.length})`}><ul className="text-sm">{venues.map((v) => <li key={v.slug} className={row}>
-        <Link href={`/admin?venue=${v.slug}#venues`} className="hover:underline">{v.name}</Link> <span className="text-xs text-gray-500">{v.city}</span>
+        <Link href={`/admin?venue=${v.slug}#venues`} className="hover:underline">{v.name}</Link> <span className="text-xs text-gray-600">{v.city}</span>
         <form action={removeVenue} className="ml-auto"><input type="hidden" name="slug" value={v.slug} /><ConfirmButton message={`Delete venue "${v.name}" and all its deal rules?`}>delete</ConfirmButton></form></li>)}
-        {!venues.length && <li className="px-3 py-2 text-gray-500">No venues yet.</li>}</ul></Panel>
+        {!venues.length && <li className="px-3 py-2 text-gray-600">No venues yet.</li>}</ul></Panel>
 
       <Panel id="rules" title={er ? `Edit deal rule` : "Add deal rule"}>
         <form action={saveRule} key={er?.id ?? "newr"} className="p-4 space-y-2">
@@ -97,11 +97,11 @@ export default async function Admin({ searchParams }: SP) {
           <label className="flex items-center gap-2 text-xs font-bold"><input type="checkbox" name="verified" defaultChecked={er?.verified} /> Verified with the store</label>
           <button className="btn-red">Save rule</button> {er && <Link href="/admin#rules" className="text-sm underline">New instead</Link>}</form>
         <ul className="border-t border-line text-sm">{rules.map((r) => <li key={r.id} className={row}>
-          <Link href={`/admin?rule=${encodeURIComponent(r.id!)}#rules`} className="hover:underline">{DAYS[r.day]} · {r.label}</Link><span className="text-xs text-gray-500">{vname(r.venue)}{r.verified ? " · ✓ verified" : " · unverified"}</span>
+          <Link href={`/admin?rule=${encodeURIComponent(r.id!)}#rules`} className="hover:underline">{DAYS[r.day]} · {r.label}</Link><span className="text-xs text-gray-600">{vname(r.venue)}{r.verified ? " · ✓ verified" : " · unverified"}</span>
           <form action={removeRule} className="ml-auto"><input type="hidden" name="id" value={r.id} /><ConfirmButton message={`Delete rule "${r.label}"?`}>delete</ConfirmButton></form></li>)}</ul></Panel>
       <Panel id="subs" title={`Digest subscribers (${subs.length})`}><ul className="max-h-96 overflow-y-auto text-sm">{subs.map((s) => <li key={s.email} className={row}>
-        <span>{s.email}</span><span className="text-xs text-gray-500">{s.area} · {s.at.slice(0, 10)}</span>
+        <span>{s.email}</span><span className="text-xs text-gray-600">{s.area} · {s.at.slice(0, 10)}</span>
         <form action={removeSub} className="ml-auto"><input type="hidden" name="email" value={s.email} /><ConfirmButton message={`Remove ${s.email} from the digest?`}>remove</ConfirmButton></form></li>)}
-        {!subs.length && <li className="px-3 py-2 text-gray-500">No subscribers yet.</li>}</ul></Panel>
+        {!subs.length && <li className="px-3 py-2 text-gray-600">No subscribers yet.</li>}</ul></Panel>
     </div></div>);
 }

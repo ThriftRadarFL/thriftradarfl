@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PageHead } from "@/components/ui";
 import { getVenues, getDealRules } from "@/lib/data";
 import { DAYS } from "@/lib/deal-rules";
-export const metadata = { title: "Deal Days — Goodwill color tags, half-off & bin restocks" };
+export const metadata = { title: "Deal Days — Goodwill color tags, half-off & bin restocks", description: "Weekly schedule of Goodwill color-tag days, half-off days, senior discounts and outlet bin restocks in Central Florida.", alternates: { canonical: "/deals" } };
 const order = [1, 2, 3, 4, 5, 6, 0];
 export default async function Deals() {
   const [venues, dealRules] = await Promise.all([getVenues(), getDealRules()]); const name = (s: string) => venues.find((v) => v.slug === s)?.name ?? s;
@@ -15,6 +15,6 @@ export default async function Deals() {
         <div className="p-1.5 space-y-1">{dealRules.filter((r) => r.day === d).map((r) => <div key={r.id} className={`pill ${r.color} block whitespace-normal`}>
           {r.label}{r.time && ` ${r.time}`}<div className="text-[10px] font-normal opacity-90">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}</div></div>)}</div></div>
     <div className="panel mt-4"><div className="panel-head">By store</div><ul>{venues.map((v) => <li key={v.slug} className="border-b border-line px-4 py-2 text-sm last:border-0">
-      <Link href={`/stores/${v.slug}`} className="font-bold text-royal hover:underline">{v.name}</Link> <span className="text-gray-500">· {v.city}</span>
+      <Link href={`/stores/${v.slug}`} className="font-bold text-royal hover:underline">{v.name}</Link> <span className="text-gray-600">· {v.city}</span>
       <div>{dealRules.filter((r) => r.venue === v.slug).map((r) => `${DAYS[r.day]}: ${r.label}${r.verified ? "" : " (unverified)"}`).join(" · ") || "No rules yet"}</div></li>)}</ul></div></div>);
 }

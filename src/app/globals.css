@@ -9,7 +9,7 @@
   --color-paper: #eef1f5;
   --color-line: #c9d1dc;
   --color-teal: #00857c;
-  --color-coral: #e8533f;
+  --color-coral: #c4402c;
   --font-sans: Verdana, Tahoma, "Segoe UI", Arial, sans-serif;
 }
 
@@ -25,3 +25,11 @@ h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter
   .daybox { @apply flex flex-col items-center justify-center w-11 shrink-0 border border-line bg-paper text-center leading-tight; }
   .link { @apply text-royal font-bold hover:underline; }
 }
+
+/* Accessibility: visible keyboard focus everywhere */
+:focus-visible { outline: 3px solid #f5b400; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+.prose-page h2 { font-size: 1.1rem; margin: 1.25rem 0 0.4rem; color: var(--color-royal); }
+.prose-page p, .prose-page li { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem; }
+.prose-page ul { list-style: disc; padding-left: 1.25rem; }
+.prose-page a { color: var(--color-royal); font-weight: bold; text-decoration: underline; }

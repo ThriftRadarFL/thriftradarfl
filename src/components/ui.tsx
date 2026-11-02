@@ -7,7 +7,7 @@ export function DayBox({ date }: { date: string }) {
   return (<div className="daybox py-0.5">
     <span className="text-[10px] font-bold uppercase text-cta">{d.toLocaleDateString("en-US", { weekday: "short" })}</span>
     <span className="text-xl font-bold text-royal">{d.getDate()}</span>
-    <span className="text-[10px] uppercase text-gray-500">{d.toLocaleDateString("en-US", { month: "short" })}</span></div>);
+    <span className="text-[10px] uppercase text-gray-600">{d.toLocaleDateString("en-US", { month: "short" })}</span></div>);
 }
 export function Discount({ pct }: { pct?: number | null }) {
   if (!pct) return <span className="pill bg-gray-500">Full price</span>;

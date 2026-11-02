@@ -1,0 +1,14 @@
+"use client";
+import Link from "next/link";
+import { useFavs, writeFavs } from "@/components/FavButton";
+type S = { slug: string; title: string; city: string; first: string; last: string };
+export default function SavedList({ sales }: { sales: S[] }) {
+  const favs = useFavs();
+  if (favs === null) return <p className="panel p-4 text-sm text-gray-600">Loading saved sales…</p>;
+  const mine = sales.filter((s) => favs.includes(s.slug)); const gone = favs.filter((f) => !sales.some((s) => s.slug === f));
+  if (!mine.length) return <p className="panel p-4 text-sm">No saved sales yet. Tap <span aria-hidden="true">♡</span> <b>Save</b> on any sale to keep it here (stored only in this browser). <Link href="/sales" className="link">Browse sales</Link></p>;
+  return (<div className="panel"><h2 className="panel-head">Saved ({mine.length})</h2><ul>{mine.map((s) => <li key={s.slug} className="flex items-center gap-2 border-b border-line px-4 py-2 text-sm last:border-0">
+    <Link href={`/sales/${s.slug}`} className="link">{s.title}</Link><span className="text-xs text-gray-600">{s.city} · {s.first}{s.last !== s.first ? ` – ${s.last}` : ""}</span>
+    <button type="button" className="ml-auto text-xs text-red-700 hover:underline" onClick={() => writeFavs(favs.filter((x) => x !== s.slug))}>Remove</button></li>)}</ul>
+    {gone.length > 0 && <p className="px-4 py-2 text-xs text-gray-600">{gone.length} saved sale(s) are no longer listed. <button type="button" className="underline" onClick={() => writeFavs(favs.filter((f) => !gone.includes(f)))}>Clear them</button></p>}</div>);
+}

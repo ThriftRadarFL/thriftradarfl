@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PageHead } from "@/components/ui";
 import { getSales } from "@/lib/data";
-export const metadata = { title: "All upcoming estate sales — Central Florida" };
+export const metadata = { title: "All upcoming estate sales — Central Florida", description: "Every upcoming estate sale, auction and yard sale in Central Florida, soonest first.", alternates: { canonical: "/sales" } };
 export const dynamic = "force-dynamic";
 export default async function SalesIndex() {
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
@@ -14,7 +14,7 @@ export default async function SalesIndex() {
         <b className="text-royal">{s.title}</b>
         <div className="text-xs text-gray-600">{s.city} · {s.days.map((d) => d.date.slice(5)).join(", ")}</div>
       </Link>))}
-      {!sales.length && <div className="p-3 text-sm text-gray-400">No upcoming sales listed yet</div>}
+      {!sales.length && <div className="p-3 text-sm text-gray-600">No upcoming sales listed yet</div>}
     </div></div>
     <p className="mt-4 text-sm"><Link className="font-bold text-royal hover:underline" href="/weekend">See just this weekend</Link></p></div>);
 }
