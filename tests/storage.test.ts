@@ -7,3 +7,5 @@ test("storageError passes other errors through", () => { const o = new Error("bo
 test("no root loading.tsx (it forces HTTP 200 on notFound)", async () => { const fs = await import("fs"); assert.equal(fs.existsSync("src/app/loading.tsx"), false); });
 import { t12, range12 } from "../src/lib/time";
 test("t12 formats 24h times for US readers", () => { assert.equal(t12("18:30"), "6:30 PM"); assert.equal(t12("08:00"), "8 AM"); assert.equal(t12("00:15"), "12:15 AM"); assert.equal(t12("12:00"), "12 PM"); assert.equal(t12("x"), "x"); assert.equal(range12("09:00", "14:00"), "9 AM–2 PM"); });
+import { hours12, dayKey } from "../src/lib/time";
+test("store hours display in 12-hour time", () => { assert.equal(hours12("9:00-21:00"), "9 AM–9 PM"); assert.equal(hours12("18:30-22:00"), "6:30 PM–10 PM"); assert.equal(hours12("closed"), "Closed"); assert.equal(hours12("call ahead"), "call ahead"); assert.equal(dayKey("tue-sat"), "Tue–Sat"); assert.equal(dayKey("daily"), "Daily"); assert.equal(dayKey("weekends"), "weekends"); });

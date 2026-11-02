@@ -1,4 +1,4 @@
-import { t12 } from "@/lib/time";
+import { t12, hours12, dayKey } from "@/lib/time";
 import { notFound } from "next/navigation";
 import { getVenue, getDealRules } from "@/lib/data";
 import { PageHead, typeLabel } from "@/components/ui";
@@ -23,7 +23,7 @@ export default async function Store({ params }: { params: Promise<{ slug: string
         {v.sourceUrl && <p className="text-xs text-gray-600">Source: <a href={v.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">{new URL(v.sourceUrl).hostname}</a></p>}
         <div className="pt-2"><ShareButtons url={`${SITE_URL}/stores/${v.slug}`} title={v.name} /></div></div></div>
       <div className="panel"><div className="panel-head">Hours</div><table className="w-full text-sm">
-        <tbody>{hours.length ? hours.map(([k, h]) => <tr key={k} className="border-b border-line"><td className="px-4 py-2 font-bold capitalize">{k}</td><td className="px-4 py-2">{h}</td></tr>)
+        <tbody>{hours.length ? hours.map(([k, h]) => <tr key={k} className="border-b border-line"><td className="px-4 py-2 font-bold">{dayKey(k)}</td><td className="px-4 py-2">{hours12(h)}</td></tr>)
           : <tr><td className="px-4 py-3 text-gray-600">Hours not verified yet — call ahead</td></tr>}</tbody></table>
         <div className="panel-head border-t border-line">Deal days</div><ul className="text-sm">{!mine.length && <li className="px-4 py-2 text-gray-600">No deal days listed.</li>}{mine.map((r) => <li key={r.id} className="border-b border-line px-4 py-2">
           <b>{DAYS[r.day]}</b> {r.label}{r.time && ` · ${t12(r.time)}`}{!r.verified && <span className="ml-1 text-xs text-gray-600">(unverified)</span>}</li>)}</ul></div>
