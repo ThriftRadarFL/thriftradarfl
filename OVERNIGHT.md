@@ -18,3 +18,4 @@ Shipped:
 - 13 demo sales; `npm test` (6 passing), typecheck, lint, build all green; dev server on :3000
 
 Blocked on your logins: GitHub push, Supabase, Vercel, MapTiler (interactive map), Resend (sending), real deal-day verification.
+- `/city`: index of all cities with sale/store counts; in sitemap (added 5:40am)
