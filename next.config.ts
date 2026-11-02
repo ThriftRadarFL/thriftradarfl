@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   // Always render <title>/<meta> in <head> (not streamed into <body>) so every crawler and audit tool sees them.
   htmlLimitedBots: /.*/,
   // Ship data/*.json with serverless functions so JSON mode works read-only on Vercel before Postgres is wired.
-  outputFileTracingIncludes: { "/**": ["./data/sales.json", "./data/venues.json"] },
+  outputFileTracingIncludes: { "/**": ["./data/sales.json", "./data/venues.json", "./public/logo-horizontal-lg.png"] },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders() }, { source: "/admin/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       { source: "/sw.js", headers: [{ key: "Cache-Control", value: "no-cache, no-store, must-revalidate" }, { key: "Content-Type", value: "application/javascript; charset=utf-8" }] },
