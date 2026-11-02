@@ -20,7 +20,7 @@ async function main() {
   const venueIds: Record<string, number> = {};
   for (const v of seedVenues) {
     const { org, ...rest } = v;
-    const [r] = await db.insert(s.venues).values({ ...rest, orgId: orgIds[org] }).onConflictDoNothing().returning({ id: s.venues.id });
+    const [r] = await db.insert(s.venues).values({ ...rest, sourceUrl: rest.sourceUrl || null, orgKey: org, orgId: orgIds[org] }).onConflictDoNothing().returning({ id: s.venues.id });
     if (r) venueIds[v.slug] = r.id;
   }
   for (const d of dealRules) {

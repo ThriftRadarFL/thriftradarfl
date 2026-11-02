@@ -34,6 +34,8 @@ export const venues = pgTable("venues", {
   hoursJson: jsonb("hours_json"),
   notes: text("notes"),
   active: boolean("active").default(true).notNull(),
+  sourceUrl: text("source_url"),
+  orgKey: text("org_key"),
 });
 
 export const sales = pgTable("sales", {

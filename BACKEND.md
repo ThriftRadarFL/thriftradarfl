@@ -7,7 +7,7 @@
 - Note: on Vercel the filesystem is read-only → JSON mode is read-only there; set `DATABASE_URL` for writes.
 
 ## Schema (`src/db/schema.ts`, migrations in `drizzle/`)
-organizations → venues (lat/lng, hours jsonb, active) → deal_rules (kind enum, day_of_week, start_time, discount_pct, verified_at, source)
+organizations → venues (lat/lng, hours jsonb, active, source_url, org_key — 0005) → deal_rules (kind enum, day_of_week, start_time, discount_pct, verified_at, source)
 sales (slug unique, type enum incl. thrift/outlet_bins, city/zip/lat/lng, payment_methods[], source, source_url, status, featured_until) → sale_days (date, start/end, discount_pct)
 tags ↔ sale_tags; subscribers (email unique, zip, area, interests[], tier).
 Deal rules source of truth for now: `src/lib/deal-rules.ts` (seeded into DB; UNVERIFIED demo except Berner's Wed auction).
@@ -49,6 +49,7 @@ Admin-triggered, one URL at a time, host allowlist (estatesales.net/.org, auctio
 `src/lib/security.ts`: CSP (self + MapTiler, blob: workers), XFO, Referrer-Policy, Permissions-Policy, COOP, HSTS in prod — applied in `next.config.ts`. Per-IP limiter (subscribe 5/min, submit/contact 5/h) + honeypot on all public forms. `/admin` + `/api/` disallowed in robots; admin noindex. Admin-guard coverage enforced by `tests/security.test.ts`.
 
 ## Tests
+- **JSON→Postgres parity (audited 2026-11-02 4 PM):** publish flag, tags, description, deal rules, submissions, contact messages, subscribers, audit log and venue source_url/org key all persist in Postgres; JSON is fallback only. `tests/pg.test.ts` round-trips every store against a real Postgres when `PG_TEST_URL` is set (verified on PGlite socket server: `npx pglite-server -p 54329 -m 10`) and asserts nothing hits JSON.
 `npm test` (node:test: validation, ics, digest, importer fixture), `npm run check` (typecheck + tests + lint).
 
 ## Phased rollout

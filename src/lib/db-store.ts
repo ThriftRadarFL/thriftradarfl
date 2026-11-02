@@ -28,11 +28,11 @@ export async function dbDeleteSale(slug: string) { await D().delete(t.sales).whe
 
 export async function dbGetVenues(): Promise<Venue[]> {
   const rows = await D().select().from(t.venues).where(eq(t.venues.active, true)).orderBy(asc(t.venues.name));
-  return rows.map((v) => ({ slug: v.slug, org: "", name: v.name, type: v.type, address: v.address, city: v.city, zip: v.zip, lat: v.lat ?? 0, lng: v.lng ?? 0,
-    phone: v.phone, hoursJson: (v.hoursJson as Record<string, string> | null) ?? null, notes: v.notes ?? "" }));
+  return rows.map((v) => ({ slug: v.slug, org: v.orgKey ?? "", name: v.name, type: v.type, address: v.address, city: v.city, zip: v.zip, lat: v.lat ?? 0, lng: v.lng ?? 0,
+    phone: v.phone, hoursJson: (v.hoursJson as Record<string, string> | null) ?? null, notes: v.notes ?? "", ...(v.sourceUrl ? { sourceUrl: v.sourceUrl } : {}) }));
 }
 export async function dbUpsertVenue(v: Venue) {
-  const vals = { slug: v.slug, name: v.name, type: v.type as (typeof t.venueType.enumValues)[number], address: v.address, city: v.city, zip: v.zip, lat: v.lat, lng: v.lng, phone: v.phone, hoursJson: v.hoursJson, notes: v.notes };
+  const vals = { slug: v.slug, name: v.name, type: v.type as (typeof t.venueType.enumValues)[number], address: v.address, city: v.city, zip: v.zip, lat: v.lat, lng: v.lng, phone: v.phone, hoursJson: v.hoursJson, notes: v.notes, sourceUrl: v.sourceUrl || null, orgKey: v.org || null };
   await D().insert(t.venues).values(vals).onConflictDoUpdate({ target: t.venues.slug, set: vals });
 }
 export async function dbDeleteVenue(slug: string) { await D().delete(t.venues).where(eq(t.venues.slug, slug)); }

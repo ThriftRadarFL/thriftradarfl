@@ -8,13 +8,15 @@ import { dealRules, ruleId } from "../src/lib/deal-rules";
 import { seedVenues } from "../src/lib/seed-data";
 const q = (s: string | null | undefined) => (s == null ? "NULL" : `'${s.replace(/'/g, "''")}'`);
 const rules = dealRules.map((r) => `  (${q(ruleId(r))}, ${q(r.venue)}, ${q(r.kind)}, ${r.day}, ${r.time ? q(r.time) : "NULL"}, ${q(r.color)}, ${r.discountPct ?? "NULL"}, ${q(r.label)}, ${r.verified})`).join(",\n");
-const venues = seedVenues.map((v) => `  (${q(v.slug)}, ${q(v.name)}, ${q(v.type)}::venue_type, ${q(v.address)}, ${q(v.city)}, ${q(v.zip)}, ${v.lat || "NULL"}, ${v.lng || "NULL"}, ${q(v.phone)}, ${v.hoursJson ? q(JSON.stringify(v.hoursJson)) + "::jsonb" : "NULL"}, ${q(v.notes)})`).join(",\n");
-writeFileSync("scripts/supabase-0002.sql", `-- ThriftRadarFL migrations 0002–0004 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages)
+const venues = seedVenues.map((v) => `  (${q(v.slug)}, ${q(v.name)}, ${q(v.type)}::venue_type, ${q(v.address)}, ${q(v.city)}, ${q(v.zip)}, ${v.lat || "NULL"}, ${v.lng || "NULL"}, ${q(v.phone)}, ${v.hoursJson ? q(JSON.stringify(v.hoursJson)) + "::jsonb" : "NULL"}, ${q(v.notes)}, ${q(v.sourceUrl || null)}, ${q(v.org)})`).join(",\n");
+writeFileSync("scripts/supabase-0002.sql", `-- ThriftRadarFL migrations 0002–0005 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages, venue source_url/org_key)
 -- Safe to run more than once. Paste into Supabase → SQL Editor → Run.
 BEGIN;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS published boolean DEFAULT true NOT NULL;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS description text;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS tags text[]; -- 0003
+ALTER TABLE venues ADD COLUMN IF NOT EXISTS source_url text; -- 0005
+ALTER TABLE venues ADD COLUMN IF NOT EXISTS org_key text; -- 0005
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS rule_key text;
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS label text;
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS verified boolean DEFAULT false NOT NULL;
@@ -35,9 +37,9 @@ ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 
 -- Seed/refresh venues (new stores added 2026-11-02 with sources in notes)
-INSERT INTO venues (slug, name, type, address, city, zip, lat, lng, phone, hours_json, notes) VALUES
+INSERT INTO venues (slug, name, type, address, city, zip, lat, lng, phone, hours_json, notes, source_url, org_key) VALUES
 ${venues}
-ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, address = EXCLUDED.address, city = EXCLUDED.city, zip = EXCLUDED.zip, lat = EXCLUDED.lat, lng = EXCLUDED.lng, phone = EXCLUDED.phone, hours_json = EXCLUDED.hours_json, notes = EXCLUDED.notes;
+ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, address = EXCLUDED.address, city = EXCLUDED.city, zip = EXCLUDED.zip, lat = EXCLUDED.lat, lng = EXCLUDED.lng, phone = EXCLUDED.phone, hours_json = EXCLUDED.hours_json, notes = EXCLUDED.notes, source_url = EXCLUDED.source_url, org_key = EXCLUDED.org_key;
 
 -- Seed deal rules (upsert by rule_key; skips venues that don't exist yet)
 INSERT INTO deal_rules (rule_key, venue_id, kind, day_of_week, start_time, color, discount_pct, label, description, verified)
