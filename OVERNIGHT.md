@@ -62,3 +62,11 @@ Blocked on your logins: GitHub push, Supabase, Vercel, MapTiler (interactive map
 - `NEXT_DIST_DIR=.next-build npm run build` builds without clobbering a running `next dev`
 - Tests: 48 passing; typecheck, lint, build green
 - Known: unknown slugs (`/city/nope`, `/sales/nope`) render the 404 page with `noindex` but HTTP 200 (root `loading.tsx` streams first) — pre-existing
+
+## 4 PM pass (What's built)
+- **JSON→Postgres audit:** publish flag, deal rules, submissions, contact messages, subscribers, audit log were already in Postgres. Gap found + fixed: store `sourceUrl` and org key were silently dropped in Postgres → migration `0005_venue_source_org` (+ `scripts/supabase-0002.sql` regenerated, now 0002–0005 with current deal rules). `tests/pg.test.ts` round-trips every store on real Postgres (`PG_TEST_URL`, verified on PGlite) and asserts nothing falls back to JSON
+- **Mobile 390px:** `screens/mobile/*.png` refreshed (16 pages, 0 horizontal overflow). Store hours now 12-hour ("9 AM–9 PM", "Tue–Sat"), nav tab strip shows a scroll fade on phones, footer adds Orlando + "All cities"
+- **Digest email:** PNG logo (`public/logo-email.png`, 516×96) referenced absolutely via `NEXT_PUBLIC_SITE_URL` (→ Vercel prod domain → localhost); 12-hour day labels, store names on deal days; cron refuses real sends while the site URL is localhost (dry run shows `logoUrl`/`siteUrlOk`)
+- **SEO:** sitemap = live published sales + non-empty cities only; robots blocks `/digest/preview` + `/offline`, drops `Host`, disallows all on Vercel preview deploys; ended sales show a banner + noindex
+- **Validation:** impossible dates and unparseable URLs rejected; venue caps/zip/coords/slug checks; store page can't crash on a bad source URL
+- Tests: 60 passing (+4 Postgres tests that run with `PG_TEST_URL`); typecheck, lint, build green
