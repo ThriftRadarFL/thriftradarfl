@@ -1,5 +1,6 @@
 import DigestForm from "./DigestForm";
 import { PageHead } from "@/components/ui";
+export const metadata = { title: "Weekly Hot Sales Digest", description: "Free Thursday email with the best Central Florida estate sales and half-off days.", alternates: { canonical: "/digest" } };
 export default function Digest() {
   return (<div><PageHead title="Weekly Hot Sales Digest" sub="The best estate sales and half-off days, every Thursday" />
     <div className="grid gap-4 md:grid-cols-2">

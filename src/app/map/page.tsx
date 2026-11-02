@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getVenues, getSales } from "@/lib/data";
 import { PageHead, typeLabel } from "@/components/ui";
+export const metadata = { title: "Sale Map — estate sales & thrift stores", description: "Map of upcoming estate sales, auctions, yard sales and thrift stores across Central Florida.", alternates: { canonical: "/map" } };
 const dot: Record<string, string> = { estate: "bg-coral", auction: "bg-royal", auction_house: "bg-royal", thrift: "bg-teal", outlet_bins: "bg-cta", yard: "bg-[#6b4fa0]" };
 export default async function MapPage() {
   const venues = await getVenues(); const sales = await getSales();

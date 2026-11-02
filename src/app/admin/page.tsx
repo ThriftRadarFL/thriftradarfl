@@ -5,7 +5,7 @@ import { SALE_TYPES, VENUE_TYPES } from "@/lib/validate";
 import { PageHead } from "@/components/ui";
 import { login, logout, saveSale, saveVenue, removeSale } from "./actions";
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Admin | ThriftRadarFL", robots: { index: false } };
+export const metadata = { title: "Admin", robots: { index: false } };
 const inp = "mt-1 block w-full border border-line px-2 py-1.5 text-sm font-normal";
 const F = ({ n, l, d, t }: { n: string; l: string; d?: string | number; t?: string }) => <label className="block text-xs font-bold">{l}<input name={n} type={t ?? "text"} defaultValue={d} className={inp} /></label>;
 type SP = { searchParams: Promise<{ err?: string; msg?: string; sale?: string; venue?: string }> };

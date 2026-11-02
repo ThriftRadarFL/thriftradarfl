@@ -1,6 +1,7 @@
 import type { Sale, SaleDay, Venue } from "./data";
 export const SALE_TYPES = ["estate", "auction", "thrift", "outlet_bins", "yard"] as const;
 export const VENUE_TYPES = ["thrift", "outlet_bins", "auction_house", "estate_company"] as const;
+export const isEmail = (e: string) => e.length <= 254 && /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(e);
 export const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 type R<T> = { ok: true; value: T } | { ok: false; errors: string[] };
 const num = (v: unknown, d = 0) => (v === "" || v == null || isNaN(Number(v)) ? d : Number(v));
@@ -13,7 +14,11 @@ export function parseSale(o: Record<string, unknown>): R<Sale> {
   else if (typeof o.days === "string") days = o.days.split("\n").map((l) => l.trim()).filter(Boolean).map((l) => {
     const [date, start, end, pct] = l.split(/[\s,]+/); return { date, start, end, discountPct: num(pct) }; });
   days.forEach((d, i) => { if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date) || !/^\d{2}:\d{2}$/.test(d.start) || !/^\d{2}:\d{2}$/.test(d.end)) e.push(`day ${i + 1} must be "YYYY-MM-DD HH:MM HH:MM [pct]"`); });
+  days.forEach((d, i) => { if (d.end <= d.start) e.push(`day ${i + 1}: end must be after start`); if (d.discountPct < 0 || d.discountPct > 100) e.push(`day ${i + 1}: discount 0-100`); });
   if (!days.length) e.push("at least one day required");
+  if (title.length > 160) e.push("title too long");
+  const lat = num(o.lat), lng = num(o.lng); if (lat && (lat < 24 || lat > 31.5)) e.push("lat outside Florida"); if (lng && (lng < -88 || lng > -79.5)) e.push("lng outside Florida");
+  if (o.slug && !/^[a-z0-9-]+$/.test(String(o.slug))) e.push("slug must be lowercase letters, digits, dashes");
   const sourceUrl = String(o.sourceUrl ?? ""); if (sourceUrl && !/^https?:\/\//.test(sourceUrl)) e.push("sourceUrl must be http(s)");
   if (e.length) return { ok: false, errors: e };
   const pm = Array.isArray(o.paymentMethods) ? (o.paymentMethods as string[]) : String(o.paymentMethods ?? "cash").split(",").map((x) => x.trim()).filter(Boolean);

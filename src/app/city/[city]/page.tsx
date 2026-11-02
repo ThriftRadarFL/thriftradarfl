@@ -6,7 +6,7 @@ type P = { params: Promise<{ city: string }> };
 export const dynamicParams = false;
 export function generateStaticParams() { return Object.keys(CITIES).map((city) => ({ city })); }
 export async function generateMetadata({ params }: P) {
-  const n = CITIES[(await params).city]; return { title: `Estate Sales & Thrift Deals in ${n}, FL | ThriftRadarFL`, description: `Upcoming estate sales, auctions, yard sales and thrift store deal days in ${n}, Florida.` };
+  const n = CITIES[(await params).city]; return { title: `Estate Sales & Thrift Deals in ${n}, FL`, alternates: { canonical: `/city/${(await params).city}` }, description: `Upcoming estate sales, auctions, yard sales and thrift store deal days in ${n}, Florida.` };
 }
 export default async function City({ params }: P) {
   const { city } = await params; const name = CITIES[city]; if (!name) notFound();

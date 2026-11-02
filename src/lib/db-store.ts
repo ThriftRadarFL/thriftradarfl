@@ -38,3 +38,7 @@ export async function dbAddSubscriber(email: string, area: string) {
   const r = await D().insert(t.subscribers).values({ email: email.toLowerCase(), area }).onConflictDoNothing().returning({ id: t.subscribers.id });
   return r.length > 0;
 }
+export async function dbListSubscribers() {
+  const r = await D().select().from(t.subscribers).orderBy(asc(t.subscribers.createdAt));
+  return r.map((x) => ({ email: x.email, area: x.area ?? "", at: x.createdAt.toISOString() }));
+}

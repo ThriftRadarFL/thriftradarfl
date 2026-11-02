@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getVenues } from "@/lib/data";
 import { PageHead, typeLabel } from "@/components/ui";
+export const metadata = { title: "Thrift Stores, Goodwill Outlets & Auction Houses", description: "Hours, addresses and deal days for Goodwill stores, outlet bins and auction houses in Central Florida.", alternates: { canonical: "/stores" } };
 const chip: Record<string, string> = { thrift: "bg-teal", outlet_bins: "bg-cta", auction_house: "bg-royal" };
 export default async function Stores() {
   const venues = await getVenues();

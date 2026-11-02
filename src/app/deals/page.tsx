@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PageHead } from "@/components/ui";
 import { getVenues } from "@/lib/data";
 import { dealRules, DAYS } from "@/lib/deal-rules";
-export const metadata = { title: "Deal Days — Goodwill color tags, half-off & bin restocks | ThriftRadarFL" };
+export const metadata = { title: "Deal Days — Goodwill color tags, half-off & bin restocks" };
 const order = [1, 2, 3, 4, 5, 6, 0];
 export default async function Deals() {
   const venues = await getVenues(); const name = (s: string) => venues.find((v) => v.slug === s)?.name ?? s;

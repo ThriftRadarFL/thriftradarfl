@@ -15,9 +15,15 @@ const venuesFile = path.join(DATA_DIR, "venues.json");
 async function readJson<T>(file: string, fallback: T): Promise<T> {
   try { return JSON.parse(await fs.readFile(file, "utf8")) as T; } catch { return fallback; }
 }
-async function writeJson(file: string, data: unknown) {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(file, JSON.stringify(data, null, 2) + "\n");
+let writeChain: Promise<unknown> = Promise.resolve();
+// Serialized + atomic (tmp file + rename) so concurrent admin writes can't corrupt JSON.
+function writeJson(file: string, data: unknown) {
+  const run = async () => {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    const tmp = `${file}.${process.pid}.tmp`;
+    await fs.writeFile(tmp, JSON.stringify(data, null, 2) + "\n"); await fs.rename(tmp, file);
+  };
+  const p = writeChain.then(run, run); writeChain = p.catch(() => {}); return p;
 }
 
 // MVP: JSON files under /data (seeded from seed-data.ts) until DATABASE_URL + Drizzle reads are wired.
@@ -54,6 +60,11 @@ export async function addDigestSubscriber(email: string, area: string) {
   return true;
 }
 
+export async function listSubscribers(): Promise<{ email: string; area: string; at: string }[]> {
+  if (hasDb) return pg.dbListSubscribers();
+  return readJson(path.join(DATA_DIR, "digest-subscribers.json"), []);
+}
+export const citySlug = (city: string) => city.toLowerCase().replace(/\s+/g, "-");
 export const CITIES: Record<string, string> = {
   "port-orange": "Port Orange", "daytona-beach": "Daytona Beach", deland: "DeLand", "new-smyrna-beach": "New Smyrna Beach", "ormond-beach": "Ormond Beach",
 };
