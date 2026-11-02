@@ -1,10 +1,10 @@
 // Weekly digest job. Vercel Cron hits this (see vercel.json) with Authorization: Bearer $CRON_SECRET.
 // Without RESEND_API_KEY it runs in dry-run mode and returns the rendered email (safe to call locally).
-import { getSales, listSubscribers, getDealRules } from "@/lib/data";
-import { buildDigest } from "@/lib/digest";
+import { getSales, listSubscribers, getDealRules, getVenues } from "@/lib/data";
+import { buildDigest, LOGO_PATH } from "@/lib/digest";
 import { json } from "@/lib/api";
 import { unsubToken } from "@/lib/auth";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, isLocalUrl } from "@/lib/site";
 export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
@@ -12,9 +12,12 @@ export async function GET(req: Request) {
   if (!secret && process.env.NODE_ENV === "production") return json({ error: "CRON_SECRET not configured" }, 401);
   if (secret && req.headers.get("authorization") !== `Bearer ${secret}`) return json({ error: "unauthorized" }, 401);
   const u = new URL(req.url); const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
-  const d = buildDigest(await getSales(), u.searchParams.get("from") ?? today, undefined, await getDealRules()); const subs = await listSubscribers();
+  const venueNames = Object.fromEntries((await getVenues()).map((v) => [v.slug, v.name]));
+  const d = buildDigest(await getSales(), u.searchParams.get("from") ?? today, undefined, await getDealRules(), venueNames); const subs = await listSubscribers();
   const key = process.env.RESEND_API_KEY; const sender = process.env.DIGEST_FROM ?? "ThriftRadarFL <onboarding@resend.dev>";
-  if (!key || u.searchParams.get("dry") === "1") return json({ dryRun: true, recipients: subs.length, subject: d.subject, sales: d.count, text: d.text, htmlBytes: d.html.length, unsubscribeLinkOk: d.html.includes(`${SITE_URL}/digest">Unsubscribe`) });
+  if (!key || u.searchParams.get("dry") === "1") return json({ dryRun: true, recipients: subs.length, subject: d.subject, sales: d.count, text: d.text, htmlBytes: d.html.length, unsubscribeLinkOk: d.html.includes(`${SITE_URL}/digest">Unsubscribe`), logoUrl: `${SITE_URL}${LOGO_PATH}`, siteUrlOk: !isLocalUrl(SITE_URL) });
+  // Never mail localhost links/images to real subscribers: require a public NEXT_PUBLIC_SITE_URL before sending.
+  if (isLocalUrl(SITE_URL)) return json({ error: "NEXT_PUBLIC_SITE_URL is not set to a public https URL; refusing to send emails with localhost links" }, 500);
   let sent = 0; const errors: string[] = [];
   for (let i = 0; i < subs.length; i += 100) { // Resend batch API: up to 100 emails per call
     const batch = subs.slice(i, i + 100).map((s) => {

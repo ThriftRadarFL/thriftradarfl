@@ -89,3 +89,21 @@ test("seed venues: unique slugs, every new store has a source URL, coords in Flo
   for (const v of seedVenues) { if (v.slug !== "goodwill-daytona-isb") assert.match(v.sourceUrl, /^https:\/\//, v.slug);
     if (v.lat) { assert.ok(v.lat > 24 && v.lat < 31.5 && v.lng < -79.5 && v.lng > -88, v.slug); } }
 });
+import { siteUrl, isLocalUrl } from "../src/lib/site";
+import { dayLabel } from "../src/lib/digest";
+test("siteUrl: NEXT_PUBLIC_SITE_URL → Vercel domain → localhost; always absolute, no trailing slash", () => {
+  assert.equal(siteUrl({ NEXT_PUBLIC_SITE_URL: "https://thriftradarfl.com/" }), "https://thriftradarfl.com");
+  assert.equal(siteUrl({ NEXT_PUBLIC_SITE_URL: "  ", VERCEL_PROJECT_PRODUCTION_URL: "trfl.vercel.app" }), "https://trfl.vercel.app");
+  assert.equal(siteUrl({ NEXT_PUBLIC_SITE_URL: "thriftradarfl.com" }), "https://thriftradarfl.com");
+  assert.equal(siteUrl({}), "http://localhost:3000"); assert.ok(isLocalUrl(siteUrl({}))); assert.ok(!isLocalUrl("https://thriftradarfl.com"));
+});
+test("digest: absolute PNG logo + links on the given site URL, 12-hour day labels, store names on deal days", () => {
+  const d = buildDigest(mockSales as Sale[], "2026-11-10", "https://x.test/digest", undefined, { "goodwill-port-orange": "Goodwill Port Orange" }, "https://x.test");
+  assert.ok(d.html.includes('<img src="https://x.test/logo-email.png"')); assert.ok(!/(src|href)="\/(?!\/)/.test(d.html), "no relative URLs in email");
+  assert.ok(d.html.includes("— Goodwill Port Orange")); assert.ok(!/\b\d{2}:\d{2}\b/.test(d.html), "no 24h times");
+  assert.equal(dayLabel("2026-11-12", "09:00"), "Thu 11/12 9 AM");
+});
+test("email logo PNG exists and matches the 215×40 slot (2.4× retina)", async () => {
+  const b = (await import("node:fs")).readFileSync("public/logo-email.png"); assert.equal(b.subarray(1, 4).toString(), "PNG");
+  const w = b.readUInt32BE(16), h = b.readUInt32BE(20); assert.ok(Math.abs(w / h - 215 / 40) < 0.05, `aspect ${w}x${h}`);
+});
