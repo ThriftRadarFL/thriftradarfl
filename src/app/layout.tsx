@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:bg-white focus:px-3 focus:py-2 focus:font-bold focus:text-royal">Skip to content</a>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()) }} />
     <Nav /><main id="main" tabIndex={-1} className="mx-auto max-w-[1160px] px-4 pt-4 pb-6 focus:outline-none">{children}</main>
-    <footer className="border-t border-line bg-white"><div className="mx-auto grid max-w-[1160px] gap-4 px-4 py-5 text-sm sm:grid-cols-3">
+    <footer className="border-t border-line bg-white print:hidden"><div className="mx-auto grid max-w-[1160px] gap-4 px-4 py-5 text-sm sm:grid-cols-3">
       <div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo-horizontal.webp" alt={SITE_NAME} width={409} height={112} loading="lazy" className="h-12 w-auto" /><p className="mt-1 text-xs text-gray-600">Estate sales, auctions and thrift deal days across Volusia &amp; Orange counties. Always confirm details with the original listing.</p></div>

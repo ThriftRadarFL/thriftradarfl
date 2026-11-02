@@ -39,3 +39,6 @@ body { text-rendering: optimizeLegibility; }
 ::selection { background: #0b3d91; color: #fff; }
 button:disabled, .btn-red:disabled, .btn-gray:disabled { opacity: 0.55; cursor: not-allowed; }
 input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #f5b400; outline-offset: 0; border-color: #0b3d91; }
+
+/* Print (route planner list etc.): plain black-on-white, no nav chrome */
+@media print { body { background: #fff !important; color: #000; } a { text-decoration: none; } @page { margin: 0.5in; } }

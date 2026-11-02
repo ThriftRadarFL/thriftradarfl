@@ -3,7 +3,7 @@ import Image from "next/image";
 import NavLinks from "./NavLinks";
 const links = [["/", "This Week"], ["/today", "Today"], ["/map", "Map"], ["/calendar", "Calendar"], ["/weekend", "Weekend"], ["/stores", "Stores"], ["/deals", "Deal Days"], ["/city", "Cities"], ["/saved", "♥ Saved"], ["/plan", "Route"], ["/digest", "Digest"]];
 export default function Nav() {
-  return (<header>
+  return (<header className="print:hidden">
     <div className="bg-royal-dark text-white"><div className="mx-auto flex max-w-[1160px] flex-wrap items-center gap-2 px-4 py-3">
       <Link href="/" aria-label="ThriftRadarFL home" className="shrink-0 rounded-md bg-white px-1.5 py-1 shadow-[0_1px_3px_rgba(0,0,0,0.35)] min-[360px]:px-2">
         <Image src="/logo-horizontal.webp" alt="ThriftRadarFL — Central Florida thrift &amp; estate sales" width={409} height={112} priority unoptimized className="hidden h-9 w-auto min-[360px]:block sm:h-11" />
