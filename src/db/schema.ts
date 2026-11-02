@@ -1,8 +1,8 @@
 import { pgTable, pgEnum, serial, text, integer, boolean, timestamp, date, time, doublePrecision, jsonb, primaryKey } from "drizzle-orm/pg-core";
 
 export const orgType = pgEnum("org_type", ["estate_co", "auction_house", "thrift_chain", "independent"]);
-export const venueType = pgEnum("venue_type", ["thrift", "outlet_bins", "auction_house", "consignment", "flea"]);
-export const saleType = pgEnum("sale_type", ["estate", "auction", "moving", "yard", "warehouse"]);
+export const venueType = pgEnum("venue_type", ["thrift", "outlet_bins", "auction_house", "consignment", "flea", "estate_company"]);
+export const saleType = pgEnum("sale_type", ["estate", "auction", "moving", "yard", "warehouse", "thrift", "outlet_bins"]);
 export const saleSource = pgEnum("sale_source", ["estatesales_net", "manual", "submitted"]);
 export const saleStatus = pgEnum("sale_status", ["upcoming", "live", "ended"]);
 export const dealKind = pgEnum("deal_kind", ["color_tag", "half_off", "senior_day", "restock", "bins_rotation", "dollar_day"]);
@@ -96,6 +96,7 @@ export const subscribers = pgTable("subscribers", {
   email: text("email").notNull().unique(),
   zip: text("zip"),
   interests: text("interests").array(),
+  area: text("area"),
   tier: subTier("tier").default("free").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });

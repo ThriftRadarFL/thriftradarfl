@@ -2,6 +2,7 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as s from "../src/db/schema";
+import { eq } from "drizzle-orm";
 import { seedOrgs, seedVenues, seedDealRules, seedTags, mockSales } from "../src/lib/seed-data";
 
 async function main() {
@@ -10,6 +11,8 @@ async function main() {
   const db = drizzle(client);
   const orgIds: Record<string, number> = {};
   for (const o of seedOrgs) {
+    const [ex] = await db.select({ id: s.organizations.id }).from(s.organizations).where(eq(s.organizations.name, o.name));
+    if (ex) { orgIds[o.key] = ex.id; continue; }
     const [r] = await db.insert(s.organizations).values({ name: o.name, type: o.type, website: o.website }).returning({ id: s.organizations.id });
     orgIds[o.key] = r.id;
   }
@@ -25,7 +28,6 @@ async function main() {
   }
   await db.insert(s.tags).values(seedTags.map((name) => ({ name }))).onConflictDoNothing();
   for (const m of mockSales) {
-    if (m.type !== "estate" && m.type !== "auction" && m.type !== "yard") continue; // thrift/bins mocks are UI-only
     const { days, type, ...rest } = m;
     const [r] = await db.insert(s.sales).values({ ...rest, type, source: "estatesales_net" as const }).onConflictDoNothing().returning({ id: s.sales.id });
     if (r) await db.insert(s.saleDays).values(days.map((d) => ({ saleId: r.id, date: d.date, startTime: d.start, endTime: d.end, discountPct: d.discountPct })));
