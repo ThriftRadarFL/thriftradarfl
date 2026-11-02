@@ -2,16 +2,19 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import Nav from "@/components/Nav";
+import Pwa from "@/components/Pwa";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 import { siteJsonLd } from "@/lib/jsonld";
 const description = "Weekly map + calendar of estate sales, auctions, thrift deal days and Goodwill bins in Central Florida.";
+export const viewport = { themeColor: "#072a66", width: "device-width", initialScale: 1 };
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "ThriftRadarFL — Central Florida estate sales & thrift deals", template: `%s | ${SITE_NAME}` },
   description, applicationName: SITE_NAME, alternates: { canonical: "/" },
   openGraph: { type: "website", siteName: SITE_NAME, locale: "en_US", url: "/", title: "ThriftRadarFL", description, },
   twitter: { card: "summary_large_image", title: "ThriftRadarFL", description },
-  icons: { icon: "/favicon.ico" },
+  icons: { icon: "/favicon.ico", apple: "/icons/apple-touch-icon.png" },
+  appleWebApp: { capable: true, title: "ThriftRadar", statusBarStyle: "black-translucent" },
 };
 const cities = [["port-orange", "Port Orange"], ["daytona-beach", "Daytona Beach"], ["deland", "DeLand"], ["new-smyrna-beach", "New Smyrna Beach"], ["ormond-beach", "Ormond Beach"]];
 const pages = [["/about", "About"], ["/faq", "FAQ"], ["/submit", "Submit a sale"], ["/contact", "Contact"], ["/privacy", "Privacy"], ["/terms", "Terms"], ["/sales", "All sales"], ["/search", "Search"]];
@@ -24,5 +27,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <div><div className="font-bold text-royal">{SITE_NAME}</div><p className="mt-1 text-xs text-gray-600">Estate sales, auctions and thrift deal days across Volusia &amp; Orange counties. Always confirm details with the original listing.</p></div>
       <nav aria-label="Site"><div className="mb-1 text-xs font-bold uppercase text-gray-600">Site</div><ul className="grid grid-cols-2 gap-1">{pages.map(([h, l]) => <li key={h}><Link href={h} className="hover:text-royal hover:underline">{l}</Link></li>)}</ul></nav>
       <nav aria-label="Cities"><div className="mb-1 text-xs font-bold uppercase text-gray-600">Cities</div><ul className="grid grid-cols-2 gap-1">{cities.map(([k, l]) => <li key={k}><Link href={`/city/${k}`} className="hover:text-royal hover:underline">{l}</Link></li>)}</ul></nav>
-    </div><p className="mx-auto max-w-[1160px] px-4 pb-4 text-xs text-gray-600">© {new Date().getFullYear()} {SITE_NAME} · Not affiliated with Goodwill, EstateSales.net or any listed seller.</p></footer></body></html>);
+    </div><p className="mx-auto max-w-[1160px] px-4 pb-4 text-xs text-gray-600">© {new Date().getFullYear()} {SITE_NAME} · Not affiliated with Goodwill, EstateSales.net or any listed seller.</p></footer><Pwa /></body></html>);
 }
