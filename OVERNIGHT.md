@@ -50,3 +50,15 @@ Blocked on your logins: GitHub push, Supabase, Vercel, MapTiler (interactive map
 - **Admin**: CSV bulk import (template, preview, all-or-nothing import, confirm), **audit log** of every admin action incl. logins; migration 0004
 - **Polish/perf**: active nav tab, navy gradients, focus/disabled states, ≥40px tap targets, metadata always in `<head>`. Lighthouse (prod, mobile): home 90/100/100/100, sale 99/100/100/100, map 96/100/100/100 (was 70)
 - Supabase paste file `scripts/supabase-0002.sql` now covers 0002–0004 + venue seed + deal rules (verified twice on PGlite)
+
+## 3–3:30 PM hardening + city pass
+- **Nav**: active tab (aria-current, red underline), gradient panel heads
+- **Security headers** (`src/lib/security.ts` → `next.config.ts`): CSP allowing only self + MapTiler (blob: workers for MapLibre; `unsafe-eval` only in dev), X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, HSTS (prod), no `X-Powered-By`. Verified in a prod build: /map renders MapLibre with zero CSP violations
+- **Spam control**: one per-IP sliding-window limiter (bounded memory) for subscribe (5/min), submit + contact (5/hour); honeypot (`website`/`company`) on all three → fake success, nothing stored; API returns 429 + `Retry-After`
+- **Validation caps** (`CAPS` in `validate.ts`): title/city/zip/slug/url/days/payment methods/description/message/area
+- **Admin audit**: every admin server action starts with `guard()`, every write API checks `isAdminRequest` — enforced by a test that scans the source. Cron now fails closed in production if `CRON_SECRET` is missing
+- **`/api/health`**: `mode` = `postgres` | `json-fallback` | `json`, plus read check, venue count, latency, which integrations are configured (booleans only, no secrets)
+- **City pages** `/city/[slug]` for every city with data (14 now, incl. Orlando, Sanford, Winter Park): "This weekend" Fri–Sun panel (sales + that city's store deal days), upcoming sales, stores with deal days, nearby cities by distance, OG/Twitter meta, BreadcrumbList + ItemList JSON-LD; all in sitemap
+- `NEXT_DIST_DIR=.next-build npm run build` builds without clobbering a running `next dev`
+- Tests: 48 passing; typecheck, lint, build green
+- Known: unknown slugs (`/city/nope`, `/sales/nope`) render the 404 page with `noindex` but HTTP 200 (root `loading.tsx` streams first) — pre-existing

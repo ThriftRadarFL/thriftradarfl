@@ -19,14 +19,14 @@ Deal rules source of truth for now: `src/lib/deal-rules.ts` (seeded into DB; UNV
 ## API (all JSON errors `{error, details?}`; body cap 32KB; `src/lib/api.ts`)
 | Method | Route | Auth | Notes |
 |---|---|---|---|
-| GET | `/api/health` | – | dataMode, adminConfigured |
+| GET | `/api/health` | – | `mode` postgres/json-fallback/json, readOk, venues, latencyMs, *Configured booleans |
 | GET | `/api/sales?city=&type=&upcoming=1&from=YYYY-MM-DD` | – | |
 | POST | `/api/sales` | admin | 201; 409 if slug exists |
 | GET/PUT/DELETE | `/api/sales/[slug]` | write=admin | PUT = partial merge + revalidate; 404s |
 | GET/POST | `/api/venues?city=` | POST admin | |
 | GET/PUT | `/api/venues/[slug]` | PUT admin | GET includes dealRules |
 | GET | `/api/deal-rules?venue=` | – | |
-| POST | `/api/subscribers` | – | rate-limited 5/min/IP, honeypot `company` |
+| POST | `/api/subscribers` | – | rate-limited 5/min/IP (429 + Retry-After), honeypot `company`/`website` |
 | GET | `/api/subscribers` | admin | JSON list |
 | GET | `/api/admin/subscribers` | admin | CSV export |
 | POST | `/api/admin/import` | admin | `{url}` → draft Sale from listing JSON-LD (not saved) |
@@ -46,7 +46,7 @@ Now: keyless SVG overview + city lists. Next: MapLibre GL + MapTiler tiles (`NEX
 Admin-triggered, one URL at a time, host allowlist (estatesales.net/.org, auctionzip, hibid), reads only schema.org JSON-LD, 10s timeout, identifies UA, never rehosts images, always keeps `sourceUrl` + "Original Listing" link. No crawlers/bulk scraping. Prefer organizer submissions.
 
 ## Security
-Security headers in `next.config.ts`; `/admin` + `/api/` disallowed in robots; admin noindex.
+`src/lib/security.ts`: CSP (self + MapTiler, blob: workers), XFO, Referrer-Policy, Permissions-Policy, COOP, HSTS in prod — applied in `next.config.ts`. Per-IP limiter (subscribe 5/min, submit/contact 5/h) + honeypot on all public forms. `/admin` + `/api/` disallowed in robots; admin noindex. Admin-guard coverage enforced by `tests/security.test.ts`.
 
 ## Tests
 `npm test` (node:test: validation, ics, digest, importer fixture), `npm run check` (typecheck + tests + lint).

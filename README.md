@@ -26,11 +26,14 @@ npm run build && npm start
 | NEXT_PUBLIC_MAPTILER_KEY | map (Day 4) |
 | RESEND_API_KEY | digest (later) |
 
+## What's built
+See `OVERNIGHT.md` → "What's built" and the dated passes below it. Latest: security headers/CSP, rate limit + honeypot on public forms, validation caps, `/api/health` (`mode`: postgres | json-fallback | json), per-city pages with "This weekend" for every city in the data.
+
 ## Layout
 - `src/db/schema.ts` — organizations, venues, sales, sale_days, deal_rules, tags, sale_tags, subscribers
 - `src/lib/seed-data.ts` — seed + mock data (lat/lng are approximate placeholders — re-geocode)
 - `scripts/seed.ts` — DB seeder
-- `src/app/*` — routes: /, /map, /stores, /stores/[slug], /deals, /digest, /admin, /sales/[slug], /city/[city]
+- `src/app/*` — routes: /, /map, /stores, /stores/[slug], /deals, /digest, /admin, /sales/[slug], /city/[slug] (auto for every city in the data)
 
 ## shadcn (later)
 `npx shadcn@latest init` then `npx shadcn@latest add button card input badge`.
