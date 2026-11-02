@@ -1,6 +1,6 @@
 // Weekly digest builder. Pure function → {subject, html, text}; sending is done by /api/cron/digest via Resend when RESEND_API_KEY is set.
 import type { Sale } from "./data";
-import { dealRules, DAYS } from "./deal-rules";
+import { dealRules as seedRules, DAYS, type DealRule } from "./deal-rules";
 import { SITE_URL } from "./site";
 const h = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 export function upcomingWindow(sales: Sale[], from: string, days = 10) {
@@ -8,7 +8,7 @@ export function upcomingWindow(sales: Sale[], from: string, days = 10) {
   return sales.filter((s) => s.days.some((d) => d.date >= from && d.date <= to))
     .sort((a, b) => Math.max(...b.days.map((d) => d.discountPct)) - Math.max(...a.days.map((d) => d.discountPct)) || a.days[0].date.localeCompare(b.days[0].date)).slice(0, 10);
 }
-export function buildDigest(sales: Sale[], from: string, unsubscribeUrl = `${SITE_URL}/digest`) {
+export function buildDigest(sales: Sale[], from: string, unsubscribeUrl = `${SITE_URL}/digest`, dealRules: DealRule[] = seedRules) {
   const top = upcomingWindow(sales, from);
   const subject = `ThriftRadarFL: ${top.length} hot sales this week${top[0] ? ` — ${top[0].city}` : ""}`;
   const deals = dealRules.filter((r) => r.discountPct && r.discountPct >= 50);

@@ -34,6 +34,7 @@ export async function dbUpsertVenue(v: Venue) {
   const vals = { slug: v.slug, name: v.name, type: v.type as (typeof t.venueType.enumValues)[number], address: v.address, city: v.city, zip: v.zip, lat: v.lat, lng: v.lng, phone: v.phone, hoursJson: v.hoursJson, notes: v.notes };
   await D().insert(t.venues).values(vals).onConflictDoUpdate({ target: t.venues.slug, set: vals });
 }
+export async function dbDeleteVenue(slug: string) { await D().delete(t.venues).where(eq(t.venues.slug, slug)); }
 export async function dbAddSubscriber(email: string, area: string) {
   const r = await D().insert(t.subscribers).values({ email: email.toLowerCase(), area }).onConflictDoNothing().returning({ id: t.subscribers.id });
   return r.length > 0;

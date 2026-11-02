@@ -2,7 +2,7 @@
 import "dotenv/config";
 import { getSales, getVenues, upsertSale, deleteSale, upsertVenue, addDigestSubscriber, dataMode } from "../src/lib/data";
 async function main() {
-  console.log("mode:", dataMode);
+  console.log("mode:", dataMode());
   const sales = await getSales(); const venues = await getVenues();
   console.log("sales", sales.length, "venues", venues.length, "first sale days", sales[0]?.days.length);
   const t = { slug: "smoke-test-sale", title: "Smoke", type: "estate", city: "DeLand", zip: "32724", lat: 29, lng: -81.3, sourceUrl: "", paymentMethods: ["cash"], days: [{ date: "2026-12-01", start: "09:00", end: "12:00", discountPct: 10 }] };

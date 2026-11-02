@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { PageHead } from "@/components/ui";
-import { getSales, getVenues } from "@/lib/data";
-import { dealRules, DAYS } from "@/lib/deal-rules";
+import { getSales, getVenues, getDealRules } from "@/lib/data";
+import { DAYS } from "@/lib/deal-rules";
 export const metadata = { title: "Calendar — estate sales & deal days, next 14 days" };
 export const dynamic = "force-dynamic";
 const fmt = (d: Date) => d.toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 export default async function Calendar() {
-  const [sales, venues] = await Promise.all([getSales(), getVenues()]);
+  const [sales, venues, dealRules] = await Promise.all([getSales(), getVenues(), getDealRules()]);
   const name = (s: string) => venues.find((v) => v.slug === s)?.name ?? s;
   const start = new Date(fmt(new Date()) + "T12:00:00");
   const days = Array.from({ length: 14 }, (_, i) => { const d = new Date(start); d.setDate(d.getDate() + i); return d; });

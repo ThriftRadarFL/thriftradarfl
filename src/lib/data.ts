@@ -3,12 +3,13 @@ import path from "path";
 import { seedVenues, mockSales } from "./seed-data";
 import { hasDb } from "@/db";
 import * as pg from "./db-store";
+import { dealRules as seedDealRules, ruleId, type DealRule } from "./deal-rules";
 
 export type Venue = Omit<(typeof seedVenues)[number], "hoursJson" | "phone" | "type"> & { type: string; phone: string | null; hoursJson: Record<string, string> | null };
 export type SaleDay = { date: string; start: string; end: string; discountPct: number };
-export type Sale = { slug: string; title: string; type: string; city: string; zip: string; lat: number; lng: number; sourceUrl: string; paymentMethods: string[]; days: SaleDay[] };
+export type Sale = { slug: string; title: string; type: string; city: string; zip: string; lat: number; lng: number; sourceUrl: string; paymentMethods: string[]; days: SaleDay[]; published?: boolean; description?: string };
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = process.env.THRIFTRADAR_DATA_DIR ?? path.join(process.cwd(), "data");
 const salesFile = path.join(DATA_DIR, "sales.json");
 const venuesFile = path.join(DATA_DIR, "venues.json");
 
@@ -26,52 +27,96 @@ function writeJson(file: string, data: unknown) {
   const p = writeChain.then(run, run); writeChain = p.catch(() => {}); return p;
 }
 
-// MVP: JSON files under /data (seeded from seed-data.ts) until DATABASE_URL + Drizzle reads are wired.
-export async function getVenues(): Promise<Venue[]> { if (hasDb) return pg.dbGetVenues(); return readJson<Venue[]>(venuesFile, seedVenues as Venue[]); }
-export async function getVenue(slug: string) { return (await getVenues()).find((v) => v.slug === slug) ?? null; }
-export async function getSales(): Promise<Sale[]> {
-  const s = hasDb ? await pg.dbGetSales() : await readJson<Sale[]>(salesFile, mockSales as Sale[]);
-  return [...s].sort((a, b) => (a.days[0]?.date ?? "").localeCompare(b.days[0]?.date ?? ""));
+// DB is used when DATABASE_URL is set AND reachable. Any DB error (timeout, protocol, auth) marks it down for 60s and
+// transparently falls back to the JSON files so builds and pages never break because the database is unreachable.
+let dbDownUntil = 0; let lastDbError = "";
+async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>): Promise<T> {
+  if (!hasDb || Date.now() < dbDownUntil) return jsonFn();
+  try {
+    let timer: NodeJS.Timeout | undefined;
+    const timeout = new Promise<never>((_, rej) => { timer = setTimeout(() => rej(new Error("db timeout")), 6000); });
+    try { return await Promise.race([dbFn(), timeout]); } finally { clearTimeout(timer); }
+  } catch (e) {
+    const err = e as { code?: string; message?: string; cause?: { code?: string } };
+    lastDbError = err.cause?.code ?? err.code ?? String(err.message ?? e).slice(0, 40);
+    if (Date.now() >= dbDownUntil) console.warn(`[data] database unreachable (${lastDbError}); using JSON fallback`);
+    dbDownUntil = Date.now() + 60_000; return jsonFn();
+  }
 }
+export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= dbDownUntil, lastError: lastDbError || null });
+
+const jsonSales = () => readJson<Sale[]>(salesFile, mockSales as Sale[]);
+const bySoonest = (s: Sale[]) => [...s].sort((a, b) => (a.days[0]?.date ?? "").localeCompare(b.days[0]?.date ?? ""));
+export async function getVenues(): Promise<Venue[]> { return viaDb(() => pg.dbGetVenues(), () => readJson<Venue[]>(venuesFile, seedVenues as Venue[])); }
+export async function getVenue(slug: string) { return (await getVenues()).find((v) => v.slug === slug) ?? null; }
+/** All sales including unpublished drafts (admin). */
+export async function getAllSales(): Promise<Sale[]> { return bySoonest(await viaDb(() => pg.dbGetSales(), jsonSales)); }
+/** Public sales: published only. */
+export async function getSales(): Promise<Sale[]> { return (await getAllSales()).filter((s) => s.published !== false); }
 export async function getSale(slug: string) { return (await getSales()).find((s) => s.slug === slug) ?? null; }
 
 export async function upsertSale(sale: Sale) {
-  if (hasDb) return pg.dbUpsertSale(sale);
-  const all = (await readJson<Sale[]>(salesFile, mockSales as Sale[])).filter((s) => s.slug !== sale.slug);
-  await writeJson(salesFile, [...all, sale]);
+  return viaDb(() => pg.dbUpsertSale(sale), async () => { const all = (await jsonSales()).filter((s) => s.slug !== sale.slug); await writeJson(salesFile, [...all, sale]); });
+}
+export async function setSalePublished(slug: string, published: boolean) {
+  const s = (await getAllSales()).find((x) => x.slug === slug); if (!s) return false; await upsertSale({ ...s, published }); return true;
 }
 export async function deleteSale(slug: string) {
-  if (hasDb) return pg.dbDeleteSale(slug);
-  await writeJson(salesFile, (await readJson<Sale[]>(salesFile, mockSales as Sale[])).filter((s) => s.slug !== slug));
+  return viaDb(() => pg.dbDeleteSale(slug), async () => writeJson(salesFile, (await jsonSales()).filter((s) => s.slug !== slug)));
 }
 export async function upsertVenue(v: Venue) {
-  if (hasDb) return pg.dbUpsertVenue(v);
-  const all = (await getVenues()).filter((x) => x.slug !== v.slug);
-  await writeJson(venuesFile, [...all, v]);
+  return viaDb(() => pg.dbUpsertVenue(v), async () => { const all = (await readJson<Venue[]>(venuesFile, seedVenues as Venue[])).filter((x) => x.slug !== v.slug); await writeJson(venuesFile, [...all, v]); });
+}
+export async function deleteVenue(slug: string) {
+  await viaDb(() => pg.dbDeleteVenue(slug), async () => writeJson(venuesFile, (await readJson<Venue[]>(venuesFile, seedVenues as Venue[])).filter((x) => x.slug !== slug)));
+  const rules = await getDealRules(); if (rules.some((r) => r.venue === slug)) await writeJson(rulesFile, rules.filter((r) => r.venue !== slug));
 }
 
+// Deal rules: JSON-backed (seeded from deal-rules.ts) so admins can edit them.
+const rulesFile = path.join(DATA_DIR, "deal-rules.json");
+export async function getDealRules(): Promise<DealRule[]> { return (await readJson<DealRule[]>(rulesFile, seedDealRules)).map((r) => ({ ...r, id: r.id || ruleId(r) })); }
+export async function upsertDealRule(r: DealRule) { const all = (await getDealRules()).filter((x) => x.id !== r.id); await writeJson(rulesFile, [...all, r].sort((a, b) => a.day - b.day)); }
+export async function deleteDealRule(id: string) { const all = await getDealRules(); await writeJson(rulesFile, all.filter((x) => x.id !== id)); return all.some((x) => x.id === id); }
+
+// Public submissions → pending queue reviewed in /admin.
+export type Submission = { id: string; at: string; email: string; sale: Sale };
+const subsFile = path.join(DATA_DIR, "submissions.json");
+export const listSubmissions = () => readJson<Submission[]>(subsFile, []);
+export async function addSubmission(sale: Sale, email: string) {
+  const list = await listSubmissions(); const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+  await writeJson(subsFile, [...list, { id, at: new Date().toISOString(), email, sale: { ...sale, published: false } }]); return id;
+}
+export async function resolveSubmission(id: string, approve: boolean) {
+  const list = await listSubmissions(); const s = list.find((x) => x.id === id); if (!s) return null;
+  if (approve) await upsertSale({ ...s.sale, published: true });
+  await writeJson(subsFile, list.filter((x) => x.id !== id)); return s.sale.slug;
+}
+
+// Contact form messages (stored locally; no email sent).
+export type ContactMsg = { id: string; at: string; name: string; email: string; message: string };
+const contactFile = path.join(DATA_DIR, "contact.json");
+export const listContacts = () => readJson<ContactMsg[]>(contactFile, []);
+export async function addContact(m: Omit<ContactMsg, "id" | "at">) { await writeJson(contactFile, [...(await listContacts()), { ...m, id: Date.now().toString(36), at: new Date().toISOString() }]); }
+export async function deleteContact(id: string) { await writeJson(contactFile, (await listContacts()).filter((x) => x.id !== id)); }
+
+const subsJson = path.join(DATA_DIR, "digest-subscribers.json");
+type Sub = { email: string; area: string; at: string };
 export async function addDigestSubscriber(email: string, area: string) {
-  if (hasDb) return pg.dbAddSubscriber(email, area);
-  const file = path.join(DATA_DIR, "digest-subscribers.json");
-  const list = await readJson<{ email: string; area: string; at: string }[]>(file, []);
-  if (list.some((x) => x.email.toLowerCase() === email.toLowerCase())) return false;
-  list.push({ email, area, at: new Date().toISOString() });
-  await writeJson(file, list);
-  return true;
+  return viaDb(() => pg.dbAddSubscriber(email, area), async () => {
+    const list = await readJson<Sub[]>(subsJson, []);
+    if (list.some((x) => x.email.toLowerCase() === email.toLowerCase())) return false;
+    await writeJson(subsJson, [...list, { email, area, at: new Date().toISOString() }]); return true;
+  });
 }
-
-export async function listSubscribers(): Promise<{ email: string; area: string; at: string }[]> {
-  if (hasDb) return pg.dbListSubscribers();
-  return readJson(path.join(DATA_DIR, "digest-subscribers.json"), []);
-}
+export async function listSubscribers(): Promise<Sub[]> { return viaDb(() => pg.dbListSubscribers(), () => readJson<Sub[]>(subsJson, [])); }
 export async function removeSubscriber(email: string) {
-  if (hasDb) return pg.dbRemoveSubscriber(email);
-  const file = path.join(DATA_DIR, "digest-subscribers.json");
-  const list = await readJson<{ email: string }[]>(file, []); const next = list.filter((x) => x.email.toLowerCase() !== email.toLowerCase());
-  await writeJson(file, next); return next.length !== list.length;
+  return viaDb(() => pg.dbRemoveSubscriber(email), async () => {
+    const list = await readJson<Sub[]>(subsJson, []); const next = list.filter((x) => x.email.toLowerCase() !== email.toLowerCase());
+    await writeJson(subsJson, next); return next.length !== list.length;
+  });
 }
 export const citySlug = (city: string) => city.toLowerCase().replace(/\s+/g, "-");
 export const CITIES: Record<string, string> = {
   "port-orange": "Port Orange", "daytona-beach": "Daytona Beach", deland: "DeLand", "new-smyrna-beach": "New Smyrna Beach", "ormond-beach": "Ormond Beach",
 };
-export const dataMode = hasDb ? "postgres" : "json";
+export const dataMode = () => (hasDb && Date.now() >= dbDownUntil ? "postgres" : "json");

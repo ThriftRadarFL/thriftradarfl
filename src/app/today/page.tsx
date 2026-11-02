@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { PageHead } from "@/components/ui";
-import { getSales, getVenues } from "@/lib/data";
-import { dealRules, DAYS } from "@/lib/deal-rules";
+import { getSales, getVenues, getDealRules } from "@/lib/data";
+import { DAYS } from "@/lib/deal-rules";
 export const metadata = { title: "Today — Central Florida estate sales & thrift deal days" };
 export const dynamic = "force-dynamic";
 export default async function Today() {
-  const [sales, venues] = await Promise.all([getSales(), getVenues()]);
+  const [sales, venues, dealRules] = await Promise.all([getSales(), getVenues(), getDealRules()]);
   const name = (s: string) => venues.find((v) => v.slug === s)?.name ?? s;
   const iso = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
   const dow = new Date(iso + "T12:00:00").getDay();
@@ -19,7 +19,7 @@ export default async function Today() {
         {!todaySales.length && <div className="text-sm text-gray-400">No estate sales listed for today. <Link className="text-royal hover:underline" href="/sales">See upcoming</Link></div>}
       </div></div>
       <div className="panel"><div className="panel-head">Deal days today ({deals.length})</div><div className="space-y-2 p-3">
-        {deals.map((r) => <Link key={r.venue + r.label} href={`/stores/${r.venue}`} className={`pill ${r.color} block whitespace-normal`}>{r.label}<div className="text-[10px] font-normal opacity-90">{name(r.venue)}{r.time ? ` · ${r.time}` : ""}{!r.verified && " · unverified"}</div></Link>)}
+        {deals.map((r) => <Link key={r.id} href={`/stores/${r.venue}`} className={`pill ${r.color} block whitespace-normal`}>{r.label}<div className="text-[10px] font-normal opacity-90">{name(r.venue)}{r.time ? ` · ${r.time}` : ""}{!r.verified && " · unverified"}</div></Link>)}
         {!deals.length && <div className="text-sm text-gray-400">No deal days today. <Link className="text-royal hover:underline" href="/deals">See the weekly schedule</Link></div>}
       </div></div>
     </div>

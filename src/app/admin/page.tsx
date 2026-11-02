@@ -25,7 +25,7 @@ export default async function Admin({ searchParams }: SP) {
   return (<div><PageHead title="Admin" sub="Local JSON data layer (data/*.json) — swaps to Postgres later" />
     {sp.msg && <p className="mb-3 border border-line bg-paper p-2 text-sm font-bold">{sp.msg}</p>}
     <div className="mb-3 flex flex-wrap items-center gap-3 text-sm"><form action={logout}><button className="btn-gray text-xs">Log out</button></form>
-      <span>Data: <b>{dataMode}</b></span><span>Subscribers: <b>{subs.length}</b></span>
+      <span>Data: <b>{dataMode()}</b></span><span>Subscribers: <b>{subs.length}</b></span>
       <a href="/api/admin/subscribers" className="underline">Export CSV</a><a href="/digest/preview" className="underline" target="_blank">Preview digest email</a><a href="/api/calendar" className="underline">Calendar feed</a></div>
     <div className="grid gap-4 lg:grid-cols-2">
       <div className="panel"><div className="panel-head">{found ? `Edit sale: ${found.slug}` : draft ? "Add sale (imported draft — review before saving)" : "Add sale"}</div>

@@ -1,6 +1,6 @@
 // UNVERIFIED DEMO schedules — invented for layout/testing. Verify with each store before publishing.
 export type DealKind = "color_tag" | "half_off" | "senior_day" | "restock" | "bins_rotation" | "dollar_day";
-export type DealRule = { venue: string; day: number; kind: DealKind; label: string; color: string; time?: string; discountPct?: number; verified: boolean };
+export type DealRule = { id?: string; venue: string; day: number; kind: DealKind; label: string; color: string; time?: string; discountPct?: number; verified: boolean };
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export const dealRules: DealRule[] = [
   { venue: "goodwill-port-orange", day: 0, kind: "color_tag", label: "Color-of-week tag 50% off", discountPct: 50, color: "bg-teal", verified: false },
@@ -20,3 +20,6 @@ export const dealRules: DealRule[] = [
   { venue: "berners-auction-deland", day: 3, kind: "restock", label: "Weekly auction 6:30pm", color: "bg-royal", time: "18:30", verified: true },
 ];
 export const nextDealDate = (r: DealRule, from = new Date()) => { const d = new Date(from); d.setDate(d.getDate() + ((r.day - d.getDay() + 7) % 7)); return d.toLocaleDateString("en-CA"); };
+export const ruleId = (r: Pick<DealRule, "venue" | "day" | "label">) => `${r.venue}-${r.day}-${r.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+export const DEAL_KINDS: DealKind[] = ["color_tag", "half_off", "senior_day", "restock", "bins_rotation", "dollar_day"];
+export const KIND_COLOR: Record<DealKind, string> = { color_tag: "bg-teal", half_off: "bg-coral", senior_day: "bg-gray-500", restock: "bg-royal", bins_rotation: "bg-royal", dollar_day: "bg-coral" };

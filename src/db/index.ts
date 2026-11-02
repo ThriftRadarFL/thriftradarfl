@@ -4,4 +4,4 @@ import * as schema from "./schema";
 
 const url = process.env.DATABASE_URL;
 export const hasDb = !!url;
-export const db = url ? drizzle(postgres(url, { prepare: false }), { schema }) : null;
+export const db = url ? drizzle(postgres(url, { prepare: false, connect_timeout: 5, max: 5, idle_timeout: 20 }), { schema }) : null;
