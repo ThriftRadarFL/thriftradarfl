@@ -20,7 +20,6 @@ export function buildCsp(dev = process.env.NODE_ENV !== "production") {
     "base-uri": "'self'",
     "object-src": "'none'",
   };
-  if (!dev) d["upgrade-insecure-requests"] = "";
   return Object.entries(d).map(([k, v]) => (v ? `${k} ${v}` : k)).join("; ");
 }
 export function securityHeaders(dev = process.env.NODE_ENV !== "production") {

@@ -16,6 +16,7 @@ const eslintConfig = [
       "public/maplibre-gl-worker.mjs",
       "node_modules/**",
       ".next/**",
+      ".next-build/**",
       "out/**",
       "build/**",
       "next-env.d.ts",

@@ -3,6 +3,8 @@ import { securityHeaders } from "./src/lib/security";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // NEXT_DIST_DIR lets a production build run alongside `next dev` without clobbering .next.
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   // Always render <title>/<meta> in <head> (not streamed into <body>) so every crawler and audit tool sees them.
   htmlLimitedBots: /.*/,
   // Ship data/*.json with serverless functions so JSON mode works read-only on Vercel before Postgres is wired.
