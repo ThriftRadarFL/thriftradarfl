@@ -1,5 +1,5 @@
 // Postgres (Drizzle) implementation of the data layer. Used automatically when DATABASE_URL is set.
-import { eq, asc, inArray } from "drizzle-orm";
+import { eq, asc, inArray, sql } from "drizzle-orm";
 import { db } from "@/db";
 import * as t from "@/db/schema";
 import type { Sale, Venue } from "./data";
@@ -41,4 +41,7 @@ export async function dbAddSubscriber(email: string, area: string) {
 export async function dbListSubscribers() {
   const r = await D().select().from(t.subscribers).orderBy(asc(t.subscribers.createdAt));
   return r.map((x) => ({ email: x.email, area: x.area ?? "", at: x.createdAt.toISOString() }));
+}
+export async function dbRemoveSubscriber(email: string) {
+  const r = await D().delete(t.subscribers).where(eq(sql`lower(${t.subscribers.email})`, email.toLowerCase())).returning({ id: t.subscribers.id }); return r.length > 0;
 }

@@ -64,6 +64,12 @@ export async function listSubscribers(): Promise<{ email: string; area: string; 
   if (hasDb) return pg.dbListSubscribers();
   return readJson(path.join(DATA_DIR, "digest-subscribers.json"), []);
 }
+export async function removeSubscriber(email: string) {
+  if (hasDb) return pg.dbRemoveSubscriber(email);
+  const file = path.join(DATA_DIR, "digest-subscribers.json");
+  const list = await readJson<{ email: string }[]>(file, []); const next = list.filter((x) => x.email.toLowerCase() !== email.toLowerCase());
+  await writeJson(file, next); return next.length !== list.length;
+}
 export const citySlug = (city: string) => city.toLowerCase().replace(/\s+/g, "-");
 export const CITIES: Record<string, string> = {
   "port-orange": "Port Orange", "daytona-beach": "Daytona Beach", deland: "DeLand", "new-smyrna-beach": "New Smyrna Beach", "ormond-beach": "Ormond Beach",

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { isAdmin } from "@/lib/auth";
-import { getSales, getVenues } from "@/lib/data";
+import { getSales, getVenues, listSubscribers, dataMode } from "@/lib/data";
 import { SALE_TYPES, VENUE_TYPES } from "@/lib/validate";
 import { PageHead } from "@/components/ui";
 import { login, logout, saveSale, saveVenue, removeSale } from "./actions";
@@ -15,11 +15,13 @@ export default async function Admin({ searchParams }: SP) {
   if (!(await isAdmin())) return (<div><PageHead title="Admin login" />
     <form action={login} className="panel max-w-sm p-4 space-y-3"><F n="password" l="Password" t="password" />
       {sp.err && <p className="text-sm text-red-700">Wrong password.</p>}<button className="btn-red w-full">Log in</button></form></div>);
-  const [sales, venues] = await Promise.all([getSales(), getVenues()]);
+  const [sales, venues, subs] = await Promise.all([getSales(), getVenues(), listSubscribers()]);
   const es = sales.find((s) => s.slug === sp.sale); const ev = venues.find((v) => v.slug === sp.venue);
   return (<div><PageHead title="Admin" sub="Local JSON data layer (data/*.json) — swaps to Postgres later" />
     {sp.msg && <p className="mb-3 border border-line bg-paper p-2 text-sm font-bold">{sp.msg}</p>}
-    <form action={logout} className="mb-3"><button className="btn-gray text-xs">Log out</button></form>
+    <div className="mb-3 flex flex-wrap items-center gap-3 text-sm"><form action={logout}><button className="btn-gray text-xs">Log out</button></form>
+      <span>Data: <b>{dataMode}</b></span><span>Subscribers: <b>{subs.length}</b></span>
+      <a href="/api/admin/subscribers" className="underline">Export CSV</a><a href="/digest/preview" className="underline" target="_blank">Preview digest email</a><a href="/api/calendar" className="underline">Calendar feed</a></div>
     <div className="grid gap-4 lg:grid-cols-2">
       <div className="panel"><div className="panel-head">{es ? `Edit sale: ${es.slug}` : "Add sale"}</div>
         <form action={saveSale} key={es?.slug ?? "new"} className="p-4 space-y-2">

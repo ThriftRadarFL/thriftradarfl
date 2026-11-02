@@ -12,3 +12,5 @@ export function checkPassword(input: string) {
   const pw = process.env.ADMIN_PASSWORD; if (!pw) return false;
   const a = createHash("sha256").update(input).digest(), b = createHash("sha256").update(pw).digest(); return timingSafeEqual(a, b);
 }
+// Stateless unsubscribe token (HMAC of email). Uses CRON_SECRET or ADMIN_PASSWORD as key.
+export const unsubToken = (email: string) => createHash("sha256").update(`unsub:${process.env.CRON_SECRET ?? process.env.ADMIN_PASSWORD ?? "dev"}:${email.toLowerCase()}`).digest("hex").slice(0, 24);
