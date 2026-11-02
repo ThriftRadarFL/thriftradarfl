@@ -107,3 +107,13 @@ test("email logo PNG exists and matches the 215×40 slot (2.4× retina)", async 
   const b = (await import("node:fs")).readFileSync("public/logo-email.png"); assert.equal(b.subarray(1, 4).toString(), "PNG");
   const w = b.readUInt32BE(16), h = b.readUInt32BE(20); assert.ok(Math.abs(w / h - 215 / 40) < 0.05, `aspect ${w}x${h}`);
 });
+import { isHttpUrl, isRealDate } from "../src/lib/validate";
+test("validation gaps: real dates, parseable http(s) URLs, venue caps/zip/coords/slug", () => {
+  assert.ok(isRealDate("2028-02-29")); assert.ok(!isRealDate("2026-02-31")); assert.ok(!isRealDate("2026-13-01"));
+  assert.ok(isHttpUrl("https://www.goodwillcfl.org/locations/")); for (const bad of ["https://", "javascript:alert(1)", "https://exa mple.com", "ftp://x.org", "https://localhost"]) assert.ok(!isHttpUrl(bad), bad);
+  const base = { title: "T", city: "DeLand", days: [{ date: "2026-02-31", start: "08:00", end: "12:00", discountPct: 0 }] };
+  assert.equal(parseSale(base).ok, false); assert.equal(parseSale({ ...base, days: [{ ...base.days[0], date: "2099-03-01" }], sourceUrl: "https://" }).ok, false);
+  const v = { name: "V", city: "DeLand", type: "thrift" };
+  assert.ok(parseVenue({ ...v, zip: " 32720 ", sourceUrl: "https://example.org/x" }).ok);
+  for (const bad of [{ zip: "abc" }, { lat: 40 }, { slug: "Bad Slug" }, { sourceUrl: "https://" }, { name: "x".repeat(200) }, { notes: "x".repeat(3000) }]) assert.equal(parseVenue({ ...v, ...bad }).ok, false, JSON.stringify(bad).slice(0, 40));
+});
