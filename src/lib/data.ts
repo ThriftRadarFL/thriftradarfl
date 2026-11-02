@@ -8,7 +8,7 @@ import { dealRules as seedDealRules, ruleId, type DealRule } from "./deal-rules"
 
 export type Venue = Omit<(typeof seedVenues)[number], "hoursJson" | "phone" | "type" | "sourceUrl"> & { type: string; phone: string | null; hoursJson: Record<string, string> | null; sourceUrl?: string };
 export type SaleDay = { date: string; start: string; end: string; discountPct: number };
-export type Sale = { slug: string; title: string; type: string; city: string; zip: string; lat: number; lng: number; sourceUrl: string; paymentMethods: string[]; days: SaleDay[]; published?: boolean; description?: string; tags?: string[] };
+export type Sale = { slug: string; title: string; type: string; city: string; zip: string; lat: number; lng: number; sourceUrl: string; paymentMethods: string[]; days: SaleDay[]; published?: boolean; description?: string; tags?: string[]; /** ISO time the listing was first added (DB created_at); undefined for legacy rows. */ addedAt?: string };
 
 const DATA_DIR = process.env.THRIFTRADAR_DATA_DIR ?? path.join(process.cwd(), "data");
 const salesFile = path.join(DATA_DIR, "sales.json");
@@ -42,7 +42,12 @@ function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: 
 // Tunable: DB_TIMEOUT_MS (default 1500) per query, DB_BACKOFF_MS (default 5 min) before retrying a down DB.
 const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 1500; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 300_000;
 let dbDownUntil = 0; let lastDbError = "";
-async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>): Promise<T> {
+/** Strict writes: when a DB is configured in production (or DB_STRICT_WRITES=1), a failed DB write is a 503 — never a silent
+ *  JSON write that would vanish on the next deploy / differ per serverless instance. DB_STRICT_WRITES=0 opts out. */
+export const strictWrites = () => hasDb && (process.env.DB_STRICT_WRITES === "1" || (process.env.NODE_ENV === "production" && process.env.DB_STRICT_WRITES !== "0"));
+const dbOffline = () => new HttpError(503, "Saving is temporarily unavailable: the database is offline. Please try again in a few minutes.", { code: "DB_DOWN" });
+async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write = false): Promise<T> {
+  if (write && strictWrites() && Date.now() < dbDownUntil) throw dbOffline();
   if (!hasDb || Date.now() < dbDownUntil) return jsonFn();
   try {
     let timer: NodeJS.Timeout | undefined;
@@ -52,7 +57,7 @@ async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>): Promi
     const err = e as { code?: string; message?: string; cause?: { code?: string } };
     lastDbError = err.cause?.code ?? err.code ?? String(err.message ?? e).slice(0, 40);
     if (Date.now() >= dbDownUntil) console.warn(`[data] database unreachable (${lastDbError}); using JSON fallback`);
-    dbDownUntil = Date.now() + DB_BACKOFF_MS; return jsonFn();
+    dbDownUntil = Date.now() + DB_BACKOFF_MS; if (write && strictWrites()) throw dbOffline(); return jsonFn();
   }
 }
 export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= dbDownUntil, lastError: lastDbError || null });
@@ -68,19 +73,21 @@ export async function getSales(): Promise<Sale[]> { return (await getAllSales())
 export async function getSale(slug: string) { return (await getSales()).find((s) => s.slug === slug) ?? null; }
 
 export async function upsertSale(sale: Sale) {
-  return viaDb(() => pg.dbUpsertSale(sale), () => mutate<Sale[]>(salesFile, mockSales as Sale[], (all) => [...all.filter((s) => s.slug !== sale.slug), sale]));
+  return viaDb(() => pg.dbUpsertSale(sale), () => mutate<Sale[]>(salesFile, mockSales as Sale[], (all) => {
+    const prev = all.find((s) => s.slug === sale.slug); // first-added time is sticky across edits
+    return [...all.filter((s) => s.slug !== sale.slug), { ...sale, addedAt: prev?.addedAt ?? sale.addedAt ?? new Date().toISOString() }]; }), true);
 }
 export async function setSalePublished(slug: string, published: boolean) {
   const s = (await getAllSales()).find((x) => x.slug === slug); if (!s) return false; await upsertSale({ ...s, published }); return true;
 }
 export async function deleteSale(slug: string) {
-  return viaDb(() => pg.dbDeleteSale(slug), () => mutate<Sale[]>(salesFile, mockSales as Sale[], (all) => all.filter((s) => s.slug !== slug)));
+  return viaDb(() => pg.dbDeleteSale(slug), () => mutate<Sale[]>(salesFile, mockSales as Sale[], (all) => all.filter((s) => s.slug !== slug)), true);
 }
 export async function upsertVenue(v: Venue) {
-  return viaDb(() => pg.dbUpsertVenue(v), () => mutate<Venue[]>(venuesFile, seedVenues as Venue[], (all) => [...all.filter((x) => x.slug !== v.slug), v]));
+  return viaDb(() => pg.dbUpsertVenue(v), () => mutate<Venue[]>(venuesFile, seedVenues as Venue[], (all) => [...all.filter((x) => x.slug !== v.slug), v]), true);
 }
 export async function deleteVenue(slug: string) {
-  await viaDb(() => pg.dbDeleteVenue(slug), () => mutate<Venue[]>(venuesFile, seedVenues as Venue[], (all) => all.filter((x) => x.slug !== slug)));
+  await viaDb(() => pg.dbDeleteVenue(slug), () => mutate<Venue[]>(venuesFile, seedVenues as Venue[], (all) => all.filter((x) => x.slug !== slug)), true);
   if (!hasDb || Date.now() < dbDownUntil) await mutate<DealRule[]>(rulesFile, seedDealRules, (all) => all.filter((r) => r.venue !== slug)); // DB cascades via FK
 }
 
@@ -88,8 +95,8 @@ export async function deleteVenue(slug: string) {
 const rulesFile = path.join(DATA_DIR, "deal-rules.json");
 export async function getDealRules(): Promise<DealRule[]> { return viaDb(() => pg.dbGetDealRules(), async () => (await readJson<DealRule[]>(rulesFile, seedDealRules)).map((r) => ({ ...r, id: r.id || ruleId(r) }))); }
 const withIds = (rs: DealRule[]) => rs.map((r) => ({ ...r, id: r.id || ruleId(r) }));
-export async function upsertDealRule(r: DealRule) { await viaDb(() => pg.dbUpsertDealRule(r), () => mutate<DealRule[]>(rulesFile, seedDealRules, (all) => [...withIds(all).filter((x) => x.id !== r.id), r].sort((a, b) => a.day - b.day))); }
-export async function deleteDealRule(id: string) { return viaDb(() => pg.dbDeleteDealRule(id), () => mutate<DealRule[], boolean>(rulesFile, seedDealRules, (all) => { const w = withIds(all); return { next: w.filter((x) => x.id !== id), result: w.some((x) => x.id === id) }; })); }
+export async function upsertDealRule(r: DealRule) { await viaDb(() => pg.dbUpsertDealRule(r), () => mutate<DealRule[]>(rulesFile, seedDealRules, (all) => [...withIds(all).filter((x) => x.id !== r.id), r].sort((a, b) => a.day - b.day)), true); }
+export async function deleteDealRule(id: string) { return viaDb(() => pg.dbDeleteDealRule(id), () => mutate<DealRule[], boolean>(rulesFile, seedDealRules, (all) => { const w = withIds(all); return { next: w.filter((x) => x.id !== id), result: w.some((x) => x.id === id) }; }), true); }
 
 // Public submissions → pending queue reviewed in /admin.
 export type Submission = { id: string; at: string; email: string; sale: Sale };
@@ -98,10 +105,10 @@ export const listSubmissions = () => viaDb(() => pg.dbListSubmissions(), () => r
 export async function addSubmission(sale: Sale, email: string) {
   const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   const sub: Submission = { id, at: new Date().toISOString(), email, sale: { ...sale, published: false } };
-  await viaDb(() => pg.dbAddSubmission(sub), () => mutate<Submission[]>(subsFile, [], (list) => [...list, sub])); return id;
+  await viaDb(() => pg.dbAddSubmission(sub), () => mutate<Submission[]>(subsFile, [], (list) => [...list, sub]), true); return id;
 }
 export async function resolveSubmission(id: string, approve: boolean) {
-  const s = await viaDb(() => pg.dbTakeSubmission(id), () => mutate<Submission[], Submission | undefined>(subsFile, [], (list) => ({ next: list.filter((x) => x.id !== id), result: list.find((x) => x.id === id) })));
+  const s = await viaDb(() => pg.dbTakeSubmission(id), () => mutate<Submission[], Submission | undefined>(subsFile, [], (list) => ({ next: list.filter((x) => x.id !== id), result: list.find((x) => x.id === id) })), true);
   if (!s) return null; if (approve) await upsertSale({ ...s.sale, published: true }); return s.sale.slug;
 }
 
@@ -111,20 +118,20 @@ const contactFile = path.join(DATA_DIR, "contact.json");
 export const listContacts = () => viaDb(() => pg.dbListContacts(), () => readJson<ContactMsg[]>(contactFile, []));
 export async function addContact(m: Omit<ContactMsg, "id" | "at">) {
   const msg: ContactMsg = { ...m, id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`, at: new Date().toISOString() };
-  await viaDb(() => pg.dbAddContact(msg), () => mutate<ContactMsg[]>(contactFile, [], (l) => [...l, msg]));
+  await viaDb(() => pg.dbAddContact(msg), () => mutate<ContactMsg[]>(contactFile, [], (l) => [...l, msg]), true);
 }
-export async function deleteContact(id: string) { await viaDb(() => pg.dbDeleteContact(id), () => mutate<ContactMsg[]>(contactFile, [], (l) => l.filter((x) => x.id !== id))); }
+export async function deleteContact(id: string) { await viaDb(() => pg.dbDeleteContact(id), () => mutate<ContactMsg[]>(contactFile, [], (l) => l.filter((x) => x.id !== id)), true); }
 
 const subsJson = path.join(DATA_DIR, "digest-subscribers.json");
 type Sub = { email: string; area: string; at: string };
 export async function addDigestSubscriber(email: string, area: string) {
   return viaDb(() => pg.dbAddSubscriber(email, area), () => mutate<Sub[], boolean>(subsJson, [], (list) =>
-    list.some((x) => x.email.toLowerCase() === email.toLowerCase()) ? { next: list, result: false } : { next: [...list, { email, area, at: new Date().toISOString() }], result: true }));
+    list.some((x) => x.email.toLowerCase() === email.toLowerCase()) ? { next: list, result: false } : { next: [...list, { email, area, at: new Date().toISOString() }], result: true }), true);
 }
 export async function listSubscribers(): Promise<Sub[]> { return viaDb(() => pg.dbListSubscribers(), () => readJson<Sub[]>(subsJson, [])); }
 export async function removeSubscriber(email: string) {
   return viaDb(() => pg.dbRemoveSubscriber(email), () => mutate<Sub[], boolean>(subsJson, [], (list) => {
-    const next = list.filter((x) => x.email.toLowerCase() !== email.toLowerCase()); return { next, result: next.length !== list.length }; }));
+    const next = list.filter((x) => x.email.toLowerCase() !== email.toLowerCase()); return { next, result: next.length !== list.length }; }), true);
 }
 export const citySlug = (city: string) => city.toLowerCase().replace(/\s+/g, "-");
 export const CITIES: Record<string, string> = {
@@ -137,6 +144,6 @@ export type AuditEntry = { at: string; action: string; target: string; detail: s
 const auditFile = path.join(DATA_DIR, "audit.json");
 export async function audit(action: string, target = "", detail = "") {
   const e: AuditEntry = { at: new Date().toISOString(), action, target, detail: detail.slice(0, 500) };
-  try { await viaDb(() => pg.dbAudit(e), () => mutate<AuditEntry[]>(auditFile, [], (l) => [e, ...l].slice(0, 2000))); } catch (err) { console.warn("[audit]", (err as Error).message); }
+  try { await viaDb(() => pg.dbAudit(e), () => mutate<AuditEntry[]>(auditFile, [], (l) => [e, ...l].slice(0, 2000)), true); } catch (err) { console.warn("[audit]", (err as Error).message); }
 }
 export const listAudit = (limit = 200) => viaDb(() => pg.dbListAudit(limit), async () => (await readJson<AuditEntry[]>(auditFile, [])).slice(0, limit));

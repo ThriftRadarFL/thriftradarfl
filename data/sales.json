@@ -32,7 +32,8 @@
         "end": "15:00",
         "discountPct": 50
       }
-    ]
+    ],
+    "addedAt": "2026-11-02T05:31:10Z"
   },
   {
     "slug": "riverside-estate-daytona-2026-11",
@@ -66,7 +67,8 @@
         "end": "13:00",
         "discountPct": 50
       }
-    ]
+    ],
+    "addedAt": "2026-11-02T05:44:14Z"
   },
   {
     "slug": "berners-auction-week-deland-2026-11",
@@ -98,7 +100,8 @@
     "tags": [
       "furniture",
       "tools"
-    ]
+    ],
+    "addedAt": "2026-11-02T05:44:14Z"
   },
   {
     "slug": "ormond-thrift-half-off-2026-11",
@@ -120,7 +123,8 @@
         "end": "21:00",
         "discountPct": 50
       }
-    ]
+    ],
+    "addedAt": "2026-11-02T05:44:14Z"
   },
   {
     "slug": "nsb-multi-family-yard-2026-11",
@@ -147,7 +151,8 @@
         "end": "11:00",
         "discountPct": 30
       }
-    ]
+    ],
+    "addedAt": "2026-11-02T05:44:14Z"
   },
   {
     "slug": "spruce-creek-estate-port-orange-2026-11",
@@ -185,7 +190,8 @@
     "tags": [
       "mid-century",
       "art"
-    ]
+    ],
+    "addedAt": "2026-11-02T05:44:14Z"
   },
   {
     "slug": "pine-hills-bins-restock-2026-11",
@@ -207,7 +213,8 @@
         "end": "17:00",
         "discountPct": 0
       }
-    ]
+    ],
+    "addedAt": "2026-11-02T05:44:14Z"
   },
   {
     "slug": "ormond-beach-mid-century-estate-2026-11",
@@ -245,7 +252,8 @@
     "tags": [
       "mid-century",
       "barware"
-    ]
+    ],
+    "addedAt": "2026-11-02T06:03:25Z"
   },
   {
     "slug": "nsb-coastal-cottage-estate-2026-11",
@@ -277,7 +285,8 @@
     "tags": [
       "art",
       "nautical"
-    ]
+    ],
+    "addedAt": "2026-11-02T06:03:25Z"
   },
   {
     "slug": "deland-downtown-moving-sale-2026-11",
@@ -302,7 +311,8 @@
     "tags": [
       "books",
       "antiques"
-    ]
+    ],
+    "addedAt": "2026-11-02T06:03:25Z"
   },
   {
     "slug": "daytona-beachside-condo-estate-2026-11",
@@ -335,7 +345,8 @@
     "tags": [
       "furniture",
       "jewelry"
-    ]
+    ],
+    "addedAt": "2026-11-02T06:03:25Z"
   },
   {
     "slug": "port-orange-garage-tools-2026-11",
@@ -360,7 +371,8 @@
     "tags": [
       "tools",
       "fishing"
-    ]
+    ],
+    "addedAt": "2026-11-02T06:03:25Z"
   },
   {
     "slug": "berners-auction-thanksgiving-week-deland-2026-11",
@@ -391,6 +403,7 @@
     ],
     "tags": [
       "collectibles"
-    ]
+    ],
+    "addedAt": "2026-11-02T06:03:25Z"
   }
 ]
