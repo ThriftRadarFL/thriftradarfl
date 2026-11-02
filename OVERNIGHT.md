@@ -77,3 +77,12 @@ Blocked on your logins: GitHub push, Supabase, Vercel, MapTiler (interactive map
 - **Printable route planner** (`/plan`): 🖨 *Print list* → clean black-on-white sheet (day, stop count, total miles, checkboxes, per-leg + running miles, sale URLs, notes lines; nav/footer/controls hidden) and *Copy as text* for texting the list
 - Screens (390px, 0 overflow, no console errors): `screens/mobile/weekend*.png`, `deals.png`, `stores_goodwill-port-orange.png`, `plan_route.png`, `plan_print.png` (print media)
 - Tests: 67 passing (+4 Postgres tests with `PG_TEST_URL`); typecheck, lint, build (`NEXT_DIST_DIR=.next-build`) green. Nothing pushed, no new logins needed
+
+## 6 PM pass
+- **404s:** verified on a production build (`next start` on :3100): `/nope`, `/sales/nope`, `/stores/nope`, `/city/nope` all return **HTTP 404** with the branded page + `noindex` (fixed earlier by 37d685e dropping root `loading.tsx`; the 3 PM "known" note is resolved). New test fails if a `loading.tsx` ever sits above a route that calls `notFound()`
+- **JSON→Postgres audit:** every write (sales/publish, venues, deal rules, submissions, contact, subscribers, audit) already had a Postgres path. Remaining gap was *silent* JSON writes when the DB is down → now **strict writes**: with `DATABASE_URL` in production (or `DB_STRICT_WRITES=1`) a down DB gives a clean 503 instead of writing JSON that vanishes; reads still fall back. `/api/health` shows `db.strictWrites`. Local `next start` with the unreachable Supabase URL in `.env.local` will refuse writes — set `DB_STRICT_WRITES=0` there (dev server unaffected)
+- **New this week** `/new` (in nav): sales first listed in the last 7 days, newest first, NEW pill + "listed N hr ago". `Sale.addedAt` ← DB `created_at` (no migration needed); JSON keeps first-save time across edits
+- **Atom feed** `/feed.xml` (newest 30 upcoming listings, valid XML, `<link rel="alternate">` on every page)
+- **Add to my route** (red button on sale pages): saves the sale and opens `/plan?day=<next sale day>` with that day preselected
+- Screens 390px (0 overflow): `screens/mobile/new.png`, `sales_precious-finds-…png`, `plan_from-sale.png`, `home.png`, `404.png`
+- Tests: 73 passing + 4 Postgres skips (`PG_TEST_URL`); typecheck, lint, build green. Nothing pushed, no logins needed

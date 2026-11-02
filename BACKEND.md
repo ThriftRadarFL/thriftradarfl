@@ -12,6 +12,8 @@ sales (slug unique, type enum incl. thrift/outlet_bins, city/zip/lat/lng, paymen
 tags ↔ sale_tags; subscribers (email unique, zip, area, interests[], tier).
 Deal rules source of truth for now: `src/lib/deal-rules.ts` (seeded into DB; UNVERIFIED demo except Berner's Wed auction).
 
+**Strict writes:** with `DATABASE_URL` set in production (or `DB_STRICT_WRITES=1`), writes never fall back to JSON — a down DB returns 503. `DB_STRICT_WRITES=0` opts out (e.g. local `next start` on the box).
+
 ## Auth
 - `ADMIN_PASSWORD` (env). `/admin` login sets httpOnly sha256 token cookie (secure in prod). APIs accept that cookie or `Authorization: Bearer <ADMIN_PASSWORD>`. Timing-safe comparisons, 800ms delay on failed login.
 - Later: Supabase Auth magic link + RLS (public read sales/venues, service-role writes).
@@ -19,6 +21,7 @@ Deal rules source of truth for now: `src/lib/deal-rules.ts` (seeded into DB; UNV
 ## API (all JSON errors `{error, details?}`; body cap 32KB; `src/lib/api.ts`)
 | Method | Route | Auth | Notes |
 |---|---|---|---|
+| GET | `/feed.xml` | – | Atom feed of newest listed upcoming sales (by `created_at`) |
 | GET | `/api/health` | – | `mode` postgres/json-fallback/json, readOk, venues, latencyMs, *Configured booleans |
 | GET | `/api/sales?city=&type=&upcoming=1&from=YYYY-MM-DD` | – | |
 | POST | `/api/sales` | admin | 201; 409 if slug exists |
