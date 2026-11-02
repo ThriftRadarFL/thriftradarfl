@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { getSale } from "@/lib/data";
 import { PageHead, DayBox, Discount, typeLabel } from "@/components/ui";
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const s = await getSale((await params).slug); return { title: s ? `${s.title} · ${s.city}, FL | ThriftRadarFL` : "Sale not found" };
+}
 export default async function Sale({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params; const s = await getSale(slug); if (!s) notFound();
   return (<div><PageHead title={s.title} sub={`${typeLabel[s.type] ?? s.type} · ${s.city}, FL ${s.zip}`} />
@@ -11,6 +14,6 @@ export default async function Sale({ params }: { params: Promise<{ slug: string 
       <div className="panel"><div className="panel-head">Details</div><div className="p-4 space-y-3 text-sm">
         <div><div className="font-bold text-gray-500 text-xs uppercase">Payment</div>{s.paymentMethods.join(", ")}</div>
         <a className="btn-red block text-center" href={s.sourceUrl}>Original Listing</a>
-        <span className="btn-gray block text-center opacity-60 cursor-not-allowed">Add to Calendar (soon)</span></div></div>
+        <a className="btn-gray block text-center" href={`/api/ics/${s.slug}`} download>Add to Calendar (.ics)</a></div></div>
     </div></div>);
 }

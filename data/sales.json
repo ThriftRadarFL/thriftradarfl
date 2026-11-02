@@ -1,0 +1,204 @@
+[
+  {
+    "slug": "precious-finds-port-orange-2026-11",
+    "title": "Precious Finds in Port Orange",
+    "type": "estate",
+    "city": "Port Orange",
+    "zip": "32127",
+    "lat": 29.115,
+    "lng": -81.03,
+    "sourceUrl": "https://www.estatesales.net/FL/Port-Orange/32127/5139969",
+    "paymentMethods": [
+      "cash",
+      "venmo",
+      "zelle"
+    ],
+    "days": [
+      {
+        "date": "2026-11-12",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-13",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 20
+      },
+      {
+        "date": "2026-11-14",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 50
+      }
+    ]
+  },
+  {
+    "slug": "riverside-estate-daytona-2026-11",
+    "title": "Riverside Drive Estate — Full House",
+    "type": "estate",
+    "city": "Daytona Beach",
+    "zip": "32118",
+    "lat": 29.22,
+    "lng": -81,
+    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach",
+    "paymentMethods": [
+      "cash",
+      "card"
+    ],
+    "days": [
+      {
+        "date": "2026-11-06",
+        "start": "08:00",
+        "end": "14:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-07",
+        "start": "08:00",
+        "end": "14:00",
+        "discountPct": 25
+      },
+      {
+        "date": "2026-11-08",
+        "start": "09:00",
+        "end": "13:00",
+        "discountPct": 50
+      }
+    ]
+  },
+  {
+    "slug": "berners-auction-week-deland-2026-11",
+    "title": "Berner's Auction Week — Furniture & Tools",
+    "type": "auction",
+    "city": "DeLand",
+    "zip": "32724",
+    "lat": 29.0065,
+    "lng": -81.287,
+    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach",
+    "paymentMethods": [
+      "cash",
+      "card"
+    ],
+    "days": [
+      {
+        "date": "2026-11-04",
+        "start": "18:30",
+        "end": "22:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-11",
+        "start": "18:30",
+        "end": "22:00",
+        "discountPct": 0
+      }
+    ]
+  },
+  {
+    "slug": "ormond-thrift-half-off-2026-11",
+    "title": "Ormond Beach Thrift — Half-Off Saturday",
+    "type": "thrift",
+    "city": "Ormond Beach",
+    "zip": "32174",
+    "lat": 29.285,
+    "lng": -81.056,
+    "sourceUrl": "https://www.goodwillcfl.org/locations/",
+    "paymentMethods": [
+      "cash",
+      "card"
+    ],
+    "days": [
+      {
+        "date": "2026-11-07",
+        "start": "09:00",
+        "end": "21:00",
+        "discountPct": 50
+      }
+    ]
+  },
+  {
+    "slug": "nsb-multi-family-yard-2026-11",
+    "title": "New Smyrna Multi-Family Yard Sale",
+    "type": "yard",
+    "city": "New Smyrna Beach",
+    "zip": "32169",
+    "lat": 29.025,
+    "lng": -80.927,
+    "sourceUrl": "https://www.estatesales.net/FL/New-Smyrna-Beach",
+    "paymentMethods": [
+      "cash"
+    ],
+    "days": [
+      {
+        "date": "2026-11-07",
+        "start": "07:00",
+        "end": "12:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-08",
+        "start": "07:00",
+        "end": "11:00",
+        "discountPct": 30
+      }
+    ]
+  },
+  {
+    "slug": "spruce-creek-estate-port-orange-2026-11",
+    "title": "Spruce Creek Fly-In Estate — Mid-Century & Art",
+    "type": "estate",
+    "city": "Port Orange",
+    "zip": "32128",
+    "lat": 29.08,
+    "lng": -81.05,
+    "sourceUrl": "https://www.estatesales.net/FL/Port-Orange",
+    "paymentMethods": [
+      "cash",
+      "venmo"
+    ],
+    "days": [
+      {
+        "date": "2026-11-13",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-14",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 30
+      },
+      {
+        "date": "2026-11-15",
+        "start": "10:00",
+        "end": "14:00",
+        "discountPct": 50
+      }
+    ]
+  },
+  {
+    "slug": "pine-hills-bins-restock-2026-11",
+    "title": "Pine Hills Outlet — Fresh Bins Monday",
+    "type": "outlet_bins",
+    "city": "Orlando",
+    "zip": "32818",
+    "lat": 28.5785,
+    "lng": -81.4565,
+    "sourceUrl": "https://www.goodwillcfl.org/locations/",
+    "paymentMethods": [
+      "cash",
+      "card"
+    ],
+    "days": [
+      {
+        "date": "2026-11-09",
+        "start": "08:00",
+        "end": "17:00",
+        "discountPct": 0
+      }
+    ]
+  }
+]

@@ -1,11 +1,20 @@
+import Link from "next/link";
 import { PageHead } from "@/components/ui";
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const sample: Record<string, [string, string][]> = { Wed: [["bg-royal", "Berner's Auction 6:30pm"]], Sat: [["bg-teal", "Color-tag 50% (TBD)"]] };
-export default function Deals() {
+import { getVenues } from "@/lib/data";
+import { dealRules, DAYS } from "@/lib/deal-rules";
+export const metadata = { title: "Deal Days — Goodwill color tags, half-off & bin restocks | ThriftRadarFL" };
+const order = [1, 2, 3, 4, 5, 6, 0];
+export default async function Deals() {
+  const venues = await getVenues(); const name = (s: string) => venues.find((v) => v.slug === s)?.name ?? s;
+  const today = new Date().getDay();
   return (<div><PageHead title="Deal Days" sub="Color-tag days, half-off days and bin restocks by weekday" />
-    <div className="panel"><div className="panel-head">This week</div>
-      <div className="grid grid-cols-7 gap-px bg-line">{days.map((d) => <div key={d} className="bg-white min-h-40">
-        <div className="bg-paper border-b border-line px-2 py-1 text-xs font-bold text-royal">{d}</div>
-        <div className="p-1.5 space-y-1">{(sample[d] ?? []).map(([c, t]) => <div key={t} className={`pill ${c} block whitespace-normal`}>{t}</div>)}</div></div>)}</div></div>
-    <p className="mt-3 text-xs text-gray-600">Schedules are being verified with each store.</p></div>);
+    <p className="mb-3 border-l-4 border-cta bg-paper p-2 text-sm"><b>Demo data:</b> schedules marked <i>unverified</i> are placeholders, not confirmed by the stores.</p>
+    <div className="panel"><div className="panel-head">Weekly schedule</div>
+      <div className="grid grid-cols-1 gap-px bg-line sm:grid-cols-7">{order.map((d) => <div key={d} className={`bg-white sm:min-h-48 ${d === today ? "ring-2 ring-cta ring-inset" : ""}`}>
+        <div className="bg-paper border-b border-line px-2 py-1 text-xs font-bold text-royal">{DAYS[d]}{d === today && " · today"}</div>
+        <div className="p-1.5 space-y-1">{dealRules.filter((r) => r.day === d).map((r) => <div key={r.venue + r.label} className={`pill ${r.color} block whitespace-normal`}>
+          {r.label}{r.time && ` ${r.time}`}<div className="text-[10px] font-normal opacity-90">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}</div></div>)}</div></div>
+    <div className="panel mt-4"><div className="panel-head">By store</div><ul>{venues.map((v) => <li key={v.slug} className="border-b border-line px-4 py-2 text-sm last:border-0">
+      <Link href={`/stores/${v.slug}`} className="font-bold text-royal hover:underline">{v.name}</Link> <span className="text-gray-500">· {v.city}</span>
+      <div>{dealRules.filter((r) => r.venue === v.slug).map((r) => `${DAYS[r.day]}: ${r.label}${r.verified ? "" : " (unverified)"}`).join(" · ") || "No rules yet"}</div></li>)}</ul></div></div>);
 }
