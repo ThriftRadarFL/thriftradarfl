@@ -66,3 +66,6 @@ test("JSON-LD: Event has ET offsets, absolute URLs; Store has address", () => {
   assert.equal(ld.location.address.addressRegion, "FL");
   const v = venueJsonLd(seedVenues[0] as Venue); assert.equal(v["@type"], "Store"); assert.equal(v.address.postalCode, seedVenues[0].zip);
 });
+test("digest email uses PNG logo (SVG is blocked by many mail clients)", () => {
+  const d = buildDigest(mockSales as Sale[], "2026-11-10"); assert.ok(d.html.includes("/logo-email.png")); assert.ok(!d.html.includes("logo.svg"));
+});

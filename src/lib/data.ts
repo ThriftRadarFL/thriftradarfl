@@ -31,18 +31,20 @@ function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: 
 
 // DB is used when DATABASE_URL is set AND reachable. Any DB error (timeout, protocol, auth) marks it down for 60s and
 // transparently falls back to the JSON files so builds and pages never break because the database is unreachable.
+// Tunable: DB_TIMEOUT_MS (default 1500) per query, DB_BACKOFF_MS (default 5 min) before retrying a down DB.
+const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 1500; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 300_000;
 let dbDownUntil = 0; let lastDbError = "";
 async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>): Promise<T> {
   if (!hasDb || Date.now() < dbDownUntil) return jsonFn();
   try {
     let timer: NodeJS.Timeout | undefined;
-    const timeout = new Promise<never>((_, rej) => { timer = setTimeout(() => rej(new Error("db timeout")), 6000); });
+    const timeout = new Promise<never>((_, rej) => { timer = setTimeout(() => rej(new Error("db timeout")), DB_TIMEOUT_MS); });
     try { return await Promise.race([dbFn(), timeout]); } finally { clearTimeout(timer); }
   } catch (e) {
     const err = e as { code?: string; message?: string; cause?: { code?: string } };
     lastDbError = err.cause?.code ?? err.code ?? String(err.message ?? e).slice(0, 40);
     if (Date.now() >= dbDownUntil) console.warn(`[data] database unreachable (${lastDbError}); using JSON fallback`);
-    dbDownUntil = Date.now() + 60_000; return jsonFn();
+    dbDownUntil = Date.now() + DB_BACKOFF_MS; return jsonFn();
   }
 }
 export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= dbDownUntil, lastError: lastDbError || null });
@@ -71,35 +73,39 @@ export async function upsertVenue(v: Venue) {
 }
 export async function deleteVenue(slug: string) {
   await viaDb(() => pg.dbDeleteVenue(slug), () => mutate<Venue[]>(venuesFile, seedVenues as Venue[], (all) => all.filter((x) => x.slug !== slug)));
-  await mutate<DealRule[]>(rulesFile, seedDealRules, (all) => all.filter((r) => r.venue !== slug));
+  if (!hasDb || Date.now() < dbDownUntil) await mutate<DealRule[]>(rulesFile, seedDealRules, (all) => all.filter((r) => r.venue !== slug)); // DB cascades via FK
 }
 
 // Deal rules: JSON-backed (seeded from deal-rules.ts) so admins can edit them.
 const rulesFile = path.join(DATA_DIR, "deal-rules.json");
-export async function getDealRules(): Promise<DealRule[]> { return (await readJson<DealRule[]>(rulesFile, seedDealRules)).map((r) => ({ ...r, id: r.id || ruleId(r) })); }
+export async function getDealRules(): Promise<DealRule[]> { return viaDb(() => pg.dbGetDealRules(), async () => (await readJson<DealRule[]>(rulesFile, seedDealRules)).map((r) => ({ ...r, id: r.id || ruleId(r) }))); }
 const withIds = (rs: DealRule[]) => rs.map((r) => ({ ...r, id: r.id || ruleId(r) }));
-export async function upsertDealRule(r: DealRule) { await mutate<DealRule[]>(rulesFile, seedDealRules, (all) => [...withIds(all).filter((x) => x.id !== r.id), r].sort((a, b) => a.day - b.day)); }
-export async function deleteDealRule(id: string) { return mutate<DealRule[], boolean>(rulesFile, seedDealRules, (all) => { const w = withIds(all); return { next: w.filter((x) => x.id !== id), result: w.some((x) => x.id === id) }; }); }
+export async function upsertDealRule(r: DealRule) { await viaDb(() => pg.dbUpsertDealRule(r), () => mutate<DealRule[]>(rulesFile, seedDealRules, (all) => [...withIds(all).filter((x) => x.id !== r.id), r].sort((a, b) => a.day - b.day))); }
+export async function deleteDealRule(id: string) { return viaDb(() => pg.dbDeleteDealRule(id), () => mutate<DealRule[], boolean>(rulesFile, seedDealRules, (all) => { const w = withIds(all); return { next: w.filter((x) => x.id !== id), result: w.some((x) => x.id === id) }; })); }
 
 // Public submissions → pending queue reviewed in /admin.
 export type Submission = { id: string; at: string; email: string; sale: Sale };
 const subsFile = path.join(DATA_DIR, "submissions.json");
-export const listSubmissions = () => readJson<Submission[]>(subsFile, []);
+export const listSubmissions = () => viaDb(() => pg.dbListSubmissions(), () => readJson<Submission[]>(subsFile, []));
 export async function addSubmission(sale: Sale, email: string) {
   const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
-  await mutate<Submission[]>(subsFile, [], (list) => [...list, { id, at: new Date().toISOString(), email, sale: { ...sale, published: false } }]); return id;
+  const sub: Submission = { id, at: new Date().toISOString(), email, sale: { ...sale, published: false } };
+  await viaDb(() => pg.dbAddSubmission(sub), () => mutate<Submission[]>(subsFile, [], (list) => [...list, sub])); return id;
 }
 export async function resolveSubmission(id: string, approve: boolean) {
-  const s = await mutate<Submission[], Submission | undefined>(subsFile, [], (list) => ({ next: list.filter((x) => x.id !== id), result: list.find((x) => x.id === id) }));
+  const s = await viaDb(() => pg.dbTakeSubmission(id), () => mutate<Submission[], Submission | undefined>(subsFile, [], (list) => ({ next: list.filter((x) => x.id !== id), result: list.find((x) => x.id === id) })));
   if (!s) return null; if (approve) await upsertSale({ ...s.sale, published: true }); return s.sale.slug;
 }
 
 // Contact form messages (stored locally; no email sent).
 export type ContactMsg = { id: string; at: string; name: string; email: string; message: string };
 const contactFile = path.join(DATA_DIR, "contact.json");
-export const listContacts = () => readJson<ContactMsg[]>(contactFile, []);
-export async function addContact(m: Omit<ContactMsg, "id" | "at">) { await mutate<ContactMsg[]>(contactFile, [], (l) => [...l, { ...m, id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`, at: new Date().toISOString() }]); }
-export async function deleteContact(id: string) { await mutate<ContactMsg[]>(contactFile, [], (l) => l.filter((x) => x.id !== id)); }
+export const listContacts = () => viaDb(() => pg.dbListContacts(), () => readJson<ContactMsg[]>(contactFile, []));
+export async function addContact(m: Omit<ContactMsg, "id" | "at">) {
+  const msg: ContactMsg = { ...m, id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`, at: new Date().toISOString() };
+  await viaDb(() => pg.dbAddContact(msg), () => mutate<ContactMsg[]>(contactFile, [], (l) => [...l, msg]));
+}
+export async function deleteContact(id: string) { await viaDb(() => pg.dbDeleteContact(id), () => mutate<ContactMsg[]>(contactFile, [], (l) => l.filter((x) => x.id !== id))); }
 
 const subsJson = path.join(DATA_DIR, "digest-subscribers.json");
 type Sub = { email: string; area: string; at: string };

@@ -55,6 +55,8 @@ export const sales = pgTable("sales", {
   sourceUrl: text("source_url"),
   status: saleStatus("status").default("upcoming").notNull(),
   featuredUntil: timestamp("featured_until", { withTimezone: true }),
+  published: boolean("published").default(true).notNull(),
+  description: text("description"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
@@ -79,6 +81,9 @@ export const dealRules = pgTable("deal_rules", {
   description: text("description"),
   verifiedAt: timestamp("verified_at", { withTimezone: true }),
   source: text("source"),
+  ruleKey: text("rule_key").unique(),
+  label: text("label"),
+  verified: boolean("verified").default(false).notNull(),
 });
 
 export const tags = pgTable("tags", {
@@ -98,5 +103,20 @@ export const subscribers = pgTable("subscribers", {
   interests: text("interests").array(),
   area: text("area"),
   tier: subTier("tier").default("free").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const submissions = pgTable("submissions", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  sale: jsonb("sale").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const contactMessages = pgTable("contact_messages", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  message: text("message").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });

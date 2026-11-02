@@ -15,6 +15,13 @@
       "when": 1793599108317,
       "tag": "0001_young_lyja",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793648144403,
+      "tag": "0002_publish_rules_submissions_contact",
+      "breakpoints": true
     }
   ]
 }
