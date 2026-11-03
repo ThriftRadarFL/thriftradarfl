@@ -41,7 +41,7 @@ function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: 
 // transparently falls back to the JSON files so builds and pages never break because the database is unreachable.
 // Tunable: DB_TIMEOUT_MS (default 1500) per query, DB_BACKOFF_MS (default 5 min) before retrying a down DB.
 const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 1500; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 300_000;
-let dbDownUntil = 0; let lastDbError = "";
+let dbDownUntil = 0; let lastDbError = ""; let lastDbMessage = "";
 /** Strict writes: when a DB is configured in production (or DB_STRICT_WRITES=1), a failed DB write is a 503 — never a silent
  *  JSON write that would vanish on the next deploy / differ per serverless instance. DB_STRICT_WRITES=0 opts out. */
 export const strictWrites = () => hasDb && (process.env.DB_STRICT_WRITES === "1" || (process.env.NODE_ENV === "production" && process.env.DB_STRICT_WRITES !== "0"));
@@ -54,13 +54,15 @@ async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write 
     const timeout = new Promise<never>((_, rej) => { timer = setTimeout(() => rej(new Error("db timeout")), DB_TIMEOUT_MS); });
     try { return await Promise.race([dbFn(), timeout]); } finally { clearTimeout(timer); }
   } catch (e) {
-    const err = e as { code?: string; message?: string; cause?: { code?: string } };
+    const err = e as { code?: string; message?: string; cause?: { code?: string; message?: string } };
     lastDbError = err.cause?.code ?? err.code ?? String(err.message ?? e).slice(0, 40);
+    // Postgres message (e.g. 'column "x" does not exist') with any URL/credential-looking text scrubbed
+    lastDbMessage = String(err.cause?.message ?? err.message ?? e).replace(/\b[a-z]+:\/\/\S+/gi, "<url>").replace(/(password|token|key|secret)\S*/gi, "<redacted>").slice(0, 160);
     if (Date.now() >= dbDownUntil) console.warn(`[data] database unreachable (${lastDbError}); using JSON fallback`);
     dbDownUntil = Date.now() + DB_BACKOFF_MS; if (write && strictWrites()) throw dbOffline(); return jsonFn();
   }
 }
-export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= dbDownUntil, lastError: lastDbError || null });
+export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= dbDownUntil, lastError: lastDbError || null, lastErrorMessage: lastDbMessage || null });
 
 const jsonSales = () => readJson<Sale[]>(salesFile, mockSales as Sale[]);
 const bySoonest = (s: Sale[]) => [...s].sort((a, b) => (a.days[0]?.date ?? "").localeCompare(b.days[0]?.date ?? ""));
