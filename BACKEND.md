@@ -62,3 +62,4 @@ Admin-triggered, one URL at a time, host allowlist (estatesales.net/.org, auctio
 2. Supabase Postgres: set `DATABASE_URL` → `npm run db:migrate && npm run db:seed` (code switches automatically).
 3. Deploy Vercel (env vars), set `NEXT_PUBLIC_SITE_URL`.
 4. Resend + cron live. 5. MapTiler map. 6. Supabase Auth replaces ADMIN_PASSWORD. 7. Organizer submission form + moderation queue.
+- Every REST write (POST/PUT/DELETE on /api/sales, /api/venues, /api/deal-rules) is now written to the audit log with detail "via API". Verify a deploy with `npm run sweep` (see OVERNIGHT.md, 8 PM pass).
