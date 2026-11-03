@@ -1,4 +1,5 @@
 import { dowOf } from "@/lib/store-today";
+import { bestDay } from "@/lib/best-day";
 import { todayET } from "@/lib/cities";
 import { t12 } from "@/lib/time";
 import Link from "next/link";
@@ -14,13 +15,13 @@ export default async function Deals() {
   const today = dowOf(todayET());
   return (<div><PageHead title="Deal Days" sub="Color-tag days, half-off days and bin restocks by weekday" />
     <p className="mb-3 border-l-4 border-cta bg-paper p-2 text-sm"><b>Heads up:</b> schedules marked <i>unverified</i> haven&apos;t been confirmed with the store yet — check signage or call ahead.</p>
-    <div className="panel mb-4 p-3"><p className="mb-2 text-sm">Put every deal day in your phone&apos;s calendar — repeats weekly and updates when schedules change.</p><CalendarLinks path="/api/calendar/deals" label="all deal days" /></div>
+    <div className="panel mb-4 p-3"><p className="mb-2 text-sm">Put every deal day in your phone&apos;s calendar — repeats weekly and updates when schedules change.</p><CalendarLinks path="/api/calendar/deals" label="all deal days" /><p className="mt-3 text-sm"><Link href="/deals/week" className="btn-red">🖨 This week&apos;s printable sheet</Link></p></div>
     <div className="panel"><div className="panel-head">Weekly schedule</div>
       <div className="grid grid-cols-1 gap-px bg-line sm:grid-cols-7">{order.map((d) => <div key={d} className={`bg-white sm:min-h-48 ${d === today ? "ring-2 ring-cta ring-inset" : ""}`}>
         <div className="bg-paper border-b border-line px-2 py-1 text-xs font-bold text-royal">{DAYS[d]}{d === today && " · today"}</div>
         <div className="p-1.5 space-y-1">{dealRules.filter((r) => r.day === d).map((r) => <div key={r.id} className={`pill ${r.color} block whitespace-normal`}>
           {r.label}{r.time && ` · ${t12(r.time)}`}<div className="text-[11px] font-normal">{name(r.venue)}{!r.verified && " · unverified"}</div></div>)}</div></div>)}</div></div>
     <div className="panel mt-4"><div className="panel-head">By store</div><ul>{venues.map((v) => <li key={v.slug} className="border-b border-line px-4 py-2 text-sm last:border-0">
-      <Link href={`/stores/${v.slug}`} className="font-bold text-royal hover:underline">{v.name}</Link> <span className="text-gray-600">· {v.city}</span>
+      <Link href={`/stores/${v.slug}`} className="font-bold text-royal hover:underline">{v.name}</Link> <span className="text-gray-600">· {v.city}</span>{(() => { const b = bestDay(v.slug, dealRules, v.hoursJson); return b ? <span className="pill ml-2 bg-cta">Best: {b.best.name}</span> : null; })()}
       <div>{dealRules.filter((r) => r.venue === v.slug).map((r) => `${DAYS[r.day]}: ${r.label}${r.verified ? "" : " (unverified)"}`).join(" · ") || "No rules yet"}</div></li>)}</ul></div></div>);
 }

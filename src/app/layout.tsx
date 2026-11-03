@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "ThriftRadar", statusBarStyle: "black-translucent" },
 };
 const cities = [["port-orange", "Port Orange"], ["daytona-beach", "Daytona Beach"], ["deland", "DeLand"], ["new-smyrna-beach", "New Smyrna Beach"], ["ormond-beach", "Ormond Beach"], ["orlando", "Orlando"]];
-const pages = [["/about", "About"], ["/faq", "FAQ"], ["/submit", "Submit a sale"], ["/contact", "Contact"], ["/privacy", "Privacy"], ["/terms", "Terms"], ["/sales", "All sales"], ["/new", "New this week"], ["/search", "Search"]];
+const pages = [["/about", "About"], ["/faq", "FAQ"], ["/submit", "Submit a sale"], ["/contact", "Contact"], ["/privacy", "Privacy"], ["/terms", "Terms"], ["/sales", "All sales"], ["/new", "New this week"], ["/deals/week", "Deal-day sheet"], ["/search", "Search"]];
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (<html lang="en"><body className="antialiased">
     <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:bg-white focus:px-3 focus:py-2 focus:font-bold focus:text-royal">Skip to content</a>

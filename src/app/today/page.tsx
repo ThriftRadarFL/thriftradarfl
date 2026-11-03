@@ -24,5 +24,5 @@ export default async function Today() {
         {!deals.length && <div className="text-sm text-gray-600">No deal days today. <Link className="text-royal hover:underline" href="/deals">See the weekly schedule</Link></div>}
       </div></div>
     </div>
-    <p className="mt-4 text-sm"><Link className="font-bold text-royal hover:underline" href="/weekend">Plan the weekend</Link> · <Link className="font-bold text-royal hover:underline" href="/calendar">Next 14 days</Link></p></div>);
+    <p className="mt-4 text-sm"><Link className="font-bold text-royal hover:underline" href="/weekend">Plan the weekend</Link> · <Link className="font-bold text-royal hover:underline" href="/calendar">Next 14 days</Link> · <Link className="font-bold text-royal hover:underline" href="/deals/week">This week&apos;s deal sheet</Link></p></div>);
 }
