@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 export const FAV_KEY = "thriftradar:favs";
 export function readFavs(): string[] { try { const v = JSON.parse(localStorage.getItem(FAV_KEY) ?? "[]"); return Array.isArray(v) ? v.filter((x) => typeof x === "string") : []; } catch { return []; } }
-export function writeFavs(f: string[]) { localStorage.setItem(FAV_KEY, JSON.stringify(f)); window.dispatchEvent(new Event("thriftradar:favs")); }
+/** Returns false if this browser refuses storage (Safari private mode, quota) instead of throwing inside a click handler. */
+export function writeFavs(f: string[]): boolean { let ok = true; try { localStorage.setItem(FAV_KEY, JSON.stringify(f)); } catch { ok = false; } window.dispatchEvent(new Event("thriftradar:favs")); return ok; }
 export function useFavs() {
   const [favs, setFavs] = useState<string[] | null>(null);
   useEffect(() => { const up = () => setFavs(readFavs()); up(); window.addEventListener("thriftradar:favs", up); window.addEventListener("storage", up);

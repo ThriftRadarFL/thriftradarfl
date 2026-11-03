@@ -7,7 +7,7 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
   const q = ((await searchParams).q ?? "").trim().slice(0, 100);
   const r = q ? searchAll(q, await getSales(), await getVenues()) : { sales: [], venues: [] };
   return (<div><PageHead title={q ? `Search: “${q}”` : "Search"} sub={q ? `${r.sales.length} sales · ${r.venues.length} stores` : "Find sales and stores by name, city, ZIP or type"} />
-    <form action="/search" role="search" className="mb-4 flex max-w-xl gap-2"><label htmlFor="sq" className="sr-only">Search sales and stores</label>
+    <form action="/search" role="search" aria-label="Search results filter" className="mb-4 flex max-w-xl gap-2"><label htmlFor="sq" className="sr-only">Search sales and stores</label>
       <input id="sq" name="q" type="search" defaultValue={q} placeholder="e.g. DeLand, mid-century, 32129, bins" className="flex-1 border border-line bg-white px-3 py-2 text-sm" /><button className="btn-red">Search</button></form>
     {q && !r.sales.length && !r.venues.length && <p className="panel p-4 text-sm">Nothing matched “{q}”. Try a city name, a ZIP code, or browse <Link href="/sales" className="link">all sales</Link> and <Link href="/stores" className="link">stores</Link>.</p>}
     <div className="grid gap-4 md:grid-cols-2">

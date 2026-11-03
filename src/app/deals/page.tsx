@@ -1,3 +1,5 @@
+import { dowOf } from "@/lib/store-today";
+import { todayET } from "@/lib/cities";
 import { t12 } from "@/lib/time";
 import Link from "next/link";
 import { PageHead } from "@/components/ui";
@@ -5,10 +7,11 @@ import { getVenues, getDealRules } from "@/lib/data";
 import { DAYS } from "@/lib/deal-rules";
 import CalendarLinks from "@/components/CalendarLinks";
 export const metadata = { title: "Deal Days — Goodwill color tags, half-off & bin restocks", description: "Weekly schedule of Goodwill color-tag days, half-off days, senior discounts and outlet bin restocks in Central Florida.", alternates: { canonical: "/deals" } };
+export const dynamic = "force-dynamic"; // "today" highlight must follow the Eastern-time date, not the build date
 const order = [1, 2, 3, 4, 5, 6, 0];
 export default async function Deals() {
   const [venues, dealRules] = await Promise.all([getVenues(), getDealRules()]); const name = (s: string) => venues.find((v) => v.slug === s)?.name ?? s;
-  const today = new Date().getDay();
+  const today = dowOf(todayET());
   return (<div><PageHead title="Deal Days" sub="Color-tag days, half-off days and bin restocks by weekday" />
     <p className="mb-3 border-l-4 border-cta bg-paper p-2 text-sm"><b>Heads up:</b> schedules marked <i>unverified</i> haven&apos;t been confirmed with the store yet — check signage or call ahead.</p>
     <div className="panel mb-4 p-3"><p className="mb-2 text-sm">Put every deal day in your phone&apos;s calendar — repeats weekly and updates when schedules change.</p><CalendarLinks path="/api/calendar/deals" label="all deal days" /></div>

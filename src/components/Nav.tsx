@@ -9,7 +9,7 @@ export default function Nav() {
         <Image src="/logo-horizontal.webp" alt="ThriftRadarFL — Central Florida thrift &amp; estate sales" width={409} height={112} priority unoptimized className="hidden h-9 w-auto min-[360px]:block sm:h-11" />
         <Image src="/icons/mark-64.png" alt="ThriftRadarFL" width={64} height={64} priority unoptimized className="block h-8 w-8 min-[360px]:hidden" /></Link>
       
-      <form action="/search" role="search" className="order-last flex w-full gap-1 sm:order-none sm:ml-auto sm:w-auto"><label htmlFor="nav-q" className="sr-only">Search sales and stores</label>
+      <form action="/search" role="search" aria-label="Site search" className="order-last flex w-full gap-1 sm:order-none sm:ml-auto sm:w-auto"><label htmlFor="nav-q" className="sr-only">Search sales and stores</label>
         <input id="nav-q" name="q" type="search" placeholder="Search sales & stores" className="min-w-0 flex-1 rounded-sm border border-white/30 bg-white px-2 py-1.5 text-sm text-ink sm:w-56" />
         <button className="btn-gray px-3 py-1.5 text-sm">Go</button></form>
       <Link href="/submit" className="ml-auto hidden text-sm font-bold text-white underline-offset-2 hover:underline sm:ml-0 sm:inline">Submit a sale</Link>

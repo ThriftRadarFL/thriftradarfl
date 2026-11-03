@@ -22,7 +22,8 @@ export const dealRules: DealRule[] = [
   { venue: "city-thrift-edgewater", day: 2, kind: "senior_day", label: "Seniors 30% off (per uncoveringflorida.com)", discountPct: 30, color: "bg-gray-700", verified: false },
   { venue: "city-thrift-edgewater", day: 3, kind: "senior_day", label: "Military discount (per uncoveringflorida.com)", color: "bg-gray-700", verified: false },
 ];
-export const nextDealDate = (r: DealRule, from = new Date()) => { const d = new Date(from); d.setDate(d.getDate() + ((r.day - d.getDay() + 7) % 7)); return d.toLocaleDateString("en-CA"); };
+/** Next date (YYYY-MM-DD, Eastern time) this rule applies, today included. Timezone-safe on UTC servers. */
+export const nextDealDate = (r: DealRule, from = new Date()) => { const iso = from.toLocaleDateString("en-CA", { timeZone: "America/New_York" }); const d = new Date(iso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + ((r.day - d.getUTCDay() + 7) % 7)); return d.toISOString().slice(0, 10); };
 export const ruleId = (r: Pick<DealRule, "venue" | "day" | "label">) => `${r.venue}-${r.day}-${r.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
 export const DEAL_KINDS: DealKind[] = ["color_tag", "half_off", "senior_day", "restock", "bins_rotation", "dollar_day"];
 export const KIND_COLOR: Record<DealKind, string> = { color_tag: "bg-teal", half_off: "bg-coral", senior_day: "bg-gray-700", restock: "bg-royal", bins_rotation: "bg-royal", dollar_day: "bg-coral" };
