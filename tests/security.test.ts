@@ -26,7 +26,7 @@ test("CSP allows MapLibre/MapTiler and blocks framing/objects; dev-only eval", (
 });
 test("next.config applies security headers to every route", async () => {
   const cfg = (await import("../next.config")).default as any; const rules = await cfg.headers();
-  const all = rules.find((r: any) => r.source === "/(.*)"); assert.ok(all.headers.some((h: any) => h.key === "Content-Security-Policy"));
+  const all = rules.find((r: any) => r.source === "/((?!embed/).*)"); assert.ok(all.headers.some((h: any) => h.key === "Content-Security-Policy"));
   assert.equal(cfg.poweredByHeader, false);
 });
 test("limiter: sliding window, per key, bounded memory", () => {

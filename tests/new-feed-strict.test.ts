@@ -46,7 +46,7 @@ test("JSON driver: addedAt is set on first save and sticky across edits", async 
 });
 
 test("feed.xml route + /new are wired (sitemap, layout alternate)", async () => {
-  const { GET } = await import("../src/app/feed.xml/route"); const r = await GET(); assert.equal(r.status, 200);
+  const { GET } = await import("../src/app/feed.xml/route"); const r = await GET(new Request("http://l/feed.xml")); assert.equal(r.status, 200);
   assert.match(r.headers.get("content-type") ?? "", /application\/atom\+xml/); assert.ok((await r.text()).includes("<feed"));
   const { STATIC_PAGES } = await import("../src/lib/seo"); assert.ok(STATIC_PAGES.includes("/new"));
 });

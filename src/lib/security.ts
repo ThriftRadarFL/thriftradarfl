@@ -3,7 +3,7 @@
 
 /** Content-Security-Policy. No nonces (pages are statically rendered), so inline scripts are allowed;
  *  everything else is locked to self + MapTiler (tiles/styles/glyphs/sprites). MapLibre needs blob: workers + inline styles. */
-export function buildCsp(dev = process.env.NODE_ENV !== "production") {
+export function buildCsp(dev = process.env.NODE_ENV !== "production", frameAncestors = "'self'") {
   const maptiler = "https://api.maptiler.com https://*.maptiler.com";
   const d: Record<string, string> = {
     "default-src": "'self'",
@@ -15,21 +15,22 @@ export function buildCsp(dev = process.env.NODE_ENV !== "production") {
     "worker-src": "'self' blob:",
     "child-src": "'self' blob:",
     "manifest-src": "'self'",
-    "frame-ancestors": "'self'",
+    "frame-ancestors": frameAncestors,
     "form-action": "'self'",
     "base-uri": "'self'",
     "object-src": "'none'",
   };
   return Object.entries(d).map(([k, v]) => (v ? `${k} ${v}` : k)).join("; ");
 }
-export function securityHeaders(dev = process.env.NODE_ENV !== "production") {
+/** `embeddable` = for /embed/* widgets: any site may iframe them (frame-ancestors *, no X-Frame-Options). */
+export function securityHeaders(dev = process.env.NODE_ENV !== "production", embeddable = false) {
   return [
-    { key: "Content-Security-Policy", value: buildCsp(dev) },
+    { key: "Content-Security-Policy", value: buildCsp(dev, embeddable ? "*" : "'self'") },
     { key: "X-Content-Type-Options", value: "nosniff" },
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-    { key: "X-Frame-Options", value: "SAMEORIGIN" },
+    ...(embeddable ? [] : [{ key: "X-Frame-Options", value: "SAMEORIGIN" }]),
     { key: "Permissions-Policy", value: "camera=(), microphone=(), payment=(), usb=(), interest-cohort=(), geolocation=(self)" },
-    { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+    ...(embeddable ? [] : [{ key: "Cross-Origin-Opener-Policy", value: "same-origin" }]),
     ...(dev ? [] : [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" }]),
   ];
 }

@@ -12,6 +12,7 @@ import { storeToday, dowOf } from "@/lib/store-today";
 import BestDay from "@/components/BestDay";
 import { bestDay } from "@/lib/best-day";
 import { todayET } from "@/lib/cities";
+import { embedSnippet } from "@/lib/embed";
 export const dynamic = "force-dynamic"; // "today at this store" follows the Eastern-time date
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const v = await getVenue((await params).slug); if (!v) return { title: "Store not found", robots: { index: false } };
@@ -31,12 +32,20 @@ export default async function Store({ params }: { params: Promise<{ slug: string
         {v.notes && <p className="text-sm text-gray-700 border-l-4 border-coral pl-3">{v.notes}</p>}
         <a className="btn-red mt-2" href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener noreferrer">Get directions ↗</a>
         {v.sourceUrl && /^https?:\/\//i.test(v.sourceUrl) && <p className="text-xs text-gray-600">Source: <a href={v.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">{hostOf(v.sourceUrl)}</a></p>}
-        <div className="pt-2"><ShareButtons url={`${SITE_URL}/stores/${v.slug}`} title={v.name} /></div></div></div>
+        <div className="pt-2"><ShareButtons url={`${SITE_URL}/stores/${v.slug}`} title={v.name} /></div>
+        <p className="text-sm"><a href={`/stores/compare?s=${v.slug}`} className="link">⇄ Compare with another store</a></p></div></div>
       <div className="panel"><div className="panel-head">Hours</div><table className="w-full text-sm">
         <tbody>{hours.length ? hours.map(([k, h]) => <tr key={k} className="border-b border-line"><td className="px-4 py-2 font-bold">{dayKey(k)}</td><td className="px-4 py-2">{hours12(h)}</td></tr>)
           : <tr><td className="px-4 py-3 text-gray-600">Hours not verified yet — call ahead</td></tr>}</tbody></table>
         <div className="panel-head border-t border-line">Deal days</div><ul className="text-sm">{!mine.length && <li className="px-4 py-2 text-gray-600">No deal days listed.</li>}{mine.map((r) => <li key={r.id} className="border-b border-line px-4 py-2">
           <b>{DAYS[r.day]}</b> {r.label}{r.time && ` · ${t12(r.time)}`}{!r.verified && <span className="ml-1 text-xs text-gray-600">(unverified)</span>}</li>)}</ul>
         {mine.length > 0 && <div className="p-3"><CalendarLinks path={`/api/calendar/deals?venue=${v.slug}`} label="this store's deals" /><p className="mt-1 text-xs text-gray-600">Repeats weekly; updates automatically if the schedule changes.</p></div>}</div>
-    </div></div>);
+    </div>
+    <details className="panel mt-4 overflow-hidden"><summary className="panel-head cursor-pointer list-none">▸ Embed this store&apos;s deal days on your site</summary>
+      <div className="grid gap-4 p-4 text-sm md:grid-cols-2"><div className="space-y-2"><p>Run a blog, club page or the store&apos;s own site? Paste this to show today&apos;s deal, the weekly schedule and the best day. It updates automatically.</p>
+        <label className="block font-bold" htmlFor="embed-full">Full card (360×330)</label><textarea id="embed-full" readOnly rows={3} className="w-full rounded-sm border border-line bg-paper p-2 font-mono text-xs" value={embedSnippet(SITE_URL, v.slug)} />
+        <label className="block font-bold" htmlFor="embed-compact">Compact badge (320×96)</label><textarea id="embed-compact" readOnly rows={3} className="w-full rounded-sm border border-line bg-paper p-2 font-mono text-xs" value={embedSnippet(SITE_URL, v.slug, true)} />
+        <p className="text-xs text-gray-600">No scripts or tracking. JSON for your own code: <a className="link" href={`/api/venues/${v.slug}/today`}>/api/venues/{v.slug}/today</a> · <a className="link" href="/developers">API docs</a></p></div>
+        <div><p className="mb-1 text-xs font-bold uppercase text-royal">Preview</p><iframe src={`/embed/stores/${v.slug}`} title={`${v.name} deal days widget preview`} width={360} height={330} loading="lazy" className="max-w-full border-0" /></div></div></details>
+  </div>);
 }

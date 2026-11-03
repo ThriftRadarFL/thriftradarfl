@@ -10,7 +10,8 @@ const nextConfig: NextConfig = {
   // Ship data/*.json with serverless functions so JSON mode works read-only on Vercel before Postgres is wired.
   outputFileTracingIncludes: { "/**": ["./data/sales.json", "./data/venues.json", "./public/logo-horizontal-lg.png"] },
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders() }, { source: "/admin/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
+    // Everything except /embed/* is SAMEORIGIN-only; /embed/* widgets may be iframed by any site.
+    return [{ source: "/((?!embed/).*)", headers: securityHeaders() }, { source: "/embed/:path*", headers: securityHeaders(undefined, true) }, { source: "/admin/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       { source: "/sw.js", headers: [{ key: "Cache-Control", value: "no-cache, no-store, must-revalidate" }, { key: "Content-Type", value: "application/javascript; charset=utf-8" }] },
       { source: "/icons/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" }] }];
   },

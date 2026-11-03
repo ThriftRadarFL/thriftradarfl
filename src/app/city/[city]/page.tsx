@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { city } = await params; const d = await load(city); if (!d) return { title: "City not found" };
   const n = d.info.name; const title = `Estate Sales & Thrift Deals in ${n}, FL`;
   const description = `${d.upcoming.length} upcoming estate sale${d.upcoming.length === 1 ? "" : "s"}, auctions and yard sales plus ${d.stores.length} thrift store${d.stores.length === 1 ? "" : "s"} with deal days in ${n}, Florida. Updated daily — see what's on this weekend.`;
-  return { title, description, alternates: { canonical: `/city/${city}` }, openGraph: { title, description, url: `${SITE_URL}/city/${city}`, siteName: SITE_NAME, type: "website" }, twitter: { card: "summary_large_image", title, description } };
+  return { title, description, alternates: { canonical: `/city/${city}`, types: { "application/atom+xml": [{ url: `/feed.xml?city=${city}`, title: `ThriftRadarFL · New sales in ${n}` }] } }, openGraph: { title, description, url: `${SITE_URL}/city/${city}`, siteName: SITE_NAME, type: "website" }, twitter: { card: "summary_large_image", title, description } };
 }
 const md = (iso: string) => { const d = new Date(iso + "T12:00:00Z"); return `${DAYS[d.getUTCDay()]} ${d.getUTCMonth() + 1}/${d.getUTCDate()}`; };
 export default async function City({ params }: P) {
