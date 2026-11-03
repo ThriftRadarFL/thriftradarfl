@@ -27,7 +27,7 @@ for (const p of urls) {
   check(/<meta property="og:image"/.test(h), `${p} missing og:image`);
   check((h.match(/<h1[\s>]/g) ?? []).length === 1, `${p} has ${(h.match(/<h1[\s>]/g) ?? []).length} <h1>`);
   const ld = [...h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]).join(" ");
-  if (p.startsWith("/stores/") && p !== "/stores/compare") check(/"@type":"(Store|LocalBusiness|ThriftStore|[A-Za-z]*Store)"/.test(ld), `${p} no Store JSON-LD`);
+  if (p.startsWith("/stores/") && !["/stores/compare", "/stores/report-cards"].includes(p)) check(/"@type":"(Store|LocalBusiness|ThriftStore|[A-Za-z]*Store)"/.test(ld), `${p} no Store JSON-LD`);
   if (p.startsWith("/sales/")) check(/"@type":"(Event|SaleEvent)"/.test(ld), `${p} no Event JSON-LD`);
   check(h.length < 400_000, `${p} HTML is ${Math.round(h.length / 1024)} KB`);
   if (seenTitles.has(title)) fails.push(`duplicate <title> "${title}" on ${p} and ${seenTitles.get(title)}`); else seenTitles.set(title, p);
@@ -49,9 +49,11 @@ const api = [["/api/health", 200, "application/json"], ["/api/sales?upcoming=1",
   ["/feed.xml", 200, "xml"], ["/robots.txt", 200, "text/plain"], ["/manifest.webmanifest", 200], ["/opengraph-image", 200, "image/png"], ["/stores/goodwill-port-orange/opengraph-image", 200, "image/png"],
   ["/api/cron/digest", 401], ["/api/admin/subscribers", 401], ["/api/admin/export?what=audit", 401],
   ["/embed/stores/goodwill-port-orange", 200, "text/html"], ["/embed/stores/goodwill-port-orange?compact=1", 200, "text/html"], ["/embed/stores/nope", 404], ["/feed.xml?city=port-orange", 200, "xml"], ["/feed.xml?city=atlantis", 404],
-  ["/stores/compare?s=goodwill-pine-hills-outlet,goodwill-taft-outlet", 200, "text/html"], ["/stores/compare?s=nope", 200, "text/html"]];
+  ["/stores/compare?s=goodwill-pine-hills-outlet,goodwill-taft-outlet", 200, "text/html"], ["/stores/compare?s=nope", 200, "text/html"],
+  ["/stores/report-cards?grade=D", 200, "text/html"], ["/stores/report-cards?grade=zz&city=nowhere", 200, "text/html"], ["/api/report-cards", 200, "application/json"], ["/api/report-cards?venue=nope", 404, "application/json"]];
 for (const [p, want, ct] of api) { const r = await get(p); check(r.status === want, `${p} → ${r.status} (want ${want})`); if (ct) check((r.headers.get("content-type") ?? "").includes(ct), `${p} content-type ${r.headers.get("content-type")}`); }
 { const e = await get("/embed/stores/goodwill-port-orange"); check(/frame-ancestors \*/.test(e.headers.get("content-security-policy") ?? ""), "embed not framable"); check(!e.headers.get("x-frame-options"), "embed sends X-Frame-Options");
+  { const s = await (await get("/stores/goodwill-port-orange")).text(); check(s.includes("Info report card"), "store page missing report card"); const r = await (await get("/api/report-cards?venue=goodwill-port-orange")).json(); check(r.count === 1 && /^[A-F]$/.test(r.data[0].grade), "report-cards API shape"); }
   check(/<script/i.test(await e.text()) === false, "embed has a script"); const c = await (await get("/stores/compare?s=goodwill-pine-hills-outlet,goodwill-taft-outlet")).text(); check(c.includes("Best pick") || c.includes("Best day"), "compare table missing");
   check(/frame-ancestors 'self'/.test((await get("/stores/goodwill-port-orange")).headers.get("content-security-policy") ?? ""), "store page framable"); }
 const sec = await get("/"); for (const h of ["content-security-policy", "x-content-type-options", "referrer-policy", "x-frame-options"]) check(sec.headers.get(h), `missing header ${h}`);

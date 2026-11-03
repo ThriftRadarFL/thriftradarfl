@@ -15,6 +15,8 @@ import BestDay from "@/components/BestDay";
 import { bestDay } from "@/lib/best-day";
 import { todayET } from "@/lib/cities";
 import { embedSnippet } from "@/lib/embed";
+import ReportCardPanel from "@/components/ReportCardPanel";
+import { reportCard, tagCountsThisWeek } from "@/lib/report-card";
 export const dynamic = "force-dynamic"; // "today at this store" follows the Eastern-time date
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const v = await getVenue((await params).slug); if (!v) return { title: "Store not found", robots: { index: false } };
@@ -33,6 +35,7 @@ export default async function Store({ params }: { params: Promise<{ slug: string
       {tagRow ? <>{tagRow.colors.map((c) => <span key={c.color} className="inline-flex items-center gap-1"><TagSwatch color={c.color} big />{c.discountPct != null && <b>{c.discountPct}% off</b>}<span className="text-xs text-gray-600">({c.reports} {c.reports === 1 ? "report" : "reports"})</span></span>)}
         <span className="w-full text-xs text-gray-600">Shopper-reported and <b>unverified</b> — check the sign in store. <a href="/color-tags#report" className="link">Report a change</a></span></>
         : <span>No shopper reports yet this week. <a href="/color-tags#report" className="link">Seen the color-of-the-week sign? Report it →</a></span>}</div></div>}
+    <ReportCardPanel c={reportCard(v, dealRules, todayET(), takesTags ? tagCountsThisWeek(tagReports.filter((r) => r.venue === v.slug), todayET()).get(v.slug) ?? 0 : null)} />
     <div className="grid min-w-0 gap-4 break-words md:grid-cols-3">
       <div className="panel min-w-0 break-words md:col-span-2"><div className="panel-head">Location</div><div className="p-4 space-y-2">
         <p className="text-lg">{v.address}<br />{v.city}, FL {v.zip}</p>{v.phone && <p><a aria-label={`Call ${v.name} at ${v.phone}`} className="font-bold text-royal hover:underline" href={`tel:${v.phone.replace(/[^\d+]/g, "")}`}>{v.phone}</a></p>}

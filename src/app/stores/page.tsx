@@ -10,7 +10,7 @@ const chip: Record<string, string> = { thrift: "bg-teal", outlet_bins: "bg-cta",
 export default async function Stores() {
   const [venues, rules] = await Promise.all([getVenues(), getDealRules()]); const today = todayET();
   return (<div><PageHead title="Thrift Stores, Outlets & Auctions" sub={`${venues.length} locations tracked`} />
-    <p className="mb-3 text-sm"><Link href="/stores/compare" className="btn-gray px-3 py-1.5 text-sm">⇄ Compare stores side by side</Link></p>
+    <p className="mb-3 text-sm"><Link href="/stores/compare" className="btn-gray px-3 py-1.5 text-sm">⇄ Compare stores side by side</Link> <Link href="/stores/report-cards" className="btn-gray px-3 py-1.5 text-sm">▦ Store report cards</Link></p>
     <div className="panel overflow-x-auto"><table className="w-full text-sm">
       <thead className="bg-royal text-left text-xs uppercase text-white"><tr><th className="px-3 py-2">Type</th><th className="px-3 py-2">Name</th><th className="px-3 py-2 hidden md:table-cell">Address</th><th className="px-3 py-2 hidden sm:table-cell">City</th><th className="px-3 py-2 hidden sm:table-cell">Today</th><th className="px-3 py-2 hidden sm:table-cell">Phone</th><th className="hidden sm:table-cell"><span className="sr-only">Actions</span></th></tr></thead>
       <tbody>{venues.map((v) => (<tr key={v.slug} className="border-b border-line last:border-0 even:bg-paper/60">
