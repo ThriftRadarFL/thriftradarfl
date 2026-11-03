@@ -36,7 +36,10 @@ for (const p of urls) {
 // 2 · Non-sitemap pages + 404s are real 404s with noindex.
 for (const p of ["/saved", "/search?q=goodwill", "/admin", "/offline", "/weekend?zip=32127&r=25", "/plan?day=2026-11-07", "/saved?list=a,b"]) { const r = await get(p); check(r.status === 200, `${p} → ${r.status}`); }
 for (const p of ["/nope", "/sales/nope", "/stores/nope", "/city/nope", "/stores/../../etc/passwd", "/sales/%3Cscript%3E"]) {
-  const r = await get(p); const h = await r.text(); check(r.status === 404, `${p} → ${r.status} (want 404)`); check(/noindex/.test(h), `${p} 404 without noindex`);
+  const r = await get(p); const h = await r.text();
+  // Vercel's edge firewall rejects path traversal with a plain 403 before the app sees it; that's fine too.
+  if (p.includes("..") && r.status === 403) { ok++; continue; }
+  check(r.status === 404, `${p} → ${r.status} (want 404)`); check(/noindex/.test(h), `${p} 404 without noindex`);
 }
 
 // 3 · APIs + feeds.

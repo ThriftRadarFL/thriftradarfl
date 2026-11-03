@@ -15,7 +15,9 @@ type P = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: P) {
   const s = await getSale((await params).slug); if (!s) return { title: "Sale not found", robots: { index: false } };
   const description = `${typeLabel[s.type] ?? "Sale"} in ${s.city}, FL · ${s.days.length} day${s.days.length > 1 ? "s" : ""} starting ${s.days[0]?.date}. Hours, discounts and add-to-calendar.`;
-  return { title: `${s.title} · ${s.city}, FL`, description, alternates: { canonical: `/sales/${s.slug}` }, ...(saleEnded(s, todayET()) ? { robots: { index: false, follow: true } } : {}),
+  // Recurring sales (e.g. weekly auctions) share a title, so the first date keeps <title> unique per listing.
+  const first = s.days[0]?.date ? new Date(s.days[0].date + "T12:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }) : "";
+  return { title: `${s.title} · ${s.city}, FL${first ? ` · ${first}` : ""}`, description, alternates: { canonical: `/sales/${s.slug}` }, ...(saleEnded(s, todayET()) ? { robots: { index: false, follow: true } } : {}),
     openGraph: { type: "article", title: s.title, description, url: `/sales/${s.slug}` }, twitter: { card: "summary_large_image", title: s.title, description } };
 }
 export default async function Sale({ params }: P) {
