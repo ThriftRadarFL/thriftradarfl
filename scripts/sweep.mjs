@@ -53,6 +53,18 @@ for (const [p, want, ct] of api) { const r = await get(p); check(r.status === wa
   check(/frame-ancestors 'self'/.test((await get("/stores/goodwill-port-orange")).headers.get("content-security-policy") ?? ""), "store page framable"); }
 const sec = await get("/"); for (const h of ["content-security-policy", "x-content-type-options", "referrer-policy", "x-frame-options"]) check(sec.headers.get(h), `missing header ${h}`);
 
+// 3b · 10 PM pass: suggest API, public-read caching + ETag/304, homepage hero, errors stay no-store.
+{ const r = await get("/api/suggest?q=port%20or"); const j = await r.json(); check(r.status === 200 && j.count > 0, "suggest returned nothing for 'port or'");
+  check(j.data?.every((x) => ["city", "store", "sale"].includes(x.kind) && x.href.startsWith("/")), "suggest item shape"); check(j.data?.[0]?.href === "/city/port-orange", `suggest top hit ${j.data?.[0]?.href}`);
+  for (const x of (j.data ?? []).slice(0, 4)) { const t = await get(x.href); check(t.status === 200, `suggest link ${x.href} → ${t.status}`); }
+  const e = await (await get("/api/suggest?q=a")).json(); check(e.count === 0, "suggest answers 1-char queries");
+  const long = await get("/api/suggest?q=" + "x".repeat(500)); check(long.status === 200, "suggest long q → " + long.status);
+  for (const p of ["/api/sales?upcoming=1", "/api/venues", "/api/deal-rules", "/api/venues/goodwill-port-orange", "/api/venues/goodwill-port-orange/today", "/api/suggest?q=goodwill"]) {
+    const a = await get(p); check(/public, max-age=\d+/.test(a.headers.get("cache-control") ?? ""), `${p} cache-control ${a.headers.get("cache-control")}`); const et = a.headers.get("etag"); check(et, `${p} no ETag`);
+    if (et) { const b = await get(p, { headers: { "if-none-match": et } }); check(b.status === 304, `${p} If-None-Match → ${b.status} (want 304)`); } }
+  for (const p of ["/api/sales/nope", "/api/health"]) check((await get(p)).headers.get("cache-control") === "no-store", `${p} should be no-store`);
+  const h = await (await get("/")).text(); check(/action="\/weekend"/.test(h) && /name="zip"/.test(h), "home hero ZIP form missing"); check(/role="combobox"/.test(h), "nav combobox missing"); check(/Quick links/.test(h), "home quick links missing"); }
+
 // 4 · Admin write flow over the REST API (JSON mode): create → read → edit → publish toggle → delete, plus venue + deal rule.
 if (PW) {
   check((await get("/api/sales", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" })).status === 401, "POST /api/sales without auth not 401");

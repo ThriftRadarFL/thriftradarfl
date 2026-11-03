@@ -48,7 +48,7 @@ test("a11y/robustness guards: global error boundary, 404 has an h1, date-depende
   assert.match(readFileSync("src/app/not-found.tsx", "utf8"), /<h1/);
   for (const f of ["src/app/deals/page.tsx", "src/app/stores/page.tsx", "src/app/stores/[slug]/page.tsx"]) assert.match(readFileSync(f, "utf8"), /export const dynamic = "force-dynamic"/, f);
   assert.doesNotMatch(readFileSync("src/app/deals/page.tsx", "utf8"), /new Date\(\)\.getDay\(\)/);
-  const nav = readFileSync("src/components/Nav.tsx", "utf8"); assert.match(nav, /role="search" aria-label=/);
+  const nav = readFileSync("src/components/NavSearch.tsx", "utf8"); assert.match(nav, /role="search" aria-label=/); assert.match(readFileSync("src/components/Nav.tsx", "utf8"), /<NavSearch \/>/);
 });
 test("GET /api/venues/[slug]/today: shape + 404", async () => {
   const { GET } = await import("../src/app/api/venues/[slug]/today/route");
