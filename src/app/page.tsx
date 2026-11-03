@@ -69,7 +69,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
       {TYPES.map((t) => <Link key={t} href={q("type", t)} className={fl(sp.type === t)}>{typeLabel[t]}</Link>)}
       <a href={`/api/calendar${sp.city ? `?city=${sp.city}` : ""}`} className="ml-auto py-2 text-xs underline">Subscribe (calendar feed)</a></div>
     {sales.length === 0 && <p className="panel p-4 text-sm">No upcoming sales match these filters. <Link href="/" className="underline">Clear filters</Link></p>}
-    <div className="grid gap-3 lg:grid-cols-2">{sales.map((s) => (<article key={s.slug} className="panel flex flex-col">
+    <div className="grid min-w-0 gap-3 lg:grid-cols-2">{sales.map((s) => (<article key={s.slug} className="panel flex min-w-0 flex-col">
       <div className="flex items-start gap-2 border-b border-line px-3 py-2">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2"><span className={`pill ${chip[s.type] ?? "bg-gray-700"}`}>{typeLabel[s.type] ?? s.type}</span><span className="text-xs text-gray-600">{s.city}, FL {s.zip}</span></div>

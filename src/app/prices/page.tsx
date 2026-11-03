@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PageHead } from "@/components/ui";
-import { getPrices, type PricePoint } from "@/lib/prices";
+import { getPrices, thriftRange, type PricePoint } from "@/lib/prices";
 export const metadata = { title: "Resale Price Tracker", description: "Sold-price medians for common thrift flips, with sample sizes, date ranges and sources. Blank rows mean no verified data yet.", alternates: { canonical: "/prices" } };
 function Spark({ h }: { h: PricePoint[] }) {
   if (h.length < 2) return null;
@@ -14,7 +14,7 @@ export default function Prices() {
     <div className="panel overflow-x-auto"><div className="panel-head">Sold prices (median of completed sales)</div>
       <table className="w-full text-sm"><thead className="bg-paper text-left"><tr>{["Item", "Sold median", "Samples", "Date range", "History", "Source", ""].map((h) => <th key={h} className="border-b border-line px-3 py-2">{h}</th>)}</tr></thead>
         <tbody>{items.map((i) => <tr key={i.slug} className="border-b border-line align-top last:border-0">
-          <td className="px-3 py-2"><b>{i.item}</b><div className="text-xs text-gray-600">{i.category}{i.thriftCost && ` · thrift cost seen: $${i.thriftCost}`}</div></td>
+          <td className="px-3 py-2"><b>{i.item}</b><div className="text-xs text-gray-600">{i.category}{i.estThrift && <> · <span title={i.estThrift.notes}>est. thrift cost {thriftRange(i.estThrift)} (low confidence{i.estThrift.sourceUrl && <>, <a href={i.estThrift.sourceUrl} rel="nofollow noopener" target="_blank" className="underline">source</a></>})</span></>}</div></td>
           {i.median === null ? <td colSpan={5} className="px-3 py-2 italic text-gray-600" title={i.notes}>No verified data yet</td> : <>
             <td className="px-3 py-2 font-bold text-royal">${i.median.toFixed(2)}{i.min !== null && i.max !== null && <div className="text-xs font-normal text-gray-600">range ${i.min.toFixed(2)}–${i.max.toFixed(2)}</div>}</td><td className="px-3 py-2">{i.samples ?? "—"}{i.samples !== null && i.samples < 100 && <div className="text-xs text-gray-600">small sample</div>}</td><td className="px-3 py-2">{i.dateRange || "—"}</td>
             <td className="px-3 py-2"><Spark h={i.history} /></td>

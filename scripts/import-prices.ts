@@ -31,6 +31,16 @@ if (existsSync(e)) {
   }
   console.log(`Merged ${merged} rows from resale-prices-ebay.csv`);
 }
+// Thrift-cost estimates (resale-margins.csv, '#' comment lines skipped): matched by item name. Shown as low-confidence estimates only.
+const mf = path.join(SRC, "resale-margins.csv");
+if (existsSync(mf)) {
+  let n = 0;
+  for (const x of parseCsv(readFileSync(mf, "utf8").split("\n").filter((l) => !l.startsWith("#")).join("\n"))) {
+    const r = rows.find((r: Record<string, string>) => r.item.trim().toLowerCase() === (x.item ?? "").trim().toLowerCase()); if (!r || (!x.thrift_low && !x.thrift_high)) continue;
+    Object.assign(r, { est_thrift_low_usd: x.thrift_low, est_thrift_high_usd: x.thrift_high, est_thrift_source_url: x.thrift_source_url, est_thrift_source_date: x.thrift_source_date, est_thrift_confidence: x.confidence, est_thrift_notes: x.notes }); n++;
+  }
+  console.log(`Merged ${n} thrift-cost estimates from resale-margins.csv`);
+}
 for (const r of rows) if (!r.item) { console.error("Row missing item:", r); process.exit(1); }
 writeFileSync(OUT, JSON.stringify(rows, null, 2) + "\n");
 console.log(`Imported ${rows.length} rows (${rows.filter((r: { sold_median_usd?: string }) => r.sold_median_usd).length} with sold data) -> ${OUT}`);

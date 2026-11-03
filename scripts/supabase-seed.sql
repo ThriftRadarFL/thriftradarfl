@@ -93,13 +93,13 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'goodwill-fern-park');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'goodwill-casselberry', (SELECT id FROM organizations WHERE name = 'Goodwill Industries of Central Florida' LIMIT 1),
-      'Goodwill Longwood/Casselberry', 'thrift', '1795 Sunshadow Drive', 'Casselberry', '32707', 0, 0, '(407) 695-3800',
-      '{"daily":"9:00-21:00"}'::jsonb, 'Not on the map yet (address didn''t geocode). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).', true
+      'Goodwill Longwood/Casselberry', 'thrift', '1795 Sunshadow Drive', 'Casselberry', '32707', 28.69771, -81.32165, '(407) 695-3800',
+      '{"daily":"9:00-21:00"}'::jsonb, 'Map pin from OpenStreetMap Nominatim. Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'goodwill-casselberry');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'goodwill-oviedo', (SELECT id FROM organizations WHERE name = 'Goodwill Industries of Central Florida' LIMIT 1),
-      'Goodwill Oviedo', 'thrift', '1819 Alafaya Trail', 'Oviedo', '32765', 0, 0, '(407) 706-0800',
-      '{"daily":"9:00-21:00"}'::jsonb, 'Not on the map yet (address didn''t geocode). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).', true
+      'Goodwill Oviedo', 'thrift', '1819 Alafaya Trail', 'Oviedo', '32765', 28.64422, -81.20738, '(407) 706-0800',
+      '{"daily":"9:00-21:00"}'::jsonb, 'Map pin from OpenStreetMap Nominatim. Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'goodwill-oviedo');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'goodwill-curry-ford', (SELECT id FROM organizations WHERE name = 'Goodwill Industries of Central Florida' LIMIT 1),
@@ -128,13 +128,13 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'goodwill-winter-park-boutique');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'goodwill-apopka', (SELECT id FROM organizations WHERE name = 'Goodwill Industries of Central Florida' LIMIT 1),
-      'Goodwill Apopka', 'thrift', '1312 East Semoran Boulevard', 'Apopka', '32703', 0, 0, '(407) 889-2965',
-      '{"daily":"9:00-21:00"}'::jsonb, 'Not on the map yet (address didn''t geocode). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).', true
+      'Goodwill Apopka', 'thrift', '1312 East Semoran Boulevard', 'Apopka', '32703', 28.67319, -81.48578, '(407) 889-2965',
+      '{"daily":"9:00-21:00"}'::jsonb, 'Map pin from OpenStreetMap Nominatim. Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'goodwill-apopka');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'restore-west-volusia-deland', (SELECT id FROM organizations WHERE name = 'Habitat for Humanity ReStore' LIMIT 1),
       'West Volusia Habitat ReStore', 'thrift', '604 S. Spring Garden Avenue', 'DeLand', '32720', 29.01882, -81.32401, '(386) 734-7268',
-      NULL, 'Habitat for Humanity ReStore: furniture, appliances, building materials. The store''s site lists conflicting hours (Tue–Sat vs Mon–Sat 8:30–5) — call ahead. Address, phone and hours from https://wvhabitat.org/the-restore/ (checked 2026-11-02).', true
+      '{"tue-sat":"8:30-17:00"}'::jsonb, 'Habitat for Humanity ReStore: furniture, appliances, building materials. The store''s site lists conflicting hours (Tue–Sat vs Mon–Sat 8:30–5) — call ahead. Address, phone and hours from https://wvhabitat.org/the-restore/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'restore-west-volusia-deland');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'restore-greater-volusia-port-orange', (SELECT id FROM organizations WHERE name = 'Habitat for Humanity ReStore' LIMIT 1),
@@ -144,22 +144,22 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'flagler-habitat-restore-palm-coast', (SELECT id FROM organizations WHERE name = 'Habitat for Humanity ReStore' LIMIT 1),
       'Flagler Habitat ReStore - Palm Coast', 'thrift', '5 Hargrove Grade', 'Palm Coast', '32137', 29.55563, -81.26861, '(386) 202-2401',
-      NULL, 'Hours: Daily listed 9am-4:30pm (confirm days). Affiliate office (386) 586-6180. Source: https://flaglerhabitat.org/ (checked 2026-11-02).', true
+      '{"daily":"9:00-16:30"}'::jsonb, 'Hours: Daily listed 9am-4:30pm (confirm days). Affiliate office (386) 586-6180. Source: https://flaglerhabitat.org/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'flagler-habitat-restore-palm-coast');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'southeast-volusia-habitat-restore', (SELECT id FROM organizations WHERE name = 'Habitat for Humanity ReStore' LIMIT 1),
       'Southeast Volusia Habitat ReStore', 'thrift', '722 S Dixie Fwy', 'New Smyrna Beach', '32168', 29.01542, -80.92229, '(386) 428-5010 ext 117',
-      NULL, 'Hours: Mon-Sat 9am-5pm; donations 9am-1pm. Source: https://habitatsev.org/restore/ (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-17:00"}'::jsonb, 'Hours: Mon-Sat 9am-5pm; donations 9am-1pm. Source: https://habitatsev.org/restore/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'southeast-volusia-habitat-restore');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'west-orange-habitat-restore', (SELECT id FROM organizations WHERE name = 'Habitat for Humanity ReStore' LIMIT 1),
       'West Orange Habitat ReStore', 'thrift', '13369 W Colonial Dr (behind Taco Bell)', 'Winter Garden', '34787', 28.55114, -81.58071, '(407) 905-0406',
-      NULL, 'Hours: Mon-Sat 9am-6pm; Sun closed. Source: https://www.westorangehabitat.org/restore (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-18:00","sun":"closed"}'::jsonb, 'Hours: Mon-Sat 9am-6pm; Sun closed. Source: https://www.westorangehabitat.org/restore (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'west-orange-habitat-restore');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'habitat-seminole-apopka-restore-sanford', (SELECT id FROM organizations WHERE name = 'Habitat for Humanity ReStore' LIMIT 1),
       'Habitat Seminole-Apopka ReStore - Sanford', 'thrift', '1100 Americana Blvd', 'Sanford', '32773', 28.76253, -81.28421, '(407) 215-2000',
-      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-18:00"}'::jsonb, 'Hours from a directory listing, unverified. UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'habitat-seminole-apopka-restore-sanford');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-orlando-thrift-store-2', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),
@@ -174,57 +174,57 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-daytona-thrift-store', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),
       'Salvation Army Daytona Thrift Store', 'thrift', '1415 Ridgewood Ave', 'Holly Hill', '32117', 29.25141, -81.04455, '(386) 672-1848',
-      NULL, 'Hours: Tue-Sat 10am-4:30pm; Sun-Mon closed. Source: https://www.salvationarmyusa.org/usa-southern-territory/florida/thrift-stores/ (checked 2026-11-02).', true
+      '{"tue-sat":"10:00-16:30","sun-mon":"closed"}'::jsonb, 'Hours: Tue-Sat 10am-4:30pm; Sun-Mon closed. Source: https://www.salvationarmyusa.org/usa-southern-territory/florida/thrift-stores/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'salvation-army-daytona-thrift-store');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'halifax-health-hospice-resale-shop-new-smyrna-beach', (SELECT id FROM organizations WHERE name = 'Halifax Health - Hospice' LIMIT 1),
       'Halifax Health Hospice Resale Shop - New Smyrna Beach', 'thrift', '720 S Dixie Fwy Suite B', 'New Smyrna Beach', '32168', 29.01552, -80.92231, '(386) 426-7308',
-      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. 2-1-1 directory; Halifax official page not fetched. Source: https://211live.org/index.php/component/cpx/?id=3883585&task=resource.view (checked 2026-11-02).', true
+      '{"mon-sat":"10:00-16:00"}'::jsonb, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. 2-1-1 directory; Halifax official page not fetched. Source: https://211live.org/index.php/component/cpx/?id=3883585&task=resource.view (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'halifax-health-hospice-resale-shop-new-smyrna-beach');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'halifax-health-hospice-resale-shop-orange-city', (SELECT id FROM organizations WHERE name = 'Halifax Health - Hospice' LIMIT 1),
       'Halifax Health Hospice Resale Shop - Orange City', 'thrift', '876 Saxon Blvd', 'Orange City', '32763', 28.91117, -81.29253, '(386) 456-0240',
-      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Source: https://211live.org/index.php?id=3883586&option=com_cpx&task=resource.view (checked 2026-11-02).', true
+      '{"mon-sat":"10:00-16:00"}'::jsonb, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Source: https://211live.org/index.php?id=3883586&option=com_cpx&task=resource.view (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'halifax-health-hospice-resale-shop-orange-city');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'halifax-health-hospice-resale-shop-port-orange', (SELECT id FROM organizations WHERE name = 'Halifax Health - Hospice' LIMIT 1),
       'Halifax Health Hospice Resale Shop - Port Orange', 'thrift', '3830 S Nova Rd Unit A', 'Port Orange', '32127', 29.12669, -81.00469, '(386) 761-6045',
-      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Source: https://211live.org/index.php/component/cpx/?id=3883588&task=resource.view (checked 2026-11-02).', true
+      '{"mon-sat":"10:00-16:00"}'::jsonb, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Source: https://211live.org/index.php/component/cpx/?id=3883588&task=resource.view (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'halifax-health-hospice-resale-shop-port-orange');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'halifax-health-hospice-resale-shop-ormond-beach', (SELECT id FROM organizations WHERE name = 'Halifax Health - Hospice' LIMIT 1),
       'Halifax Health Hospice Resale Shop - Ormond Beach', 'thrift', '160 N Nova Rd #132', 'Ormond Beach', '32174', 29.28145, -81.08274, '(386) 672-2915',
-      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm (likely). Sources conflict N vs S Nova Rd; verify. Source: https://211live.org/ (checked 2026-11-02).', true
+      '{"mon-sat":"10:00-16:00"}'::jsonb, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm (likely). Sources conflict N vs S Nova Rd; verify. Source: https://211live.org/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'halifax-health-hospice-resale-shop-ormond-beach');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'halifax-health-hospice-resale-shop-palm-coast', (SELECT id FROM organizations WHERE name = 'Halifax Health - Hospice' LIMIT 1),
       'Halifax Health Hospice Resale Shop - Palm Coast', 'thrift', '126 Flagler Plaza Dr', 'Palm Coast', '32137', 29.47516, -81.18135, '(386) 439-0333',
-      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Reopened 2023. Source: https://www.flaglernewsweekly.com/halifax-health-hospice-celebrates-resale-store-reopening-in-palm-coast/ (checked 2026-11-02).', true
+      '{"mon-sat":"10:00-16:00"}'::jsonb, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Reopened 2023. Source: https://www.flaglernewsweekly.com/halifax-health-hospice-celebrates-resale-store-reopening-in-palm-coast/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'halifax-health-hospice-resale-shop-palm-coast');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'halifax-humane-society-thrift-store', (SELECT id FROM organizations WHERE name = 'Halifax Humane Society' LIMIT 1),
       'Halifax Humane Society Thrift Store', 'thrift', '385 S Yonge St', 'Ormond Beach', '32174', 29.27311, -81.05677, '(386) 322-7717',
-      NULL, 'Hours: Mon-Sat 9am-6pm. Free donation pickup. Source: https://www.halifaxhumanesociety.org/thrift-store/ (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-18:00"}'::jsonb, 'Hours: Mon-Sat 9am-6pm. Free donation pickup. Source: https://www.halifaxhumanesociety.org/thrift-store/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'halifax-humane-society-thrift-store');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'flagler-humane-society-thrift-store', (SELECT id FROM organizations WHERE name = 'Flagler Humane Society' LIMIT 1),
       'Flagler Humane Society Thrift Store', 'thrift', '480 Palm Coast Pkwy SW', 'Palm Coast', '32137', 29.55143, -81.24352, '(386) 446-9416',
-      NULL, 'Hours: Mon-Sat 9am-7pm; Sun 10am-5pm. Source: https://flaglerhumanesociety.org/thrift-store/ (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-19:00","sun":"10:00-17:00"}'::jsonb, 'Hours: Mon-Sat 9am-7pm; Sun 10am-5pm. Source: https://flaglerhumanesociety.org/thrift-store/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'flagler-humane-society-thrift-store');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'omg-thrift', (SELECT id FROM organizations WHERE name = 'OMG Thrift (independent)' LIMIT 1),
       'omg! thrift', 'thrift', '1442 State Road 436 Suite 1028', 'Casselberry', '32707', 28.62662, -81.31627, '1-888-6THRIFT',
-      NULL, 'Hours: Mon-Sat 9am-8pm; Sun 11am-7pm. Deal day from aggregator only (unverified); blog says color listed on their site. Source: https://omgthrift.com/contact/ (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-20:00","sun":"11:00-19:00"}'::jsonb, 'Hours: Mon-Sat 9am-8pm; Sun 11am-7pm. Deal day from aggregator only (unverified); blog says color listed on their site. Source: https://omgthrift.com/contact/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'omg-thrift');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'the-hope-chest', (SELECT id FROM organizations WHERE name = 'HOPE Helps, Inc.' LIMIT 1),
       'The HOPE Chest', 'thrift', '1802 W Broadway St', 'Oviedo', '32765', 28.66212, -81.22434, '407-366-3422',
-      NULL, 'Hours: Mon-Fri 9am-5pm; Sat 8am-5pm; Sun closed. Hours official; store address from aggregator (org office 812 Eyrie Dr); deal days unverified. Source: https://www.hopehelps.org/the-hope-chest/ (checked 2026-11-02).', true
+      '{"mon-fri":"9:00-17:00","sat":"8:00-17:00","sun":"closed"}'::jsonb, 'Hours: Mon-Fri 9am-5pm; Sat 8am-5pm; Sun closed. Hours official; store address from aggregator (org office 812 Eyrie Dr); deal days unverified. Source: https://www.hopehelps.org/the-hope-chest/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'the-hope-chest');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'city-thrift-edgewater', (SELECT id FROM organizations WHERE name = 'City Thrift (independent)' LIMIT 1),
       'City Thrift - Edgewater', 'thrift', '6015 Edgewater Dr', 'Orlando', '32810', 28.61163, -81.41683, NULL,
-      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-9pm; Sun 10am-7pm (aggregator). No official site found. Source: https://thriftnearby.com/fl/orlando/city-thrift-1803/ (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-21:00","sun":"10:00-19:00"}'::jsonb, 'Hours from a directory listing, unverified. UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-9pm; Sun 10am-7pm (aggregator). No official site found. Source: https://thriftnearby.com/fl/orlando/city-thrift-1803/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'city-thrift-edgewater');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'city-thrift-semoran', (SELECT id FROM organizations WHERE name = 'City Thrift (independent)' LIMIT 1),
@@ -244,7 +244,7 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'st-vincent-de-paul-nearly-new-flagler-beach', (SELECT id FROM organizations WHERE name = 'Society of St. Vincent de Paul' LIMIT 1),
       'St. Vincent de Paul Nearly New Thrift Store - Flagler Beach', 'thrift', '400 S Daytona Ave', 'Flagler Beach', '32136', 29.47829, -81.1285, '(386) 439-0071',
-      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon, Wed, Fri, Sat 10am-3pm (211 listing; another source adds Thu). No official site found, only Facebook. Source: 211live.org (checked 2026-11-02).', true
+      '{"mon,wed,fri,sat":"10:00-15:00"}'::jsonb, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon, Wed, Fri, Sat 10am-3pm (211 listing; another source adds Thu). No official site found, only Facebook. Source: 211live.org (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'st-vincent-de-paul-nearly-new-flagler-beach');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'sharing-center-village-shoppes-longwood', (SELECT id FROM organizations WHERE name = 'The Sharing Center' LIMIT 1),

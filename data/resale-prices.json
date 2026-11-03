@@ -13,7 +13,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “vintage band t-shirt”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "5.99",
-    "sold_max_usd": "540.00"
+    "sold_max_usd": "540.00",
+    "est_thrift_low_usd": "3.99",
+    "est_thrift_high_usd": "13.99",
+    "est_thrift_source_url": "https://exa.ai/library/place/t7zpnd13q7x",
+    "est_thrift_source_date": "2025-02-04",
+    "est_thrift_confidence": "medium",
+    "est_thrift_notes": "Orlando Goodwill (S. OBT) shopper review: tees $3.99 generic to $13.99 branded. Florida."
   },
   {
     "item": "Single-stitch tee",
@@ -29,7 +35,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “vintage single stitch t-shirt”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "3.77",
-    "sold_max_usd": "540.00"
+    "sold_max_usd": "540.00",
+    "est_thrift_low_usd": "3.99",
+    "est_thrift_high_usd": "13.99",
+    "est_thrift_source_url": "https://exa.ai/library/place/t7zpnd13q7x",
+    "est_thrift_source_date": "2025-02-04",
+    "est_thrift_confidence": "medium",
+    "est_thrift_notes": "Same Orlando Goodwill review as band tee; no single-stitch-specific price."
   },
   {
     "item": "Pyrex patterned bowl",
@@ -45,7 +57,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “vintage pyrex patterned bowl”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "2.00",
-    "sold_max_usd": "159.99"
+    "sold_max_usd": "159.99",
+    "est_thrift_low_usd": "5.3",
+    "est_thrift_high_usd": "49.99",
+    "est_thrift_source_url": "https://www.reddit.com/r/Pyrex_Love/comments/1s7000x/my_goodwill_is_pyrex_heaven/",
+    "est_thrift_source_date": "2026-03-29",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Reddit thread: $5.30-$6.40 at OP's Goodwill; $14.99-$49.99 per bowl reported in WA. Wide spread; not Florida."
   },
   {
     "item": "Le Creuset / Lodge cast iron",
@@ -61,7 +79,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “lodge cast iron skillet”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "0.99",
-    "sold_max_usd": "499.95"
+    "sold_max_usd": "499.95",
+    "est_thrift_low_usd": "5",
+    "est_thrift_high_usd": "12",
+    "est_thrift_source_url": "https://www.homeaswemakeit.com/30-items-goodwill-prices-below-resale-value/",
+    "est_thrift_source_date": "",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Blog: skillets on housewares rack $5-$12 (undated). eBay median query is Lodge only."
   },
   {
     "item": "Nintendo 64 game (Super Mario 64, loose)",
@@ -75,7 +99,13 @@
     "typical_thrift_cost_usd": "",
     "thrift_cost_source_or_estimate": "",
     "est_margin_usd": "",
-    "notes": "PriceCharting completed eBay sales, loose/used tab; eBay sold search returned HTTP 403. Single representative title, not the whole category. Thrift cost not found, so margin left blank."
+    "notes": "PriceCharting completed eBay sales, loose/used tab; eBay sold search returned HTTP 403. Single representative title, not the whole category. Thrift cost not found, so margin left blank.",
+    "est_thrift_low_usd": "4",
+    "est_thrift_high_usd": "38.67",
+    "est_thrift_source_url": "https://www.reddit.com/r/goodwill/comments/1v66ady/what_happened_to_the_prices_at_goodwill/",
+    "est_thrift_source_date": "2026-07-25",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Reddit: Goodwill games now $4-$5 generic, but staff look up value and price at or above market. thrift_high set to the eBay median under that pricing. Margin can be negative. eBay figure is PriceCharting loose."
   },
   {
     "item": "GameCube game (Super Smash Bros. Melee, loose)",
@@ -89,7 +119,13 @@
     "typical_thrift_cost_usd": "",
     "thrift_cost_source_or_estimate": "",
     "est_margin_usd": "",
-    "notes": "PriceCharting completed eBay sales, loose/used tab; eBay sold search returned HTTP 403. Single representative title, not the whole category. Thrift cost not found, so margin left blank."
+    "notes": "PriceCharting completed eBay sales, loose/used tab; eBay sold search returned HTTP 403. Single representative title, not the whole category. Thrift cost not found, so margin left blank.",
+    "est_thrift_low_usd": "4",
+    "est_thrift_high_usd": "49.99",
+    "est_thrift_source_url": "https://www.reddit.com/r/goodwill/comments/1v66ady/what_happened_to_the_prices_at_goodwill/",
+    "est_thrift_source_date": "2026-07-25",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Reddit: Goodwill games now $4-$5 generic, but staff look up value and price at or above market. thrift_high set to the eBay median under that pricing. Margin can be negative. eBay figure is PriceCharting loose."
   },
   {
     "item": "Nike/Jordan used sneakers",
@@ -105,7 +141,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “used nike air jordan sneakers”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "8.99",
-    "sold_max_usd": "220.00"
+    "sold_max_usd": "220.00",
+    "est_thrift_low_usd": "5",
+    "est_thrift_high_usd": "15",
+    "est_thrift_source_url": "https://clientconnect.assurant.com/goodwill-vs-salvation-army-the-ultimate-price-comparison-guide",
+    "est_thrift_source_date": "",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Assurant comparison: sneakers Goodwill $5-$15, Salvation Army $10-$25 (undated, non-FL). Jordans are often priced higher."
   },
   {
     "item": "Levi's 501 vintage",
@@ -121,7 +163,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “vintage levis 501 jeans”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "4.88",
-    "sold_max_usd": "450.00"
+    "sold_max_usd": "450.00",
+    "est_thrift_low_usd": "5",
+    "est_thrift_high_usd": "12",
+    "est_thrift_source_url": "https://tumbleweedthrift.com/thrift-store-orlando/",
+    "est_thrift_source_date": "",
+    "est_thrift_confidence": "medium",
+    "est_thrift_notes": "Orlando Goodwill guide: jeans $5-$12. Vintage 501s may be pulled and priced higher."
   },
   {
     "item": "Carhartt jacket",
@@ -137,7 +185,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “carhartt detroit jacket”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "20.00",
-    "sold_max_usd": "536.71"
+    "sold_max_usd": "536.71",
+    "est_thrift_low_usd": "45.99",
+    "est_thrift_high_usd": "99.99",
+    "est_thrift_source_url": "https://www.reddit.com/r/Carhartt/comments/1qjk3oc/does_anyone_elses_goodwill_gatekeep_their/",
+    "est_thrift_source_date": "2026-01-22",
+    "est_thrift_confidence": "medium",
+    "est_thrift_notes": "Reddit: Savers Carhartt jackets start ~$45.99; other store $99.99+; some Goodwills send them online only. Rare outliers $6.50-$7.46."
   },
   {
     "item": "Coach leather bag",
@@ -153,7 +207,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “vintage coach leather bag”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "20.00",
-    "sold_max_usd": "1573.00"
+    "sold_max_usd": "1573.00",
+    "est_thrift_low_usd": "8",
+    "est_thrift_high_usd": "40",
+    "est_thrift_source_url": "https://www.underpriced.app/blog/goodwill-finds-worth-money-complete-guide",
+    "est_thrift_source_date": "",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Blogs: Coach $8-$15 (underpriced.app) to $15-$40 (topic101). Savers seen at $150 (Reddit, 2024-12-26)."
   },
   {
     "item": "Vinyl records",
@@ -169,7 +229,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “vinyl record lp”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "2.95",
-    "sold_max_usd": "4450.00"
+    "sold_max_usd": "4450.00",
+    "est_thrift_low_usd": "1",
+    "est_thrift_high_usd": "4.99",
+    "est_thrift_source_url": "https://goodwillsp.org/location/rewind/",
+    "est_thrift_source_date": "",
+    "est_thrift_confidence": "medium",
+    "est_thrift_notes": "Official Goodwill (NC) prices: $0.49 standard store, $4.99 at record store; blog says $1-$3. Not Florida. Sold median is all LPs, which skews high."
   },
   {
     "item": "Polaroid camera",
@@ -185,7 +251,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “vintage polaroid camera”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "9.99",
-    "sold_max_usd": "500.00"
+    "sold_max_usd": "500.00",
+    "est_thrift_low_usd": "10",
+    "est_thrift_high_usd": "40",
+    "est_thrift_source_url": "https://www.homeaswemakeit.com/30-items-goodwill-prices-below-resale-value/",
+    "est_thrift_source_date": "",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Blog: film cameras on electronics shelf $10-$40 (undated)."
   },
   {
     "item": "CorningWare",
@@ -201,7 +273,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “vintage corningware blue cornflower”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "6.20",
-    "sold_max_usd": "229.99"
+    "sold_max_usd": "229.99",
+    "est_thrift_low_usd": "1",
+    "est_thrift_high_usd": "5",
+    "est_thrift_source_url": "https://underpricedai.com/blog/vintage-corningware-value",
+    "est_thrift_source_date": "2026-10-08",
+    "est_thrift_confidence": "medium",
+    "est_thrift_notes": "Blog: CorningWare $1-$5/piece at Goodwill/Salvation Army."
   },
   {
     "item": "Fiestaware",
@@ -249,7 +327,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “patagonia synchilla fleece”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "16.00",
-    "sold_max_usd": "245.00"
+    "sold_max_usd": "245.00",
+    "est_thrift_low_usd": "8",
+    "est_thrift_high_usd": "20",
+    "est_thrift_source_url": "https://www.underpriced.app/blog/goodwill-finds-worth-money-complete-guide",
+    "est_thrift_source_date": "",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Blogs: $8-$15 (underpriced.app), $12-$20 (topic101). One Salvation Army online auction sold at $38."
   },
   {
     "item": "Dooney & Bourke bag",
@@ -281,7 +365,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “vintage starter jacket”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "20.00",
-    "sold_max_usd": "400.00"
+    "sold_max_usd": "400.00",
+    "est_thrift_low_usd": "10",
+    "est_thrift_high_usd": "20",
+    "est_thrift_source_url": "https://www.underpriced.app/blog/goodwill-finds-worth-money-complete-guide",
+    "est_thrift_source_date": "",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Blog: 90s Starter jackets $10-$20."
   },
   {
     "item": "iPod",
@@ -297,7 +387,13 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “apple ipod classic”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "20.00",
-    "sold_max_usd": "1375.00"
+    "sold_max_usd": "1375.00",
+    "est_thrift_low_usd": "10",
+    "est_thrift_high_usd": "20",
+    "est_thrift_source_url": "https://www.underpriced.app/blog/goodwill-finds-worth-money-complete-guide",
+    "est_thrift_source_date": "",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Blog: iPod Classic $10-$20 (undated). Many are pulled for online sale."
   },
   {
     "item": "Fire-King mug",
@@ -313,6 +409,12 @@
     "est_margin_usd": "",
     "notes": "eBay sold: median of the 62 most recent sold listings on one search-results page (query “fire king jadeite mug”), not a full market sample; mixed conditions and sizes.",
     "sold_min_usd": "3.99",
-    "sold_max_usd": "199.99"
+    "sold_max_usd": "199.99",
+    "est_thrift_low_usd": "",
+    "est_thrift_high_usd": "7.99",
+    "est_thrift_source_url": "https://exa.ai/library/place/t7zpnd13q7x",
+    "est_thrift_source_date": "2025-09-24",
+    "est_thrift_confidence": "low",
+    "est_thrift_notes": "Orlando Goodwill review: mugs priced as high as $7.99 (generic mugs, not jadeite). Only a high was found."
   }
 ]

@@ -177,13 +177,13 @@
     "address": "1795 Sunshadow Drive",
     "city": "Casselberry",
     "zip": "32707",
-    "lat": 0,
-    "lng": 0,
+    "lat": 28.69771,
+    "lng": -81.32165,
     "phone": "(407) 695-3800",
     "hoursJson": {
       "daily": "9:00-21:00"
     },
-    "notes": "Not on the map yet (address didn't geocode). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "notes": "Map pin from OpenStreetMap Nominatim. Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
     "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
@@ -194,13 +194,13 @@
     "address": "1819 Alafaya Trail",
     "city": "Oviedo",
     "zip": "32765",
-    "lat": 0,
-    "lng": 0,
+    "lat": 28.64422,
+    "lng": -81.20738,
     "phone": "(407) 706-0800",
     "hoursJson": {
       "daily": "9:00-21:00"
     },
-    "notes": "Not on the map yet (address didn't geocode). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "notes": "Map pin from OpenStreetMap Nominatim. Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
     "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
@@ -296,13 +296,13 @@
     "address": "1312 East Semoran Boulevard",
     "city": "Apopka",
     "zip": "32703",
-    "lat": 0,
-    "lng": 0,
+    "lat": 28.67319,
+    "lng": -81.48578,
     "phone": "(407) 889-2965",
     "hoursJson": {
       "daily": "9:00-21:00"
     },
-    "notes": "Not on the map yet (address didn't geocode). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "notes": "Map pin from OpenStreetMap Nominatim. Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
     "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
@@ -316,7 +316,9 @@
     "lat": 29.01882,
     "lng": -81.32401,
     "phone": "(386) 734-7268",
-    "hoursJson": null,
+    "hoursJson": {
+      "tue-sat": "8:30-17:00"
+    },
     "notes": "Habitat for Humanity ReStore: furniture, appliances, building materials. The store's site lists conflicting hours (Tue–Sat vs Mon–Sat 8:30–5) — call ahead. Address, phone and hours from https://wvhabitat.org/the-restore/ (checked 2026-11-02).",
     "sourceUrl": "https://wvhabitat.org/the-restore/"
   },
@@ -349,7 +351,9 @@
     "lat": 29.55563,
     "lng": -81.26861,
     "phone": "(386) 202-2401",
-    "hoursJson": null,
+    "hoursJson": {
+      "daily": "9:00-16:30"
+    },
     "notes": "Hours: Daily listed 9am-4:30pm (confirm days). Affiliate office (386) 586-6180. Source: https://flaglerhabitat.org/ (checked 2026-11-02).",
     "sourceUrl": "https://flaglerhabitat.org/"
   },
@@ -364,7 +368,9 @@
     "lat": 29.01542,
     "lng": -80.92229,
     "phone": "(386) 428-5010 ext 117",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "9:00-17:00"
+    },
     "notes": "Hours: Mon-Sat 9am-5pm; donations 9am-1pm. Source: https://habitatsev.org/restore/ (checked 2026-11-02).",
     "sourceUrl": "https://habitatsev.org/restore/"
   },
@@ -379,7 +385,10 @@
     "lat": 28.55114,
     "lng": -81.58071,
     "phone": "(407) 905-0406",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "9:00-18:00",
+      "sun": "closed"
+    },
     "notes": "Hours: Mon-Sat 9am-6pm; Sun closed. Source: https://www.westorangehabitat.org/restore (checked 2026-11-02).",
     "sourceUrl": "https://www.westorangehabitat.org/restore"
   },
@@ -394,8 +403,10 @@
     "lat": 28.76253,
     "lng": -81.28421,
     "phone": "(407) 215-2000",
-    "hoursJson": null,
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).",
+    "hoursJson": {
+      "mon-sat": "9:00-18:00"
+    },
+    "notes": "Hours from a directory listing, unverified. UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).",
     "sourceUrl": "https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford"
   },
   {
@@ -439,7 +450,10 @@
     "lat": 29.25141,
     "lng": -81.04455,
     "phone": "(386) 672-1848",
-    "hoursJson": null,
+    "hoursJson": {
+      "tue-sat": "10:00-16:30",
+      "sun-mon": "closed"
+    },
     "notes": "Hours: Tue-Sat 10am-4:30pm; Sun-Mon closed. Source: https://www.salvationarmyusa.org/usa-southern-territory/florida/thrift-stores/ (checked 2026-11-02).",
     "sourceUrl": "https://www.salvationarmyusa.org/usa-southern-territory/florida/thrift-stores/"
   },
@@ -454,7 +468,9 @@
     "lat": 29.01552,
     "lng": -80.92231,
     "phone": "(386) 426-7308",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "10:00-16:00"
+    },
     "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. 2-1-1 directory; Halifax official page not fetched. Source: https://211live.org/index.php/component/cpx/?id=3883585&task=resource.view (checked 2026-11-02).",
     "sourceUrl": "https://211live.org/index.php/component/cpx/?id=3883585&task=resource.view"
   },
@@ -469,7 +485,9 @@
     "lat": 28.91117,
     "lng": -81.29253,
     "phone": "(386) 456-0240",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "10:00-16:00"
+    },
     "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Source: https://211live.org/index.php?id=3883586&option=com_cpx&task=resource.view (checked 2026-11-02).",
     "sourceUrl": "https://211live.org/index.php?id=3883586&option=com_cpx&task=resource.view"
   },
@@ -484,7 +502,9 @@
     "lat": 29.12669,
     "lng": -81.00469,
     "phone": "(386) 761-6045",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "10:00-16:00"
+    },
     "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Source: https://211live.org/index.php/component/cpx/?id=3883588&task=resource.view (checked 2026-11-02).",
     "sourceUrl": "https://211live.org/index.php/component/cpx/?id=3883588&task=resource.view"
   },
@@ -499,7 +519,9 @@
     "lat": 29.28145,
     "lng": -81.08274,
     "phone": "(386) 672-2915",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "10:00-16:00"
+    },
     "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm (likely). Sources conflict N vs S Nova Rd; verify. Source: https://211live.org/ (checked 2026-11-02).",
     "sourceUrl": "https://211live.org/"
   },
@@ -514,7 +536,9 @@
     "lat": 29.47516,
     "lng": -81.18135,
     "phone": "(386) 439-0333",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "10:00-16:00"
+    },
     "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Reopened 2023. Source: https://www.flaglernewsweekly.com/halifax-health-hospice-celebrates-resale-store-reopening-in-palm-coast/ (checked 2026-11-02).",
     "sourceUrl": "https://www.flaglernewsweekly.com/halifax-health-hospice-celebrates-resale-store-reopening-in-palm-coast/"
   },
@@ -529,7 +553,9 @@
     "lat": 29.27311,
     "lng": -81.05677,
     "phone": "(386) 322-7717",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "9:00-18:00"
+    },
     "notes": "Hours: Mon-Sat 9am-6pm. Free donation pickup. Source: https://www.halifaxhumanesociety.org/thrift-store/ (checked 2026-11-02).",
     "sourceUrl": "https://www.halifaxhumanesociety.org/thrift-store/"
   },
@@ -544,7 +570,10 @@
     "lat": 29.55143,
     "lng": -81.24352,
     "phone": "(386) 446-9416",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "9:00-19:00",
+      "sun": "10:00-17:00"
+    },
     "notes": "Hours: Mon-Sat 9am-7pm; Sun 10am-5pm. Source: https://flaglerhumanesociety.org/thrift-store/ (checked 2026-11-02).",
     "sourceUrl": "https://flaglerhumanesociety.org/thrift-store/"
   },
@@ -559,7 +588,10 @@
     "lat": 28.62662,
     "lng": -81.31627,
     "phone": "1-888-6THRIFT",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-sat": "9:00-20:00",
+      "sun": "11:00-19:00"
+    },
     "notes": "Hours: Mon-Sat 9am-8pm; Sun 11am-7pm. Deal day from aggregator only (unverified); blog says color listed on their site. Source: https://omgthrift.com/contact/ (checked 2026-11-02).",
     "sourceUrl": "https://omgthrift.com/contact/"
   },
@@ -574,7 +606,11 @@
     "lat": 28.66212,
     "lng": -81.22434,
     "phone": "407-366-3422",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon-fri": "9:00-17:00",
+      "sat": "8:00-17:00",
+      "sun": "closed"
+    },
     "notes": "Hours: Mon-Fri 9am-5pm; Sat 8am-5pm; Sun closed. Hours official; store address from aggregator (org office 812 Eyrie Dr); deal days unverified. Source: https://www.hopehelps.org/the-hope-chest/ (checked 2026-11-02).",
     "sourceUrl": "https://www.hopehelps.org/the-hope-chest/"
   },
@@ -589,8 +625,11 @@
     "lat": 28.61163,
     "lng": -81.41683,
     "phone": null,
-    "hoursJson": null,
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-9pm; Sun 10am-7pm (aggregator). No official site found. Source: https://thriftnearby.com/fl/orlando/city-thrift-1803/ (checked 2026-11-02).",
+    "hoursJson": {
+      "mon-sat": "9:00-21:00",
+      "sun": "10:00-19:00"
+    },
+    "notes": "Hours from a directory listing, unverified. UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-9pm; Sun 10am-7pm (aggregator). No official site found. Source: https://thriftnearby.com/fl/orlando/city-thrift-1803/ (checked 2026-11-02).",
     "sourceUrl": "https://thriftnearby.com/fl/orlando/city-thrift-1803/"
   },
   {
@@ -654,7 +693,9 @@
     "lat": 29.47829,
     "lng": -81.1285,
     "phone": "(386) 439-0071",
-    "hoursJson": null,
+    "hoursJson": {
+      "mon,wed,fri,sat": "10:00-15:00"
+    },
     "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon, Wed, Fri, Sat 10am-3pm (211 listing; another source adds Thu). No official site found, only Facebook. Source: 211live.org (checked 2026-11-02).",
     "sourceUrl": "https://211live.org/index.php/component/cpx/?id=3883031&task=resource.view"
   },

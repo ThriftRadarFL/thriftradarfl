@@ -17,7 +17,7 @@ body { background: var(--color-paper); color: var(--color-ink); font-family: var
 h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter-spacing: -0.01em; }
 
 @layer components {
-  .panel { @apply bg-white border border-line rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.15)]; }
+  .panel { @apply bg-white border border-line rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.15)] min-w-0 [overflow-wrap:anywhere]; }
   .panel-head { @apply bg-gradient-to-b from-royal to-royal-dark text-white px-4 py-2 text-sm font-bold uppercase tracking-wide; }
   .btn-red { @apply inline-block min-h-10 bg-cta text-white font-bold px-4 py-2 rounded-sm border border-cta-dark shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-cta-dark; }
   .btn-gray { @apply inline-block min-h-10 bg-white text-royal font-bold px-4 py-2 rounded-sm border border-line hover:bg-paper; }
@@ -50,3 +50,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
 
 /* Print (route planner list etc.): plain black-on-white, no nav chrome */
 @media print { body { background: #fff !important; color: #000; } a { text-decoration: none; } @page { margin: 0.5in; } }
+
+/* Touch targets ≥40px (QA P3): form controls and the labels that wrap checkboxes/radios. */
+select, input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) { min-height: 2.5rem; }
+label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { min-height: 2.5rem; cursor: pointer; }
+input[type="checkbox"], input[type="radio"] { min-width: 1.25rem; min-height: 1.25rem; }

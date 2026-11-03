@@ -28,12 +28,12 @@ export default async function Store({ params }: { params: Promise<{ slug: string
     <BestDay b={bestDay(v.slug, dealRules, v.hoursJson)} today={dowOf(todayET())} />
     <div className="grid min-w-0 gap-4 break-words md:grid-cols-3">
       <div className="panel min-w-0 break-words md:col-span-2"><div className="panel-head">Location</div><div className="p-4 space-y-2">
-        <p className="text-lg">{v.address}<br />{v.city}, FL {v.zip}</p>{v.phone && <p><a className="font-bold text-royal hover:underline" href={`tel:${v.phone.replace(/[^\d+]/g, "")}`}>{v.phone}</a></p>}
+        <p className="text-lg">{v.address}<br />{v.city}, FL {v.zip}</p>{v.phone && <p><a aria-label={`Call ${v.name} at ${v.phone}`} className="font-bold text-royal hover:underline" href={`tel:${v.phone.replace(/[^\d+]/g, "")}`}>{v.phone}</a></p>}
         {v.notes && <p className="text-sm text-gray-700 border-l-4 border-coral pl-3">{v.notes}</p>}
-        <a className="btn-red mt-2" href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener noreferrer">Get directions ↗</a>
+        <a className="btn-red mt-2" href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener noreferrer" aria-label={`Get directions to ${v.name} in Google Maps (opens in a new tab)`}>Get directions ↗</a>
         {v.sourceUrl && /^https?:\/\//i.test(v.sourceUrl) && <p className="text-xs text-gray-600">Source: <a href={v.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">{hostOf(v.sourceUrl)}</a></p>}
         <div className="pt-2"><ShareButtons url={`${SITE_URL}/stores/${v.slug}`} title={v.name} /></div>
-        <p className="text-sm"><a href={`/stores/compare?s=${v.slug}`} className="link">⇄ Compare with another store</a></p></div></div>
+        <p className="text-sm"><a href={`/stores/compare?s=${v.slug}`} className="link" aria-label={`Compare ${v.name} with another store`}>⇄ Compare with another store</a></p></div></div>
       <div className="panel min-w-0 break-words"><div className="panel-head">Hours</div><table className="w-full text-sm">
         <tbody>{hours.length ? hours.map(([k, h]) => <tr key={k} className="border-b border-line"><td className="px-4 py-2 font-bold">{dayKey(k)}</td><td className="px-4 py-2">{hours12(h)}</td></tr>)
           : <tr><td className="px-4 py-3 text-gray-600">Hours not verified yet — call ahead</td></tr>}</tbody></table>

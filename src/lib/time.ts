@@ -12,4 +12,4 @@ export function hours12(h: string): string {
 }
 const DAY: Record<string, string> = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun", daily: "Daily" };
 /** Hours key for display: "tue-sat" -> "Tue–Sat", "daily" -> "Daily". */
-export const dayKey = (k: string) => k.split("-").map((p) => DAY[p.toLowerCase()] ?? p).join("–");
+export const dayKey = (k: string) => k.split(",").map((g) => g.trim().split("-").map((p) => DAY[p.toLowerCase()] ?? p).join("–")).join(", ");

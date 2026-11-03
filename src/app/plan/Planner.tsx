@@ -10,7 +10,7 @@ export default function Planner({ sales, today, site, initialDay }: { sales: S[]
   const [picked, setPicked] = useState<string[] | null>(null); const [copyMsg, setCopyMsg] = useState("");
   const saved = useMemo(() => sales.filter((s) => favs?.includes(s.slug) && s.lat && s.lng), [sales, favs]);
   const days = useMemo(() => [...new Set(saved.flatMap((s) => s.days.map((d) => d.date)).filter((d) => d >= today))].sort(), [saved, today]);
-  const day = dayState ?? (initialDay && days.includes(initialDay) ? initialDay : days[0]) ?? "";
+  const day = dayState ?? (initialDay && days.includes(initialDay) ? initialDay : ""); // default "Any day"
   const onDay = saved.filter((s) => !day || s.days.some((d) => d.date === day));
   const chosen = onDay.filter((s) => (picked ?? onDay.map((x) => x.slug)).includes(s.slug));
   const route = orderStops(chosen, start ?? undefined); const url = googleMapsRoute(route, start ?? undefined); const legs = routeLegs(route, day, start);

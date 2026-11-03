@@ -44,7 +44,7 @@ export default async function City({ params }: P) {
       {!weekend.length && <p className="p-3 text-sm">Weekend&apos;s over — check back Thursday for the next one.</p>}</section>
 
     <div className="grid gap-4 md:grid-cols-3">
-      <section className="panel md:col-span-2"><h2 className="panel-head">All upcoming sales</h2>
+      <section className="panel min-w-0 md:col-span-2"><h2 className="panel-head">All upcoming sales</h2>
         {upcoming.length ? <ul>{upcoming.map((x) => <li key={x.slug} className="flex min-h-14 items-center gap-3 border-b border-line px-4 py-2 last:border-0">
           <DayBox date={x.days.find((dd) => dd.date >= d.today)?.date ?? x.days[0].date} /><div className="min-w-0"><Link href={`/sales/${x.slug}`} className="font-bold hover:text-royal">{x.title}</Link><div className="text-xs text-gray-600">{typeLabel[x.type] ?? x.type} · {x.days.length} day{x.days.length === 1 ? "" : "s"}{x.zip ? ` · ${x.zip}` : ""}</div></div>
           <span className="ml-auto shrink-0"><Discount pct={Math.max(...x.days.map((dd) => dd.discountPct))} /></span></li>)}</ul>
