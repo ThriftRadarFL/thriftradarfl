@@ -23,7 +23,7 @@ export default async function Developers() {
             <p className="text-xs"><b>Try it:</b> <a className="link break-all font-mono" href={ex} target={d.type === "html" ? "_blank" : undefined} rel="noopener">{ex}</a></p>
             <pre className="max-w-full overflow-x-auto whitespace-pre-wrap break-words rounded-sm border border-line bg-[#0f1b33] p-2 text-xs text-[#d6e4ff]"><code>{d.returns}</code></pre></div></section>); })}</div>
       <aside className="min-w-0 space-y-4"><div className="panel"><div className="panel-head">The basics</div><ul className="list-disc space-y-1.5 p-4 pl-8 text-sm">
-        <li>Base URL: <code className="break-all">{SITE_URL}</code></li><li>All read endpoints are public; CORS is not enabled, so call them from your server, a shortcut app or a feed reader.</li>
+        <li>Base URL: <code className="break-all">{SITE_URL}</code></li><li>All read endpoints are public; CORS is not enabled, so call them from your server, a shortcut app or a feed reader.</li><li>JSON reads are cached briefly (<code>Cache-Control: public, max-age=60</code>) and carry a weak <code>ETag</code>: send it back as <code>If-None-Match</code> and you get an empty <code>304</code> when nothing changed.</li>
         <li>Errors are JSON: <code>{`{ "error": "…" }`}</code> with a 4xx/5xx status.</li><li>Dates are <b>Eastern time</b>, <code>YYYY-MM-DD</code>; times are 24-hour <code>HH:MM</code>.</li>
         <li>Deal rules marked <code>&quot;verified&quot;: false</code> come from third-party sources. Show that to your users.</li><li>Please cache: data changes a few times a day.</li>
         <li>Writes (<code>POST/PUT/DELETE</code>) need an admin token and aren&apos;t public.</li></ul></div>

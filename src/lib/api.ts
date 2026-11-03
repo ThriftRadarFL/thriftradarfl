@@ -1,6 +1,17 @@
 // Shared API helpers: JSON errors, body parsing with size cap, rate limit (see security.ts).
 export class HttpError extends Error { constructor(public status: number, message: string, public details?: unknown) { super(message); } }
 export const json = (data: unknown, status = 200) => Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
+// Public read endpoints: short browser cache + longer CDN cache with stale-while-revalidate, plus a weak ETag so
+// repeat polls (widgets, shortcuts) get a body-less 304. Errors still go through json() → no-store.
+import { createHash } from "node:crypto";
+export const PUBLIC_CACHE = "public, max-age=60, s-maxage=300, stale-while-revalidate=600";
+export function cachedJson(req: Request, data: unknown, cache = PUBLIC_CACHE) {
+  const body = JSON.stringify(data); const etag = `W/"${createHash("sha1").update(body).digest("base64url").slice(0, 22)}"`;
+  const headers = { "Cache-Control": cache, ETag: etag, Vary: "Accept-Encoding" };
+  const inm = req.headers.get("if-none-match");
+  if (inm && inm.split(/\s*,\s*/).some((t) => t === etag || t === "*")) return new Response(null, { status: 304, headers });
+  return new Response(body, { status: 200, headers: { ...headers, "Content-Type": "application/json" } });
+}
 export async function readBody(req: Request, maxBytes = 32_000): Promise<Record<string, unknown>> {
   const text = await req.text();
   if (text.length > maxBytes) throw new HttpError(413, "payload too large");
