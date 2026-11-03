@@ -20,5 +20,5 @@ export default function Prices() {
             <td className="px-3 py-2"><Spark h={i.history} /></td>
             <td className="px-3 py-2"><a href={i.sourceUrl} rel="nofollow noopener" target="_blank" className="text-royal underline">{new URL(i.sourceUrl).hostname.replace(/^www\./, "")}</a></td></>}
           <td className="px-3 py-2">{i.median !== null && <Link href={`/calculator?item=${i.slug}`} className="text-xs font-bold text-cta underline">Calculate</Link>}</td></tr>)}</tbody></table></div>
-    <p className="mt-3 text-xs text-gray-600">Data retrieved {items[0]?.retrieved || "—"}. Medians are for one representative listing type and can move quickly. Try the <Link href="/calculator" className="text-royal underline">profit calculator</Link>.</p></div>);
+    <p className="mt-3 text-xs text-gray-600">Data retrieved {items[0]?.retrieved || "—"}. Medians are for one representative listing type and can move quickly. See this week&apos;s <Link href="/flip-of-the-week" className="text-royal underline">Flip of the Week</Link>. Try the <Link href="/calculator" className="text-royal underline">profit calculator</Link>.</p></div>);
 }
