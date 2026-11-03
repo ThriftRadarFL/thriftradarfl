@@ -28,6 +28,7 @@ Deal rules source of truth for now: `src/lib/deal-rules.ts` (seeded into DB; UNV
 | GET/PUT/DELETE | `/api/sales/[slug]` | write=admin | PUT = partial merge + revalidate; 404s |
 | GET/POST | `/api/venues?city=` | POST admin | |
 | GET/PUT | `/api/venues/[slug]` | PUT admin | GET includes dealRules |
+| GET | `/api/venues/[slug]/today` | – | Eastern-date hours, today's deals (by discount), next deal — widget/shortcut friendly |
 | GET | `/api/deal-rules?venue=` | – | |
 | POST | `/api/subscribers` | – | rate-limited 5/min/IP (429 + Retry-After), honeypot `company`/`website` |
 | GET | `/api/subscribers` | admin | JSON list |

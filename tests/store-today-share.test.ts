@@ -50,3 +50,10 @@ test("a11y/robustness guards: global error boundary, 404 has an h1, date-depende
   assert.doesNotMatch(readFileSync("src/app/deals/page.tsx", "utf8"), /new Date\(\)\.getDay\(\)/);
   const nav = readFileSync("src/components/Nav.tsx", "utf8"); assert.match(nav, /role="search" aria-label=/);
 });
+test("GET /api/venues/[slug]/today: shape + 404", async () => {
+  const { GET } = await import("../src/app/api/venues/[slug]/today/route");
+  const ok = await GET(new Request("http://x/api/venues/goodwill-port-orange/today"), { params: Promise.resolve({ slug: "goodwill-port-orange" }) });
+  assert.equal(ok.status, 200); const b = (await ok.json()).data;
+  assert.equal(b.store.slug, "goodwill-port-orange"); assert.match(b.date, /^\d{4}-\d{2}-\d{2}$/); assert.ok(Array.isArray(b.today)); assert.ok(b.next === null || typeof b.next.inDays === "number");
+  const nf = await GET(new Request("http://x"), { params: Promise.resolve({ slug: "nope-nope" }) }); assert.equal(nf.status, 404);
+});
