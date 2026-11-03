@@ -21,7 +21,9 @@ Deal rules source of truth for now: `src/lib/deal-rules.ts` (seeded into DB; UNV
 ## API (all JSON errors `{error, details?}`; body cap 32KB; `src/lib/api.ts`)
 | Method | Route | Auth | Notes |
 |---|---|---|---|
-| GET | `/feed.xml` | – | Atom feed of newest listed upcoming sales (by `created_at`) |
+| GET | `/feed.xml?city=` | – | Atom feed of newest listed upcoming sales (by `created_at`); `city` slug → per-city feed (unknown → 404) |
+| GET | `/embed/stores/[slug]?compact=1` | – | iframe-able HTML widget (any origin may frame `/embed/*`; no JS) |
+| GET | `/api/admin/export?what=submissions\|contacts\|audit` | admin | CSV (formula-injection safe) |
 | GET | `/api/health` | – | `mode` postgres/json-fallback/json, readOk, venues, latencyMs, *Configured booleans |
 | GET | `/api/sales?city=&type=&upcoming=1&from=YYYY-MM-DD` | – | |
 | POST | `/api/sales` | admin | 201; 409 if slug exists |
@@ -63,3 +65,4 @@ Admin-triggered, one URL at a time, host allowlist (estatesales.net/.org, auctio
 3. Deploy Vercel (env vars), set `NEXT_PUBLIC_SITE_URL`.
 4. Resend + cron live. 5. MapTiler map. 6. Supabase Auth replaces ADMIN_PASSWORD. 7. Organizer submission form + moderation queue.
 - Every REST write (POST/PUT/DELETE on /api/sales, /api/venues, /api/deal-rules) is now written to the audit log with detail "via API". Verify a deploy with `npm run sweep` (see OVERNIGHT.md, 8 PM pass).
+- Public endpoint docs for third parties: `/developers` (source `src/lib/api-docs.ts`, test-checked against route files).
