@@ -67,3 +67,21 @@ test("deal-rules, venues, health", async () => {
   const v = await (await venues.GET(req("/api/venues"))).json(); assert.ok(v.count > 0);
   const h = await (await health.GET()).json(); assert.equal(h.dataMode, "json"); assert.equal(h.adminConfigured, true);
 });
+
+test("PUT /api/sales/{slug} honours published:false (hidden, out of public API) and can re-publish; edits keep the flag", async () => {
+  const H = { authorization: "Bearer test-pw", "content-type": "application/json" }; const slug = "pub-flag-test"; const d = new Date(Date.now() + 3 * 864e5).toISOString().slice(0, 10);
+  assert.equal((await sales.POST(req("/api/sales", { method: "POST", headers: H, body: JSON.stringify({ slug, title: "Pub Flag", type: "estate", city: "Port Orange", zip: "32127", days: [{ date: d, start: "09:00", end: "14:00" }] }) }))).status, 201);
+  const put = (body: object) => saleOne.PUT(req(`/api/sales/${slug}`, { method: "PUT", headers: H, body: JSON.stringify(body) }), ctx(slug));
+  assert.equal((await put({ published: false })).status, 200);
+  assert.equal((await saleOne.GET(req(`/api/sales/${slug}`), ctx(slug))).status, 404, "unpublished sale must not be public");
+  assert.equal((await put({ title: "Pub Flag edited" })).status, 200, "admin can still edit an unpublished sale");
+  assert.equal((await saleOne.GET(req(`/api/sales/${slug}`), ctx(slug))).status, 404, "editing must not silently re-publish");
+  assert.equal((await sales.POST(req("/api/sales", { method: "POST", headers: H, body: JSON.stringify({ slug, title: "Clobber", type: "estate", city: "Port Orange", days: [{ date: d, start: "09:00", end: "14:00" }] }) }))).status, 409, "POST can't overwrite an unpublished slug");
+  const del = (s2: string) => saleOne.DELETE(req(`/api/sales/${s2}`, { method: "DELETE", headers: H }), ctx(s2));
+  assert.equal((await sales.POST(req("/api/sales", { method: "POST", headers: H, body: JSON.stringify({ slug: slug + "-2", title: "Hidden", type: "estate", city: "Port Orange", published: false, days: [{ date: d, start: "09:00", end: "14:00" }] }) }))).status, 201);
+  assert.equal((await saleOne.GET(req(`/api/sales/${slug}-2`), ctx(slug + "-2"))).status, 404, "POST published:false stays hidden");
+  assert.equal((await del(slug + "-2")).status, 204, "admin can delete an unpublished sale");
+  assert.equal((await put({ published: true })).status, 200);
+  const got = await (await saleOne.GET(req(`/api/sales/${slug}`), ctx(slug))).json(); assert.equal(got.data.title, "Pub Flag edited");
+  assert.equal((await saleOne.DELETE(req(`/api/sales/${slug}`, { method: "DELETE", headers: H }), ctx(slug))).status, 204);
+});
