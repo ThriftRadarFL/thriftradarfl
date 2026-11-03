@@ -1,12 +1,20 @@
 // Generates scripts/supabase-0002.sql: self-sufficient, idempotent paste-into-SQL-Editor file: migrations 0002–0005 + upsert of ALL seed venues and deal rules + removal of dropped venues.
-import { writeFileSync, readFileSync } from "node:fs";
+import { writeFileSync, readFileSync, copyFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 const entries = JSON.parse(readFileSync("drizzle/meta/_journal.json", "utf8")).entries.filter((e: { idx: number }) => e.idx >= 2) as { idx: number; tag: string; when: number }[];
 const marks = entries.map((j) => { const hash = createHash("sha256").update(readFileSync(`drizzle/${j.tag}.sql`, "utf8")).digest("hex");
   return `INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '${hash}', ${j.when} WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '${hash}'); -- ${j.tag}`; }).join("\n");
 import { dealRules, ruleId } from "../src/lib/deal-rules";
-import { seedVenues } from "../src/lib/seed-data";
+import { seedVenues, mockSales } from "../src/lib/seed-data";
 const q = (s: string | null | undefined) => (s == null ? "NULL" : `'${s.replace(/'/g, "''")}'`);
+const arr = (a?: string[]) => (!a?.length ? "NULL" : `ARRAY[${a.map((x) => q(x)).join(",")}]::text[]`);
+const saleSql = mockSales.map((m) => `INSERT INTO sales (slug, title, type, city, zip, lat, lng, payment_methods, source, source_url, status, description, tags, published)
+  VALUES (${q(m.slug)}, ${q(m.title)}, ${q(m.type)}::sale_type, ${q(m.city)}, ${q(m.zip)}, ${m.lat}, ${m.lng}, ${arr(m.paymentMethods)}, 'estatesales_net', ${q(m.sourceUrl)}, 'upcoming', ${q(m.description)}, ${arr(m.tags)}, true)
+  ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title, type = EXCLUDED.type, city = EXCLUDED.city, zip = EXCLUDED.zip, lat = EXCLUDED.lat, lng = EXCLUDED.lng, source_url = EXCLUDED.source_url, description = EXCLUDED.description, tags = EXCLUDED.tags;
+DELETE FROM sale_days WHERE sale_id = (SELECT id FROM sales WHERE slug = ${q(m.slug)});
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct) SELECT s.id, d.date::date, d.st::time, d.en::time, d.pct FROM sales s, (VALUES
+${m.days.map((d) => `  (${q(d.date)}, ${q(d.start)}, ${q(d.end)}, ${d.discountPct})`).join(",\n")}) AS d(date, st, en, pct) WHERE s.slug = ${q(m.slug)};`).join("\n");
+const keepSales = mockSales.map((m) => q(m.slug)).join(", ");
 const rules = dealRules.map((r) => `  (${q(ruleId(r))}, ${q(r.venue)}, ${q(r.kind)}, ${r.day}, ${r.time ? q(r.time) : "NULL"}, ${q(r.color)}, ${r.discountPct ?? "NULL"}, ${q(r.label)}, ${r.verified})`).join(",\n");
 const venues = seedVenues.map((v) => `  (${q(v.slug)}, ${q(v.name)}, ${q(v.type)}::venue_type, ${q(v.address)}, ${q(v.city)}, ${q(v.zip)}, ${v.lat || "NULL"}, ${v.lng || "NULL"}, ${q(v.phone)}, ${v.hoursJson ? q(JSON.stringify(v.hoursJson)) + "::jsonb" : "NULL"}, ${q(v.notes)}, ${q(v.sourceUrl || null)}, ${q(v.org)})`).join(",\n");
 writeFileSync("scripts/supabase-0002.sql", `-- ThriftRadarFL migrations 0002–0005 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages, venue source_url/org_key)
@@ -42,7 +50,7 @@ ${venues}
 ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, type = EXCLUDED.type, address = EXCLUDED.address, city = EXCLUDED.city, zip = EXCLUDED.zip, lat = EXCLUDED.lat, lng = EXCLUDED.lng, phone = EXCLUDED.phone, hours_json = EXCLUDED.hours_json, notes = EXCLUDED.notes, source_url = EXCLUDED.source_url, org_key = EXCLUDED.org_key;
 
 -- Remove stores dropped from the seed (not on the official Goodwill CFL list); its deal rules cascade
-DELETE FROM venues WHERE slug IN ('goodwill-daytona-isb');
+DELETE FROM venues WHERE slug IN ('goodwill-daytona-isb', 'st-vincent-de-paul-thrift-store-longwood', 'habitat-seminole-apopka-restore-casselberry');
 -- Legacy rules inserted by scripts/seed.ts before rule_key existed would duplicate the keyed rows below
 DELETE FROM deal_rules WHERE rule_key IS NULL;
 
@@ -56,10 +64,15 @@ JOIN venues ve ON ve.slug = v.venue
 ON CONFLICT (rule_key) DO UPDATE SET kind = EXCLUDED.kind, day_of_week = EXCLUDED.day_of_week, start_time = EXCLUDED.start_time, color = EXCLUDED.color,
   discount_pct = EXCLUDED.discount_pct, label = EXCLUDED.label, description = EXCLUDED.description, verified = EXCLUDED.verified;
 
+-- Real sales (estatesales.net, 2026-11-02): remove demo/scraped sales not in the seed (non-admin submissions kept), upsert the real ones
+DELETE FROM sales WHERE source <> 'submitted' AND slug NOT IN (${keepSales});
+${saleSql}
+
 -- Record in Drizzle's journal so a later \`npm run db:migrate\` doesn't re-apply these
 CREATE SCHEMA IF NOT EXISTS drizzle;
 CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (id serial PRIMARY KEY, hash text NOT NULL, created_at bigint);
 ${marks}
 COMMIT;
 `);
-console.log("wrote scripts/supabase-0002.sql", seedVenues.length, "venues", dealRules.length, "rules");
+copyFileSync("scripts/supabase-0002.sql", "scripts/supabase-run-me.sql");
+console.log("wrote scripts/supabase-0002.sql + supabase-run-me.sql", seedVenues.length, "venues", dealRules.length, "rules");

@@ -50,8 +50,8 @@ test("data quality: finds dupes, coords problems, orphans, bad hours; clean data
     [V("v1", "Goodwill X", "Port Orange"), V("v2", "goodwill x", "Port Orange", { address: "1 Main Street" }), V("v3", "Far", "Port Orange", { lat: 28.54, lng: -81.38 }), V("v4", "Nozip", "Port Orange", { zip: "321", hoursJson: null })],
     [R("v1", 1, "Half"), R("ghost", 1, "Orphan"), R("v1", 9, "Bad day", 150)]);
   const codes = new Set(bad.map((i) => i.code));
-  for (const c of ["sale.dup-title", "sale.no-coords", "sale.coords-outside", "sale.bad-hours", "sale.generic-source", "store.dup-name", "store.dup-address", "store.coords-far-from-zip", "store.bad-zip", "store.no-hours", "rule.orphan", "rule.bad-day", "rule.bad-pct"]) assert.ok(codes.has(c), `expected ${c}`);
-  assert.match(bad.find((i) => i.code === "sale.coords-outside")!.msg, /swapped/);
+  for (const c of ["sale.dup-title", "sale.coords-zero", "sale.coords-swapped", "sale.bad-hours", "sale.generic-source", "store.dup-name", "store.dup-address", "store.coords-far-from-zip", "store.bad-zip", "store.no-hours", "rule.orphan", "rule.bad-day", "rule.bad-pct"]) assert.ok(codes.has(c), `expected ${c}`);
+  assert.match(bad.find((i) => i.code === "sale.coords-swapped")!.msg, /swapped/);
   assert.equal(bad[0].level, "error", "errors sort first");
   const s = summarize(bad); assert.ok(s.errors >= 5 && s.warnings >= 5);
 });

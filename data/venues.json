@@ -399,21 +399,6 @@
     "sourceUrl": "https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford"
   },
   {
-    "slug": "habitat-seminole-apopka-restore-casselberry",
-    "org": "habitat",
-    "name": "Habitat Seminole-Apopka ReStore - Casselberry",
-    "type": "thrift",
-    "address": "345 Semoran Blvd",
-    "city": "Casselberry",
-    "zip": "32707",
-    "lat": 0,
-    "lng": 0,
-    "phone": "(407) 215-2000",
-    "hoursJson": null,
-    "notes": "Not on the map yet (address didn't geocode). UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-7pm (aggregator). Status uncertain; a review says an Altamonte ReStore closed. Greater Orlando & Osceola Habitat ReStores closed 2019. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-casselberry (checked 2026-11-02).",
-    "sourceUrl": "https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-casselberry"
-  },
-  {
     "slug": "salvation-army-orlando-thrift-store-2",
     "org": "salvation",
     "name": "Salvation Army Orlando Thrift Store 2",
@@ -436,11 +421,11 @@
     "address": "1330 N Semoran Blvd",
     "city": "Casselberry",
     "zip": "32707",
-    "lat": 0,
-    "lng": 0,
+    "lat": 28.63025,
+    "lng": -81.318,
     "phone": "(407) 295-9311",
     "hoursJson": null,
-    "notes": "Not on the map yet (address didn't geocode). Hours not on official page; aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).",
+    "notes": "Map pin from US Census geocoder (matched 1330 State Hwy 436). Hours not on official page; aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).",
     "sourceUrl": "https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/"
   },
   {
@@ -624,21 +609,6 @@
     "sourceUrl": "https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/"
   },
   {
-    "slug": "st-vincent-de-paul-thrift-store-longwood",
-    "org": "society-of-st-vincent-de-paul",
-    "name": "St. Vincent de Paul Thrift Store - Longwood",
-    "type": "thrift",
-    "address": "150 N US Hwy 17-92",
-    "city": "Longwood",
-    "zip": "32750",
-    "lat": 0,
-    "lng": 0,
-    "phone": "321-972-2925",
-    "hoursJson": null,
-    "notes": "Not on the map yet (address didn't geocode). UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://findthrift.com/store-list/FL/Longwood (checked 2026-11-02).",
-    "sourceUrl": "https://findthrift.com/store-list/FL/Longwood"
-  },
-  {
     "slug": "salvation-army-w-colonial-orlando",
     "org": "salvation",
     "name": "Salvation Army Thrift Store (W Colonial Dr)",
@@ -655,5 +625,90 @@
     },
     "notes": "Hours Mon–Sat 9 AM–6 PM, closed Sun. Wednesday Customer Appreciation Day (50% off all tag colors but one) and rotating color-tag sales are store-specific and come from a business-owner reply on Yelp — unverified with the store. Source: https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/ (checked 2026-11-02).",
     "sourceUrl": "https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/"
+  },
+  {
+    "slug": "st-vincent-de-paul-thrift-store-apopka",
+    "org": "society-of-st-vincent-de-paul",
+    "name": "St. Vincent de Paul Thrift Store - Apopka",
+    "type": "thrift",
+    "address": "770 S Orange Blossom Trail",
+    "city": "Apopka",
+    "zip": "32703",
+    "lat": 28.66856,
+    "lng": -81.4907,
+    "phone": "(407) 886-0940",
+    "hoursJson": {
+      "daily": "9:00-19:00"
+    },
+    "notes": "Map pin from US Census geocoder. Hours: Mon-Sun 9am-7pm. Source: https://svdporlando.org/svdp-thrift-stores-1 (checked 2026-11-02).",
+    "sourceUrl": "https://svdporlando.org/svdp-thrift-stores-1"
+  },
+  {
+    "slug": "st-vincent-de-paul-nearly-new-flagler-beach",
+    "org": "society-of-st-vincent-de-paul",
+    "name": "St. Vincent de Paul Nearly New Thrift Store - Flagler Beach",
+    "type": "thrift",
+    "address": "400 S Daytona Ave",
+    "city": "Flagler Beach",
+    "zip": "32136",
+    "lat": 29.47829,
+    "lng": -81.1285,
+    "phone": "(386) 439-0071",
+    "hoursJson": null,
+    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon, Wed, Fri, Sat 10am-3pm (211 listing; another source adds Thu). No official site found, only Facebook. Source: 211live.org (checked 2026-11-02).",
+    "sourceUrl": "https://211live.org/index.php/component/cpx/?id=3883031&task=resource.view"
+  },
+  {
+    "slug": "sharing-center-village-shoppes-longwood",
+    "org": "sharing-center",
+    "name": "The Sharing Center Village Shoppes (Thrift, Boutique, Furniture)",
+    "type": "thrift",
+    "address": "600 N Highway 17-92 Suite 130",
+    "city": "Longwood",
+    "zip": "32750",
+    "lat": 0,
+    "lng": 0,
+    "phone": "(407) 260-9155",
+    "hoursJson": {
+      "mon-sat": "9:30-17:00",
+      "sun": "closed"
+    },
+    "notes": "Not on the map yet (address didn't geocode). Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (checked 2026-11-02).",
+    "sourceUrl": "https://thesharingcenter.org/shopwithus/"
+  },
+  {
+    "slug": "prince-of-peace-like-new-shop-ormond-beach",
+    "org": "prince-of-peace-ormond",
+    "name": "Prince of Peace Like New Shop",
+    "type": "thrift",
+    "address": "1225 Hand Ave",
+    "city": "Ormond Beach",
+    "zip": "32174",
+    "lat": 29.25865,
+    "lng": -81.09862,
+    "phone": "(386) 672-2836",
+    "hoursJson": {
+      "tue-fri": "9:30-14:00",
+      "1st-3rd-sat": "10:00-13:00"
+    },
+    "notes": "Parish thrift shop. Map pin from US Census geocoder. Hours: Tue-Fri 9:30am-2pm; 1st & 3rd Sat 10am-1pm. Source: https://www.princeofpeaceormond.com/like-new-shop (checked 2026-11-02).",
+    "sourceUrl": "https://www.princeofpeaceormond.com/like-new-shop"
+  },
+  {
+    "slug": "pierson-methodist-church-thrift-store",
+    "org": "pierson-methodist",
+    "name": "Pierson Methodist Church Thrift Store",
+    "type": "thrift",
+    "address": "136 W Second Ave",
+    "city": "Pierson",
+    "zip": "32180",
+    "lat": 29.23962,
+    "lng": -81.46435,
+    "phone": "(386) 434-2030",
+    "hoursJson": {
+      "fri-sat": "10:00-14:00"
+    },
+    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Fri-Sat 10am-2pm (local church directory, not an official church page). Source: https://www.beacononlinenews.com/churches/pierson-methodist-church/ (checked 2026-11-02).",
+    "sourceUrl": "https://www.beacononlinenews.com/churches/pierson-methodist-church/"
   }
 ]

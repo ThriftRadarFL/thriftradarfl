@@ -16,7 +16,7 @@ export default function Prices() {
         <tbody>{items.map((i) => <tr key={i.slug} className="border-b border-line align-top last:border-0">
           <td className="px-3 py-2"><b>{i.item}</b><div className="text-xs text-gray-600">{i.category}{i.thriftCost && ` · thrift cost seen: $${i.thriftCost}`}</div></td>
           {i.median === null ? <td colSpan={5} className="px-3 py-2 italic text-gray-600" title={i.notes}>No verified data yet</td> : <>
-            <td className="px-3 py-2 font-bold text-royal">${i.median.toFixed(2)}</td><td className="px-3 py-2">{i.samples ?? "—"}</td><td className="px-3 py-2">{i.dateRange || "—"}</td>
+            <td className="px-3 py-2 font-bold text-royal">${i.median.toFixed(2)}{i.min !== null && i.max !== null && <div className="text-xs font-normal text-gray-600">range ${i.min.toFixed(2)}–${i.max.toFixed(2)}</div>}</td><td className="px-3 py-2">{i.samples ?? "—"}{i.samples !== null && i.samples < 100 && <div className="text-xs text-gray-600">small sample</div>}</td><td className="px-3 py-2">{i.dateRange || "—"}</td>
             <td className="px-3 py-2"><Spark h={i.history} /></td>
             <td className="px-3 py-2"><a href={i.sourceUrl} rel="nofollow noopener" target="_blank" className="text-royal underline">{new URL(i.sourceUrl).hostname.replace(/^www\./, "")}</a></td></>}
           <td className="px-3 py-2">{i.median !== null && <Link href={`/calculator?item=${i.slug}`} className="text-xs font-bold text-cta underline">Calculate</Link>}</td></tr>)}</tbody></table></div>

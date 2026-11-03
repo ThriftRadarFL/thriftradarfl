@@ -1,53 +1,384 @@
 [
   {
-    "slug": "precious-finds-port-orange-2026-11",
-    "title": "Precious Finds in Port Orange",
+    "slug": "vintage-mcm-antiques-collectibles-treasure-trove-sale-in-col-5143188",
+    "title": "Vintage/MCM/Antiques/Collectibles Treasure Trove Sale in College Park!",
     "type": "estate",
-    "city": "Port Orange",
-    "zip": "32127",
-    "lat": 29.115,
-    "lng": -81.03,
-    "sourceUrl": "https://www.estatesales.net/FL/Port-Orange/32127/5139969",
-    "paymentMethods": [
-      "cash",
-      "venmo",
-      "zelle"
-    ],
+    "city": "Orlando",
+    "zip": "32804",
+    "lat": 28.579,
+    "lng": -81.3942,
+    "sourceUrl": "https://www.estatesales.net/FL/Orlando/32804/traditional/5143188",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32804 center. Run by Bobs Senior Services LLC. Source: estatesales.net.",
     "days": [
       {
-        "date": "2026-11-12",
+        "date": "2026-11-05",
         "start": "09:00",
         "end": "15:00",
         "discountPct": 0
       },
       {
+        "date": "2026-11-06",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-07",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": [
+      "collectibles",
+      "antiques"
+    ]
+  },
+  {
+    "slug": "estate-sale-orlando-5144160",
+    "title": "Estate Sale Orlando",
+    "type": "estate",
+    "city": "Orlando",
+    "zip": "32812",
+    "lat": 28.4847,
+    "lng": -81.3244,
+    "sourceUrl": "https://www.estatesales.net/FL/Orlando/32812/traditional/5144160",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (full address posted Nov 5). Map pin is the ZIP 32812 center. Run by Orlando Estate Sale Ladies, LLC. Source: estatesales.net; estatesales.org (https://www.estatesales.org/estate-sales/fl/orlando-/32812/estate-sale-in-orlando-2471588).",
+    "days": [
+      {
+        "date": "2026-11-06",
+        "start": "08:30",
+        "end": "14:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-07",
+        "start": "08:30",
+        "end": "14:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "hathaway-estate-sales-winter-park-5144367",
+    "title": "Hathaway Estate Sales - Winter Park",
+    "type": "estate",
+    "city": "Winter Park",
+    "zip": "32789",
+    "lat": 28.5992,
+    "lng": -81.3522,
+    "sourceUrl": "https://www.estatesales.net/FL/Winter%20Park/32789/traditional/5144367",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32789 center. Run by Hathaway Estate Sales LLC. Source: estatesales.net.",
+    "days": [
+      {
+        "date": "2026-11-06",
+        "start": "09:00",
+        "end": "14:45",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-07",
+        "start": "09:00",
+        "end": "14:45",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-08",
+        "start": "09:00",
+        "end": "14:45",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "winter-park-estate-sale-on-green-cove-rd-winter-prak-fl-5143062",
+    "title": "Winter Park Estate Sale on Green Cove Rd Winter Prak FL",
+    "type": "estate",
+    "city": "Winter Park",
+    "zip": "32792",
+    "lat": 28.6084,
+    "lng": -81.3006,
+    "sourceUrl": "https://www.estatesales.net/FL/Winter%20Park/32792/traditional/5143062",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32792 center. Run by Bates Estates Sales Orlando. Source: estatesales.net.",
+    "days": [
+      {
+        "date": "2026-11-06",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-07",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "crafter-s-paradise-sale-in-orlando-5136069",
+    "title": "“Crafter’s Paradise” Sale in Orlando",
+    "type": "estate",
+    "city": "Orlando",
+    "zip": "32819",
+    "lat": 28.4537,
+    "lng": -81.4724,
+    "sourceUrl": "https://www.estatesales.net/FL/Orlando/32819/traditional/5136069",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32819 center. Run by Treasure Chasers Estate Sales And Liquidations LLC. Source: estatesales.net.",
+    "days": [
+      {
+        "date": "2026-11-06",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-07",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-08",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "operation-estate-liquidation-5139666",
+    "title": "Operation: Estate Liquidation",
+    "type": "estate",
+    "city": "Orlando",
+    "zip": "32826",
+    "lat": 28.5797,
+    "lng": -81.1886,
+    "sourceUrl": "https://www.estatesales.net/FL/Orlando/32826/traditional/5139666",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32826 center. Run by Private Listing. Source: estatesales.net.",
+    "days": [
+      {
         "date": "2026-11-13",
         "start": "09:00",
         "end": "15:00",
-        "discountPct": 20
+        "discountPct": 0
       },
       {
         "date": "2026-11-14",
         "start": "09:00",
         "end": "15:00",
-        "discountPct": 50
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-15",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
       }
     ],
-    "addedAt": "2026-11-02T05:31:10Z"
+    "tags": []
   },
   {
-    "slug": "riverside-estate-daytona-2026-11",
-    "title": "Riverside Drive Estate — Full House",
+    "slug": "let-it-go-lifestyle-in-apopka-5112129",
+    "title": "Let it Go Lifestyle in Apopka",
+    "type": "estate",
+    "city": "Apopka",
+    "zip": "32712",
+    "lat": 28.7361,
+    "lng": -81.5476,
+    "sourceUrl": "https://www.estatesales.net/FL/Apopka/32712/traditional/5112129",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (full address posted Nov 12, 9am). Map pin is the ZIP 32712 center. Run by Let It Go Lifestyle. Source: estatesales.net; estatesales.org (https://www.estatesales.org/estate-sales/fl/apopka/32712/let-it-go-lifestyle-in-2467336).",
+    "days": [
+      {
+        "date": "2026-11-13",
+        "start": "09:00",
+        "end": "14:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-14",
+        "start": "09:00",
+        "end": "14:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-15",
+        "start": "09:00",
+        "end": "14:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "the-eclectic-collective-5143245",
+    "title": "The Eclectic Collective",
+    "type": "estate",
+    "city": "Orlando",
+    "zip": "32803",
+    "lat": 28.5556,
+    "lng": -81.3484,
+    "sourceUrl": "https://www.estatesales.net/FL/Orlando/32803/traditional/5143245",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32803 center. Run by Private Listing. Source: estatesales.net.",
+    "days": [
+      {
+        "date": "2026-11-13",
+        "start": "09:00",
+        "end": "14:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "oviedo-moving-sale-big-house-5130591",
+    "title": "Oviedo Moving Sale - Big house!",
+    "type": "estate",
+    "city": "Oviedo",
+    "zip": "32765",
+    "lat": 28.6651,
+    "lng": -81.1963,
+    "sourceUrl": "https://www.estatesales.net/FL/Oviedo/32765/traditional/5130591",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32765 center. Run by The Garage Sale People, LLC. Source: estatesales.net.",
+    "days": [
+      {
+        "date": "2026-11-12",
+        "start": "08:00",
+        "end": "13:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-13",
+        "start": "08:00",
+        "end": "13:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-14",
+        "start": "08:00",
+        "end": "13:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "packed-home-stained-glass-fairy-lamp-vintage-quilts-nostalgi-5139180",
+    "title": "Packed Home: Stained Glass, Fairy Lamp, Vintage Quilts & Nostalgia",
+    "type": "estate",
+    "city": "Winter Springs",
+    "zip": "32708",
+    "lat": 28.6881,
+    "lng": -81.27,
+    "sourceUrl": "https://www.estatesales.net/FL/Winter%20Springs/32708/traditional/5139180",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32708 center. Listing gives only first-day open (03:00 PM) and last-day close (01:00 PM); other hours not posted, check the listing. Run by Blue Moon Estate Sales - Orlando East. Source: estatesales.net.",
+    "days": [
+      {
+        "date": "2026-11-12",
+        "start": "15:00",
+        "end": "18:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-13",
+        "start": "09:00",
+        "end": "13:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-14",
+        "start": "09:00",
+        "end": "13:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-15",
+        "start": "09:00",
+        "end": "13:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "berner-s-weekly-auction-5138292",
+    "title": "Berner's Weekly Auction",
+    "type": "auction",
+    "city": "DeLand",
+    "zip": "32724",
+    "lat": 29.0065,
+    "lng": -81.287,
+    "sourceUrl": "https://www.estatesales.net/FL/Deland/32724/traditional/5138292",
+    "paymentMethods": [],
+    "description": "Address: 1500 Jacobs Road, DeLand, FL 32724. Registration 5:30 PM, auction 6:30 PM (end time not posted; 10 PM shown as an estimate based on Berner's usual schedule). Run by Berner's Auction, Inc. Source: estatesales.net.",
+    "days": [
+      {
+        "date": "2026-11-04",
+        "start": "17:30",
+        "end": "22:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "something-for-everyone-in-pelican-bay-5124612",
+    "title": "Something for everyone in Pelican Bay",
     "type": "estate",
     "city": "Daytona Beach",
-    "zip": "32118",
-    "lat": 29.22,
-    "lng": -81,
-    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach",
-    "paymentMethods": [
-      "cash",
-      "card"
+    "zip": "32119",
+    "lat": 29.161,
+    "lng": -81.0256,
+    "sourceUrl": "https://www.estatesales.net/FL/Daytona%20Beach/32119/traditional/5124612",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32119 center. Run by Magnet And Steel Estate Sales And Liquidators. Source: estatesales.net.",
+    "days": [
+      {
+        "date": "2026-11-06",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-07",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-08",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      }
     ],
+    "tags": []
+  },
+  {
+    "slug": "sherrington-estate-sale-5136183",
+    "title": "SHERRINGTON ESTATE SALE",
+    "type": "estate",
+    "city": "Ormond Beach",
+    "zip": "32174",
+    "lat": 29.2922,
+    "lng": -81.1614,
+    "sourceUrl": "https://www.estatesales.net/FL/Ormond%20Beach/32174/traditional/5136183",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32174 center. Run by D&D Estate Sale Pros. Source: estatesales.net.",
     "days": [
       {
         "date": "2026-11-06",
@@ -59,37 +390,58 @@
         "date": "2026-11-07",
         "start": "08:00",
         "end": "14:00",
-        "discountPct": 25
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "huge-estate-sale-disney-art-hallmark-lionel-trains-waterford-5130090",
+    "title": "Huge Estate Sale! Disney, Art, Hallmark, Lionel Trains, Waterford, Holiday Décor & More!",
+    "type": "estate",
+    "city": "Ormond Beach",
+    "zip": "32174",
+    "lat": 29.2922,
+    "lng": -81.1614,
+    "sourceUrl": "https://www.estatesales.net/FL/Ormond%20Beach/32174/traditional/5130090",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (full address posted Nov 4, 5pm). Map pin is the ZIP 32174 center. Run by Ray Of Sunshine Estate Sales. Source: estatesales.net; estatesales.org (https://www.estatesales.org/estate-sales/fl/ormond-beach/32174/massive-estate-sale-new-vintage-2469708).",
+    "days": [
+      {
+        "date": "2026-11-06",
+        "start": "08:30",
+        "end": "14:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-07",
+        "start": "08:30",
+        "end": "14:00",
+        "discountPct": 0
       },
       {
         "date": "2026-11-08",
-        "start": "09:00",
-        "end": "13:00",
-        "discountPct": 50
+        "start": "08:30",
+        "end": "14:00",
+        "discountPct": 0
       }
     ],
-    "addedAt": "2026-11-02T05:44:14Z"
+    "tags": [
+      "art"
+    ]
   },
   {
-    "slug": "berners-auction-week-deland-2026-11",
-    "title": "Berner's Auction Week — Furniture & Tools",
+    "slug": "berner-s-weekly-auction-5143836",
+    "title": "Berner's Weekly Auction",
     "type": "auction",
     "city": "DeLand",
     "zip": "32724",
     "lat": 29.0065,
     "lng": -81.287,
-    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach",
-    "paymentMethods": [
-      "cash",
-      "card"
-    ],
+    "sourceUrl": "https://www.estatesales.net/FL/Deland/32724/traditional/5143836",
+    "paymentMethods": [],
+    "description": "Address: 1500 Jacobs Road, DeLand, FL 32724. Run by Berner's Auction, Inc. Source: estatesales.net.",
     "days": [
-      {
-        "date": "2026-11-04",
-        "start": "18:30",
-        "end": "22:00",
-        "discountPct": 0
-      },
       {
         "date": "2026-11-11",
         "start": "18:30",
@@ -97,77 +449,65 @@
         "discountPct": 0
       }
     ],
-    "tags": [
-      "furniture",
-      "tools"
-    ],
-    "addedAt": "2026-11-02T05:44:14Z"
+    "tags": []
   },
   {
-    "slug": "ormond-thrift-half-off-2026-11",
-    "title": "Ormond Beach Thrift — Half-Off Saturday",
-    "type": "thrift",
-    "city": "Ormond Beach",
-    "zip": "32174",
-    "lat": 29.285,
-    "lng": -81.056,
-    "sourceUrl": "https://www.goodwillcfl.org/locations/",
-    "paymentMethods": [
-      "cash",
-      "card"
-    ],
+    "slug": "sweet-memories-estate-sales-invites-you-to-edgewater-5142384",
+    "title": "Sweet Memories Estate Sales invites you to Edgewater!",
+    "type": "estate",
+    "city": "Edgewater",
+    "zip": "32141",
+    "lat": 28.9288,
+    "lng": -80.9191,
+    "sourceUrl": "https://www.estatesales.net/FL/Edgewater/32141/traditional/5142384",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32141 center. Run by Sweet Memories Estate Sales. Source: estatesales.net.",
     "days": [
       {
-        "date": "2026-11-07",
+        "date": "2026-11-12",
         "start": "09:00",
-        "end": "21:00",
-        "discountPct": 50
-      }
-    ],
-    "addedAt": "2026-11-02T05:44:14Z"
-  },
-  {
-    "slug": "nsb-multi-family-yard-2026-11",
-    "title": "New Smyrna Multi-Family Yard Sale",
-    "type": "yard",
-    "city": "New Smyrna Beach",
-    "zip": "32169",
-    "lat": 29.025,
-    "lng": -80.927,
-    "sourceUrl": "https://www.estatesales.net/FL/New-Smyrna-Beach",
-    "paymentMethods": [
-      "cash"
-    ],
-    "days": [
-      {
-        "date": "2026-11-07",
-        "start": "07:00",
-        "end": "12:00",
+        "end": "14:00",
         "discountPct": 0
       },
       {
-        "date": "2026-11-08",
-        "start": "07:00",
-        "end": "11:00",
-        "discountPct": 30
+        "date": "2026-11-13",
+        "start": "09:00",
+        "end": "14:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-14",
+        "start": "09:00",
+        "end": "14:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-15",
+        "start": "09:00",
+        "end": "14:00",
+        "discountPct": 0
       }
     ],
-    "addedAt": "2026-11-02T05:44:14Z"
+    "tags": []
   },
   {
-    "slug": "spruce-creek-estate-port-orange-2026-11",
-    "title": "Spruce Creek Fly-In Estate — Mid-Century & Art",
+    "slug": "precious-finds-in-port-orange-5139969",
+    "title": "Precious finds in Port Orange",
     "type": "estate",
     "city": "Port Orange",
-    "zip": "32128",
-    "lat": 29.08,
-    "lng": -81.05,
-    "sourceUrl": "https://www.estatesales.net/FL/Port-Orange",
-    "paymentMethods": [
-      "cash",
-      "venmo"
-    ],
+    "zip": "32127",
+    "lat": 29.1085,
+    "lng": -80.9757,
+    "sourceUrl": "https://www.estatesales.net/FL/Port%20Orange/32127/traditional/5139969",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32127 center. Run by Magnet And Steel Estate Sales And Liquidators. Source: estatesales.net.",
     "days": [
+      {
+        "date": "2026-11-12",
+        "start": "09:00",
+        "end": "15:00",
+        "discountPct": 0
+      },
       {
         "date": "2026-11-13",
         "start": "09:00",
@@ -178,232 +518,36 @@
         "date": "2026-11-14",
         "start": "09:00",
         "end": "15:00",
-        "discountPct": 30
-      },
-      {
-        "date": "2026-11-15",
-        "start": "10:00",
-        "end": "14:00",
-        "discountPct": 50
-      }
-    ],
-    "tags": [
-      "mid-century",
-      "art"
-    ],
-    "addedAt": "2026-11-02T05:44:14Z"
-  },
-  {
-    "slug": "pine-hills-bins-restock-2026-11",
-    "title": "Pine Hills Outlet — Fresh Bins Monday",
-    "type": "outlet_bins",
-    "city": "Orlando",
-    "zip": "32818",
-    "lat": 28.5785,
-    "lng": -81.4565,
-    "sourceUrl": "https://www.goodwillcfl.org/locations/",
-    "paymentMethods": [
-      "cash",
-      "card"
-    ],
-    "days": [
-      {
-        "date": "2026-11-09",
-        "start": "08:00",
-        "end": "17:00",
         "discountPct": 0
       }
     ],
-    "addedAt": "2026-11-02T05:44:14Z"
+    "tags": []
   },
   {
-    "slug": "ormond-beach-mid-century-estate-2026-11",
-    "title": "Ormond Beach Mid-Century Estate — Teak & Barware",
+    "slug": "a-fabulous-find-in-deland-5116830",
+    "title": "A Fabulous Find in Deland",
     "type": "estate",
-    "city": "Ormond Beach",
-    "zip": "32176",
-    "lat": 29.3,
-    "lng": -81.06,
-    "sourceUrl": "https://www.estatesales.net/FL/Ormond-Beach",
-    "paymentMethods": [
-      "cash",
-      "card"
-    ],
-    "days": [
-      {
-        "date": "2026-11-19",
-        "start": "09:00",
-        "end": "15:00",
-        "discountPct": 0
-      },
-      {
-        "date": "2026-11-20",
-        "start": "09:00",
-        "end": "15:00",
-        "discountPct": 25
-      },
-      {
-        "date": "2026-11-21",
-        "start": "09:00",
-        "end": "13:00",
-        "discountPct": 50
-      }
-    ],
-    "tags": [
-      "mid-century",
-      "barware"
-    ],
-    "addedAt": "2026-11-02T06:03:25Z"
-  },
-  {
-    "slug": "nsb-coastal-cottage-estate-2026-11",
-    "title": "New Smyrna Coastal Cottage Estate — Nautical & Art",
-    "type": "estate",
-    "city": "New Smyrna Beach",
-    "zip": "32168",
-    "lat": 29.03,
-    "lng": -80.93,
-    "sourceUrl": "https://www.estatesales.net/FL/New-Smyrna-Beach",
-    "paymentMethods": [
-      "cash",
-      "venmo"
-    ],
-    "days": [
-      {
-        "date": "2026-11-20",
-        "start": "08:00",
-        "end": "14:00",
-        "discountPct": 0
-      },
-      {
-        "date": "2026-11-21",
-        "start": "08:00",
-        "end": "14:00",
-        "discountPct": 30
-      }
-    ],
-    "tags": [
-      "art",
-      "nautical"
-    ],
-    "addedAt": "2026-11-02T06:03:25Z"
-  },
-  {
-    "slug": "deland-downtown-moving-sale-2026-11",
-    "title": "DeLand Historic District Moving Sale — Antiques & Books",
-    "type": "yard",
-    "city": "DeLand",
-    "zip": "32720",
-    "lat": 29.03,
-    "lng": -81.3,
-    "sourceUrl": "https://www.estatesales.net/FL/DeLand",
-    "paymentMethods": [
-      "cash"
-    ],
-    "days": [
-      {
-        "date": "2026-11-14",
-        "start": "07:30",
-        "end": "13:00",
-        "discountPct": 0
-      }
-    ],
-    "tags": [
-      "books",
-      "antiques"
-    ],
-    "addedAt": "2026-11-02T06:03:25Z"
-  },
-  {
-    "slug": "daytona-beachside-condo-estate-2026-11",
-    "title": "Daytona Beachside Condo Estate — Furniture & Jewelry",
-    "type": "estate",
-    "city": "Daytona Beach",
-    "zip": "32118",
-    "lat": 29.21,
-    "lng": -81.01,
-    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach",
-    "paymentMethods": [
-      "cash",
-      "card",
-      "zelle"
-    ],
-    "days": [
-      {
-        "date": "2026-11-20",
-        "start": "09:00",
-        "end": "15:00",
-        "discountPct": 0
-      },
-      {
-        "date": "2026-11-21",
-        "start": "09:00",
-        "end": "15:00",
-        "discountPct": 50
-      }
-    ],
-    "tags": [
-      "furniture",
-      "jewelry"
-    ],
-    "addedAt": "2026-11-02T06:03:25Z"
-  },
-  {
-    "slug": "port-orange-garage-tools-2026-11",
-    "title": "Port Orange Garage Sale — Tools & Fishing Gear",
-    "type": "yard",
-    "city": "Port Orange",
-    "zip": "32127",
-    "lat": 29.12,
-    "lng": -80.99,
-    "sourceUrl": "https://www.estatesales.net/FL/Port-Orange",
-    "paymentMethods": [
-      "cash"
-    ],
-    "days": [
-      {
-        "date": "2026-11-21",
-        "start": "07:00",
-        "end": "12:00",
-        "discountPct": 0
-      }
-    ],
-    "tags": [
-      "tools",
-      "fishing"
-    ],
-    "addedAt": "2026-11-02T06:03:25Z"
-  },
-  {
-    "slug": "berners-auction-thanksgiving-week-deland-2026-11",
-    "title": "Berner's Auction — Pre-Holiday Collectibles Night",
-    "type": "auction",
     "city": "DeLand",
     "zip": "32724",
-    "lat": 29.0065,
-    "lng": -81.287,
-    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach",
-    "paymentMethods": [
-      "cash",
-      "card"
-    ],
+    "lat": 29.0572,
+    "lng": -81.2256,
+    "sourceUrl": "https://www.estatesales.net/FL/Deland/32724/traditional/5116830",
+    "paymentMethods": [],
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32724 center. Run by A Fabulous Find Estate Sale Company LLC. Source: estatesales.net.",
     "days": [
       {
-        "date": "2026-11-18",
-        "start": "18:30",
-        "end": "22:00",
+        "date": "2026-11-13",
+        "start": "09:00",
+        "end": "14:00",
         "discountPct": 0
       },
       {
-        "date": "2026-11-25",
-        "start": "18:30",
-        "end": "22:00",
+        "date": "2026-11-14",
+        "start": "09:00",
+        "end": "14:00",
         "discountPct": 0
       }
     ],
-    "tags": [
-      "collectibles"
-    ],
-    "addedAt": "2026-11-02T06:03:25Z"
+    "tags": []
   }
 ]

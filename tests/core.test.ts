@@ -23,7 +23,7 @@ test("parseVenue + helpers", () => {
   assert.ok(isEmail("a@b.co")); assert.ok(!isEmail("a@b")); assert.equal(slugify("  Hello, World! "), "hello-world");
 });
 test("ics: one VEVENT per day, CRLF, folded lines, escaping", () => {
-  const s = { ...(mockSales[0] as Sale), title: "Commas, semis; and a very long title that will definitely need folding past seventy-five octets" };
+  const s = { ...(mockSales.find((m) => m.slug.startsWith("precious-finds"))! as Sale), title: "Commas, semis; and a very long title that will definitely need folding past seventy-five octets" };
   const ics = buildIcs([s]);
   assert.equal((ics.match(/BEGIN:VEVENT/g) ?? []).length, s.days.length);
   assert.ok(ics.includes("\r\n")); assert.ok(ics.split("\r\n").every((l) => Buffer.byteLength(l) <= 75));
@@ -31,7 +31,7 @@ test("ics: one VEVENT per day, CRLF, folded lines, escaping", () => {
   assert.ok(ics.includes("DTSTART;TZID=America/New_York:20261112T090000"));
 });
 test("digest picks sales in window, escapes html", () => {
-  const d = buildDigest([{ ...(mockSales[0] as Sale), title: "<script>x</script>" }], "2026-11-10");
+  const d = buildDigest([{ ...(mockSales.find((m) => m.slug.startsWith("precious-finds"))! as Sale), title: "<script>x</script>" }], "2026-11-10");
   assert.equal(d.count, 1); assert.ok(!d.html.includes("<script>x")); assert.ok(d.html.includes("&lt;script&gt;"));
   assert.equal(buildDigest(mockSales as Sale[], "2030-01-01").count, 0);
 });
@@ -61,7 +61,7 @@ test("search matches all terms across fields, accent/case-insensitive", () => {
   assert.ok(searchAll("bins", [], seedVenues as Venue[]).venues.length >= 2);
 });
 test("JSON-LD: Event has ET offsets, absolute URLs; Store has address", () => {
-  const ld = saleJsonLd(mockSales[0] as Sale);
+  const ld = saleJsonLd(mockSales.find((m) => m.slug.startsWith("precious-finds"))! as Sale);
   assert.equal(ld["@type"], "Event"); assert.match(ld.startDate, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:00-05:00$/); assert.match(ld.url, /^https?:\/\//);
   assert.equal(ld.location.address.addressRegion, "FL");
   const v = venueJsonLd(seedVenues[0] as Venue); assert.equal(v["@type"], "Store"); assert.equal(v.address.postalCode, seedVenues[0].zip);

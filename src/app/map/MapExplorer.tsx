@@ -10,9 +10,9 @@ const sel = "mt-1 block w-full border border-line bg-white px-2 py-2 text-sm fon
 export default function MapExplorer({ pins, apiKey, today }: { pins: Pin[]; apiKey?: string; today: string }) {
   const [day, setDay] = useState(""); const [type, setType] = useState(""); const [city, setCity] = useState(""); const [stores, setStores] = useState(true);
   const [me, setMe] = useState<LatLng | null>(null); const [msg, setMsg] = useState("");
-  // MapLibre is ~800 KB of JS: load it automatically on wide screens after idle, on phones only when asked (keeps mobile fast).
+  // MapLibre is ~800 KB of JS: load it after the page is idle (phones included) so first paint stays fast.
   const [live, setLive] = useState(false);
-  useEffect(() => { if (!apiKey || !matchMedia("(min-width: 768px)").matches) return;
+  useEffect(() => { if (!apiKey) return;
     const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
     if (w.requestIdleCallback) w.requestIdleCallback(() => setLive(true), { timeout: 2500 }); else setTimeout(() => setLive(true), 1200); }, [apiKey]);
   const days = useMemo(() => [...new Set(pins.flatMap((p) => p.dates))].filter((d) => d >= today).sort(), [pins, today]);

@@ -24,7 +24,11 @@ export function phoneOk(p: string) { const d = p.replace(/\s*(ext|x)\.?\s*\d+$/i
 const hasCoords = (x: { lat?: number | null; lng?: number | null }) => !!x.lat && !!x.lng;
 const inBox = (lat: number, lng: number) => lat >= BOX.latMin && lat <= BOX.latMax && lng >= BOX.lngMin && lng <= BOX.lngMax;
 function dupes<T>(items: T[], key: (t: T) => string) { const m = new Map<string, T[]>(); for (const i of items) { const k = key(i); if (!k) continue; m.set(k, [...(m.get(k) ?? []), i]); } return [...m.values()].filter((g) => g.length > 1); }
-function coordIssues(kind: string, slug: string, x: { lat?: number | null; lng?: number | null; zip?: string | null }, out: Issue[], farMiles = 20) {
+function coordIssues(kind: string, slug: string, x: { lat?: number | null; lng?: number | null; zip?: string | null; unpinnedOk?: boolean }, out: Issue[], farMiles = 20) {
+  const lat = Number(x.lat ?? 0), lng = Number(x.lng ?? 0);
+  if ((lat === 0) !== (lng === 0)) { out.push({ level: "error", code: `${kind}.coords-half`, target: slug, msg: `only one of lat/lng is set (${x.lat}, ${x.lng})` }); return; }
+  if (lat === 0 && lng === 0 && !x.unpinnedOk) { out.push({ level: "error", code: `${kind}.coords-zero`, target: slug, msg: "coordinates are 0,0 (null island) — geocode it or mark it “Not on the map yet” in notes" }); return; }
+  if (hasCoords(x) && !inBox(lat, lng) && inBox(lng, lat)) { out.push({ level: "error", code: `${kind}.coords-swapped`, target: slug, msg: `lat/lng look swapped (${x.lat}, ${x.lng})` }); return; }
   if (!hasCoords(x)) { out.push({ level: "warn", code: `${kind}.no-coords`, target: slug, msg: `no coordinates — not on the map${zipPoint(x.zip) ? " (near-you falls back to its ZIP centroid)" : ""}` }); return; }
   if (!inBox(x.lat!, x.lng!)) { out.push({ level: "error", code: `${kind}.coords-outside`, target: slug, msg: `coordinates ${x.lat}, ${x.lng} are outside Central Florida${inBox(x.lng!, x.lat!) ? " (lat/lng swapped?)" : ""}` }); return; }
   const z = zipPoint(x.zip); if (z) { const mi = milesBetween(z, { lat: x.lat!, lng: x.lng! }); if (mi > farMiles) out.push({ level: "warn", code: `${kind}.coords-far-from-zip`, target: slug, msg: `pin is ${Math.round(mi)} mi from ZIP ${x.zip}'s center` }); }
@@ -36,7 +40,7 @@ export function checkData(sales: Sale[], venues: Venue[], rules: DealRule[]): Is
   for (const g of dupes(venues, (v) => norm(v.name))) out.push({ level: "warn", code: "store.dup-name", target: g.map((v) => v.slug).join(", "), msg: `same name “${g[0].name}”` });
   for (const g of dupes(venues, (v) => (v.address ? `${normAddr(v.address)}|${v.zip}` : ""))) out.push({ level: "warn", code: "store.dup-address", target: g.map((v) => v.slug).join(", "), msg: `same address ${g[0].address}, ${g[0].zip}` });
   for (const v of venues) {
-    coordIssues("store", v.slug, v, out);
+    coordIssues("store", v.slug, { ...v, unpinnedOk: /not on the map yet/i.test(v.notes ?? "") }, out);
     if (!/^\d{5}$/.test(v.zip ?? "")) out.push({ level: "error", code: "store.bad-zip", target: v.slug, msg: `ZIP “${v.zip}” is not 5 digits` });
     else if (!zipPoint(v.zip)) out.push({ level: "warn", code: "store.zip-unknown", target: v.slug, msg: `ZIP ${v.zip} isn't in the Central FL ZIP table` });
     const u = urlProblem(v.sourceUrl); if (u) out.push({ level: u.startsWith("uses http") ? "warn" : "error", code: "store.bad-url", target: v.slug, msg: `source URL ${u}` });

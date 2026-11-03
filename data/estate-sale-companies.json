@@ -1,0 +1,152 @@
+[
+  {
+    "name": "A Fabulous Find Estate Sale Company, LLC",
+    "city": "DeLand",
+    "phone": "(407) 443-1767",
+    "website": "https://www.facebook.com/afabulousfindestatesales/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/a-fabulous-find-estate-sale-22981",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/a-fabulous-find-estate-sale-22981",
+    "verified": false,
+    "notes": "Facebook page (no own site; linked from estatesales.org profile; also linktr.ee/afabulousfindestatesales per third-party listing)"
+  },
+  {
+    "name": "Estate Sale Solutions of Florida",
+    "city": "Longwood",
+    "phone": "(407) 790-0479",
+    "website": "https://essofl.com/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/estate-sale-solutions-of-florida-22857",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/estate-sale-solutions-of-florida-22857",
+    "verified": true,
+    "notes": "Real site; title matches company"
+  },
+  {
+    "name": "Found by Hand",
+    "city": "Orlando",
+    "phone": "(866) 255-4206",
+    "website": "https://foundbyhand.com/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/found-by-hand-9781",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/found-by-hand-9781",
+    "verified": true,
+    "notes": "Real site; phone 866-255-4206 matches"
+  },
+  {
+    "name": "Grasons of Northeast Orlando, FL",
+    "city": "Winter Springs",
+    "phone": "(407) 267-3015",
+    "website": "https://www.grasons.com/northeast-orlando/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/grasons-of-northeast-orlando-fl-25708",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/grasons-of-northeast-orlando-fl-25708",
+    "verified": true,
+    "notes": "Franchise page on grasons.com; phone 407-267-3015 matches"
+  },
+  {
+    "name": "Grasons of St Johns & Flagler Counties",
+    "city": "Saint Augustine (serves Flagler)",
+    "phone": "(904) 417-3409",
+    "website": "https://www.grasons.com/estate-sale-companies/stjohns-flagler-counties-fl/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/grasons-of-st-johns-flagler-23523",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/grasons-of-st-johns-flagler-23523",
+    "verified": false,
+    "notes": "Franchise page linked from profile; fetch blocked by Cloudflare (403), not verified"
+  },
+  {
+    "name": "Hathaway Estate Sales, LLC",
+    "city": "Lake Mary",
+    "phone": "(321) 439-6220",
+    "website": "https://hathawayestatesales.com/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/hathaway-estate-sales-llc-5839",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/hathaway-estate-sales-llc-5839",
+    "verified": true,
+    "notes": "Real site; phone (321) 439-6220 matches"
+  },
+  {
+    "name": "Hidden Treasure Estates Sales",
+    "city": "DeBary",
+    "phone": "(321) 663-6509",
+    "website": "https://centralfloridaestatesales.com/",
+    "sourceUrl": "https://centralfloridaestatesales.com/contact/",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/hidden-treasure-estates-sales-4624",
+    "verified": true,
+    "notes": "Phone from the company website (centralfloridaestatesales.com/contact); estatesales.org lists (386) 668-5418. Facebook: facebook.com/htestatesales"
+  },
+  {
+    "name": "It's Showtime Estate Sales LLC",
+    "city": "Orlando",
+    "phone": "(843) 822-8743",
+    "website": "http://www.itsshowtimeestatesales.com",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/its-showtime-estate-sales-10477",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/its-showtime-estate-sales-10477",
+    "verified": false,
+    "notes": "Listed on profile but site did not load (connection failure/500); may be defunct"
+  },
+  {
+    "name": "Let It Go Lifestyle Estate Sale Company & Emporium",
+    "city": "Apopka",
+    "phone": "(407) 797-3534",
+    "website": "https://letitgolifestyle.com/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/let-it-go-lifstyle-9743",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/let-it-go-lifstyle-9743",
+    "verified": true,
+    "notes": "Real site; phone 407-797-3534 matches"
+  },
+  {
+    "name": "Orlando Estate Sale Ladies, LLC",
+    "city": "Orlando",
+    "phone": "(321) 663-6981",
+    "website": "https://orlandoestatesaleladies.com/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/orlando-estate-sale-ladies-llc-6535",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/orlando-estate-sale-ladies-llc-6535",
+    "verified": true,
+    "notes": "Real site; phone 321-663-6981 matches"
+  },
+  {
+    "name": "Poshlando Estate Experts",
+    "city": "Orlando area (recent sale Leesburg)",
+    "phone": "(407) 906-5877",
+    "website": "http://www.poshlandoestatesales.com",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/poshlando-estate-sales-25743",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/poshlando-estate-sales-25743",
+    "verified": false,
+    "notes": "Listed on profile but site did not load (connection failure/500); Instagram: instagram.com/poshlandoestateexperts"
+  },
+  {
+    "name": "Senior Moving Specialists LLC",
+    "city": "DeLand",
+    "phone": "(386) 344-1607",
+    "website": "https://www.seniormovingspecialists.com/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/senior-moving-specialists-22689",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/senior-moving-specialists-22689",
+    "verified": false,
+    "notes": "Listed on profile; site loads (Senior Moving Specialists, Florida) but phone (386) 516-3446 differs and no DeLand mention, so match unconfirmed"
+  },
+  {
+    "name": "The Accents On Us",
+    "city": "Palm Coast",
+    "phone": "(949) 686-8854",
+    "website": "https://www.facebook.com/TheAccentsOnUs/",
+    "sourceUrl": "https://www.estatesales.org/estate-sale-companies/the-accents-on-us-4556",
+    "profileUrl": "https://www.estatesales.org/estate-sale-companies/the-accents-on-us-4556",
+    "verified": false,
+    "notes": "Facebook page; site listed on profile (accentsonus.com) returns 404"
+  },
+  {
+    "name": "Ray of Sunshine Estate Sales",
+    "city": "Ormond Beach (sale location)",
+    "phone": "(407) 617-8033",
+    "website": "https://www.estatesales.net/companies/FL/Apopka/32703/176300",
+    "sourceUrl": "https://www.estatesales.net/companies/FL/Apopka/32703/176300",
+    "profileUrl": "https://www.estatesales.org/estate-sales/fl/ormond-beach/32174/massive-estate-sale-new-vintage-2469708",
+    "verified": false,
+    "notes": "estatesales.net profile only (new company, Apopka, LLC filed Sep 2026, phone (407) 617-8033); no site found"
+  },
+  {
+    "name": "Berner's Auction, Inc",
+    "city": "DeLand",
+    "phone": "(386) 738-8848",
+    "website": "https://bernersauction.com/",
+    "sourceUrl": "https://bernersauction.com/",
+    "profileUrl": "https://www.estatesales.net/FL/Deland/32724/5138292",
+    "verified": true,
+    "notes": "Real site found via search; phone (386) 738-8848 matches"
+  }
+]

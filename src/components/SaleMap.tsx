@@ -31,5 +31,5 @@ export default function SaleMap({ pins, apiKey, me }: { pins: MapPin[]; apiKey: 
       meMarker.current = new lib.Marker({ element: d }).setLngLat([me.lng, me.lat]).addTo(m); b.extend([me.lng, me.lat]); }
     if (!b.isEmpty()) m.fitBounds(b, { padding: 40, maxZoom: 12, duration: 300 });
   }, [pins, me, ready]);
-  return <div ref={el} className="h-[440px] w-full sm:h-[520px]" role="region" aria-label="Interactive map of sales and stores" />;
+  return <div ref={el} className="h-[360px] w-full sm:h-[440px] md:h-[520px]" role="region" aria-label="Interactive map of sales and stores" />;
 }

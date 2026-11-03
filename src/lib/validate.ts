@@ -36,7 +36,7 @@ export function parseSale(o: Record<string, unknown>): R<Sale> {
   if (e.length) return { ok: false, errors: e };
   const pm = Array.isArray(o.paymentMethods) ? (o.paymentMethods as string[]) : String(o.paymentMethods ?? "cash").split(",").map((x) => x.trim()).filter(Boolean);
   const pmClean = pm.map((x) => String(x).slice(0, CAPS.paymentItem)).slice(0, CAPS.payment);
-  return { ok: true, value: { slug: String(o.slug || "") || slugify(`${title}-${days[0].date.slice(0, 7)}`), title, type, city, zip, lat: num(o.lat), lng: num(o.lng), sourceUrl, paymentMethods: pmClean, days, ...(o.tags != null && cleanTags(o.tags).length ? { tags: cleanTags(o.tags) } : {}) } };
+  return { ok: true, value: { slug: String(o.slug || "") || slugify(`${title}-${days[0].date.slice(0, 7)}`), title, type, city, zip, lat: num(o.lat), lng: num(o.lng), sourceUrl, paymentMethods: pmClean, days, ...(typeof o.description === "string" && o.description.trim() ? { description: o.description.trim().slice(0, CAPS.description) } : {}), ...(o.tags != null && cleanTags(o.tags).length ? { tags: cleanTags(o.tags) } : {}) } };
 }
 // Structured hours ({"mon-sat":"9:00-18:00"}) from API/JSON callers; ignored unless small string→string map.
 const hoursObj = (h: unknown): Record<string, string> | null => {

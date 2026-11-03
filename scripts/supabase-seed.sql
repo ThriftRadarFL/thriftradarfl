@@ -32,6 +32,15 @@ INSERT INTO organizations (name, type, website, phone, source_url, is_featured)
 INSERT INTO organizations (name, type, website, phone, source_url, is_featured)
     SELECT 'Society of St. Vincent de Paul', 'independent', 'https://findthrift.com/store-list/FL/Longwood', NULL, NULL, false
     WHERE NOT EXISTS (SELECT 1 FROM organizations WHERE name = 'Society of St. Vincent de Paul');
+INSERT INTO organizations (name, type, website, phone, source_url, is_featured)
+    SELECT 'The Sharing Center', 'independent', 'https://thesharingcenter.org/shopwithus/', NULL, NULL, false
+    WHERE NOT EXISTS (SELECT 1 FROM organizations WHERE name = 'The Sharing Center');
+INSERT INTO organizations (name, type, website, phone, source_url, is_featured)
+    SELECT 'Prince of Peace Catholic Church', 'independent', 'https://www.princeofpeaceormond.com/like-new-shop', NULL, NULL, false
+    WHERE NOT EXISTS (SELECT 1 FROM organizations WHERE name = 'Prince of Peace Catholic Church');
+INSERT INTO organizations (name, type, website, phone, source_url, is_featured)
+    SELECT 'Pierson Methodist Church', 'independent', 'https://www.beacononlinenews.com/churches/pierson-methodist-church/', NULL, NULL, false
+    WHERE NOT EXISTS (SELECT 1 FROM organizations WHERE name = 'Pierson Methodist Church');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'goodwill-port-orange', (SELECT id FROM organizations WHERE name = 'Goodwill Industries of Central Florida' LIMIT 1),
       'Goodwill Port Orange', 'thrift', '1752 Dunlawton Ave', 'Port Orange', '32129', 29.1385, -81.0175, '(386) 898-0308',
@@ -153,19 +162,14 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
       NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'habitat-seminole-apopka-restore-sanford');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
-    SELECT 'habitat-seminole-apopka-restore-casselberry', (SELECT id FROM organizations WHERE name = 'Habitat for Humanity ReStore' LIMIT 1),
-      'Habitat Seminole-Apopka ReStore - Casselberry', 'thrift', '345 Semoran Blvd', 'Casselberry', '32707', 0, 0, '(407) 215-2000',
-      NULL, 'Not on the map yet (address didn''t geocode). UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-7pm (aggregator). Status uncertain; a review says an Altamonte ReStore closed. Greater Orlando & Osceola Habitat ReStores closed 2019. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-casselberry (checked 2026-11-02).', true
-    WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'habitat-seminole-apopka-restore-casselberry');
-INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-orlando-thrift-store-2', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),
       'Salvation Army Orlando Thrift Store 2', 'thrift', '4075-A S Goldenrod Rd', 'Orlando', '32822', 28.4886, -81.28524, '(407) 295-9311',
       NULL, 'Hours: Mon-Sat 10am-6pm (aggregator); Sun closed. Hours unverified; Apple Maps lists (689) 986-0780. Source: https://www.salvationarmyusa.org/fl/orlando/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'salvation-army-orlando-thrift-store-2');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-orlando-thrift-store-4', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),
-      'Salvation Army Orlando Thrift Store 4', 'thrift', '1330 N Semoran Blvd', 'Casselberry', '32707', 0, 0, '(407) 295-9311',
-      NULL, 'Not on the map yet (address didn''t geocode). Hours not on official page; aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).', true
+      'Salvation Army Orlando Thrift Store 4', 'thrift', '1330 N Semoran Blvd', 'Casselberry', '32707', 28.63025, -81.318, '(407) 295-9311',
+      NULL, 'Map pin from US Census geocoder (matched 1330 State Hwy 436). Hours not on official page; aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'salvation-army-orlando-thrift-store-4');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-daytona-thrift-store', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),
@@ -228,15 +232,35 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
       NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'city-thrift-semoran');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
-    SELECT 'st-vincent-de-paul-thrift-store-longwood', (SELECT id FROM organizations WHERE name = 'Society of St. Vincent de Paul' LIMIT 1),
-      'St. Vincent de Paul Thrift Store - Longwood', 'thrift', '150 N US Hwy 17-92', 'Longwood', '32750', 0, 0, '321-972-2925',
-      NULL, 'Not on the map yet (address didn''t geocode). UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://findthrift.com/store-list/FL/Longwood (checked 2026-11-02).', true
-    WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'st-vincent-de-paul-thrift-store-longwood');
-INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-w-colonial-orlando', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),
       'Salvation Army Thrift Store (W Colonial Dr)', 'thrift', '3899-3955 W Colonial Dr', 'Orlando', '32808', 28.552831, -81.427908, '(321) 398-5520',
       '{"mon-sat":"9:00-18:00","sun":"closed"}'::jsonb, 'Hours Mon–Sat 9 AM–6 PM, closed Sun. Wednesday Customer Appreciation Day (50% off all tag colors but one) and rotating color-tag sales are store-specific and come from a business-owner reply on Yelp — unverified with the store. Source: https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'salvation-army-w-colonial-orlando');
+INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
+    SELECT 'st-vincent-de-paul-thrift-store-apopka', (SELECT id FROM organizations WHERE name = 'Society of St. Vincent de Paul' LIMIT 1),
+      'St. Vincent de Paul Thrift Store - Apopka', 'thrift', '770 S Orange Blossom Trail', 'Apopka', '32703', 28.66856, -81.4907, '(407) 886-0940',
+      '{"daily":"9:00-19:00"}'::jsonb, 'Map pin from US Census geocoder. Hours: Mon-Sun 9am-7pm. Source: https://svdporlando.org/svdp-thrift-stores-1 (checked 2026-11-02).', true
+    WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'st-vincent-de-paul-thrift-store-apopka');
+INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
+    SELECT 'st-vincent-de-paul-nearly-new-flagler-beach', (SELECT id FROM organizations WHERE name = 'Society of St. Vincent de Paul' LIMIT 1),
+      'St. Vincent de Paul Nearly New Thrift Store - Flagler Beach', 'thrift', '400 S Daytona Ave', 'Flagler Beach', '32136', 29.47829, -81.1285, '(386) 439-0071',
+      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon, Wed, Fri, Sat 10am-3pm (211 listing; another source adds Thu). No official site found, only Facebook. Source: 211live.org (checked 2026-11-02).', true
+    WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'st-vincent-de-paul-nearly-new-flagler-beach');
+INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
+    SELECT 'sharing-center-village-shoppes-longwood', (SELECT id FROM organizations WHERE name = 'The Sharing Center' LIMIT 1),
+      'The Sharing Center Village Shoppes (Thrift, Boutique, Furniture)', 'thrift', '600 N Highway 17-92 Suite 130', 'Longwood', '32750', 0, 0, '(407) 260-9155',
+      '{"mon-sat":"9:30-17:00","sun":"closed"}'::jsonb, 'Not on the map yet (address didn''t geocode). Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (checked 2026-11-02).', true
+    WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'sharing-center-village-shoppes-longwood');
+INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
+    SELECT 'prince-of-peace-like-new-shop-ormond-beach', (SELECT id FROM organizations WHERE name = 'Prince of Peace Catholic Church' LIMIT 1),
+      'Prince of Peace Like New Shop', 'thrift', '1225 Hand Ave', 'Ormond Beach', '32174', 29.25865, -81.09862, '(386) 672-2836',
+      '{"tue-fri":"9:30-14:00","1st-3rd-sat":"10:00-13:00"}'::jsonb, 'Parish thrift shop. Map pin from US Census geocoder. Hours: Tue-Fri 9:30am-2pm; 1st & 3rd Sat 10am-1pm. Source: https://www.princeofpeaceormond.com/like-new-shop (checked 2026-11-02).', true
+    WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'prince-of-peace-like-new-shop-ormond-beach');
+INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
+    SELECT 'pierson-methodist-church-thrift-store', (SELECT id FROM organizations WHERE name = 'Pierson Methodist Church' LIMIT 1),
+      'Pierson Methodist Church Thrift Store', 'thrift', '136 W Second Ave', 'Pierson', '32180', 29.23962, -81.46435, '(386) 434-2030',
+      '{"fri-sat":"10:00-14:00"}'::jsonb, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Fri-Sat 10am-2pm (local church directory, not an official church page). Source: https://www.beacononlinenews.com/churches/pierson-methodist-church/ (checked 2026-11-02).', true
+    WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'pierson-methodist-church-thrift-store');
 INSERT INTO tags (name) SELECT 'furniture' WHERE NOT EXISTS (SELECT 1 FROM tags WHERE name = 'furniture');
 INSERT INTO tags (name) SELECT 'mid-century' WHERE NOT EXISTS (SELECT 1 FROM tags WHERE name = 'mid-century');
 INSERT INTO tags (name) SELECT 'tools' WHERE NOT EXISTS (SELECT 1 FROM tags WHERE name = 'tools');
@@ -365,159 +389,259 @@ INSERT INTO deal_rules (venue_id, kind, day_of_week, start_time, discount_pct, d
       SELECT 1 FROM deal_rules dr WHERE dr.venue_id = v.id AND dr.kind = 'senior_day' AND dr.day_of_week IS NOT DISTINCT FROM 3 AND dr.description = 'Military discount (per uncoveringflorida.com)'
     );
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'precious-finds-port-orange-2026-11', 'Precious Finds in Port Orange', 'estate', NULL, 'Port Orange', '32127',
-      29.115, -81.03, ARRAY['cash','venmo','zelle']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/Port-Orange/32127/5139969', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'precious-finds-port-orange-2026-11');
+    SELECT 'vintage-mcm-antiques-collectibles-treasure-trove-sale-in-col-5143188', 'Vintage/MCM/Antiques/Collectibles Treasure Trove Sale in College Park!', 'estate', NULL, 'Orlando', '32804',
+      28.579, -81.3942, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Orlando/32804/traditional/5143188', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'vintage-mcm-antiques-collectibles-treasure-trove-sale-in-col-5143188');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-12', '09:00', '15:00', 0
-      FROM sales s WHERE s.slug = 'precious-finds-port-orange-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-12');
+      SELECT s.id, '2026-11-05', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'vintage-mcm-antiques-collectibles-treasure-trove-sale-in-col-5143188'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-05');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-13', '09:00', '15:00', 20
-      FROM sales s WHERE s.slug = 'precious-finds-port-orange-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-13');
-INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-14', '09:00', '15:00', 50
-      FROM sales s WHERE s.slug = 'precious-finds-port-orange-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-14');
-INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'riverside-estate-daytona-2026-11', 'Riverside Drive Estate — Full House', 'estate', NULL, 'Daytona Beach', '32118',
-      29.22, -81, ARRAY['cash','card']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/Daytona-Beach', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'riverside-estate-daytona-2026-11');
-INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-06', '08:00', '14:00', 0
-      FROM sales s WHERE s.slug = 'riverside-estate-daytona-2026-11'
+      SELECT s.id, '2026-11-06', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'vintage-mcm-antiques-collectibles-treasure-trove-sale-in-col-5143188'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-06');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-07', '08:00', '14:00', 25
-      FROM sales s WHERE s.slug = 'riverside-estate-daytona-2026-11'
+      SELECT s.id, '2026-11-07', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'vintage-mcm-antiques-collectibles-treasure-trove-sale-in-col-5143188'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-07');
+INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
+    SELECT 'estate-sale-orlando-5144160', 'Estate Sale Orlando', 'estate', NULL, 'Orlando', '32812',
+      28.4847, -81.3244, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Orlando/32812/traditional/5144160', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'estate-sale-orlando-5144160');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-06', '08:30', '14:00', 0
+      FROM sales s WHERE s.slug = 'estate-sale-orlando-5144160'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-06');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-07', '08:30', '14:00', 0
+      FROM sales s WHERE s.slug = 'estate-sale-orlando-5144160'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-07');
+INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
+    SELECT 'hathaway-estate-sales-winter-park-5144367', 'Hathaway Estate Sales - Winter Park', 'estate', NULL, 'Winter Park', '32789',
+      28.5992, -81.3522, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Winter%20Park/32789/traditional/5144367', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'hathaway-estate-sales-winter-park-5144367');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-06', '09:00', '14:45', 0
+      FROM sales s WHERE s.slug = 'hathaway-estate-sales-winter-park-5144367'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-06');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-07', '09:00', '14:45', 0
+      FROM sales s WHERE s.slug = 'hathaway-estate-sales-winter-park-5144367'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-07');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-08', '09:00', '13:00', 50
-      FROM sales s WHERE s.slug = 'riverside-estate-daytona-2026-11'
+      SELECT s.id, '2026-11-08', '09:00', '14:45', 0
+      FROM sales s WHERE s.slug = 'hathaway-estate-sales-winter-park-5144367'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-08');
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'berners-auction-week-deland-2026-11', 'Berner''s Auction Week — Furniture & Tools', 'auction', NULL, 'DeLand', '32724',
-      29.0065, -81.287, ARRAY['cash','card']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/Daytona-Beach', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'berners-auction-week-deland-2026-11');
+    SELECT 'winter-park-estate-sale-on-green-cove-rd-winter-prak-fl-5143062', 'Winter Park Estate Sale on Green Cove Rd Winter Prak FL', 'estate', NULL, 'Winter Park', '32792',
+      28.6084, -81.3006, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Winter%20Park/32792/traditional/5143062', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'winter-park-estate-sale-on-green-cove-rd-winter-prak-fl-5143062');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-04', '18:30', '22:00', 0
-      FROM sales s WHERE s.slug = 'berners-auction-week-deland-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-04');
+      SELECT s.id, '2026-11-06', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'winter-park-estate-sale-on-green-cove-rd-winter-prak-fl-5143062'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-06');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-11', '18:30', '22:00', 0
-      FROM sales s WHERE s.slug = 'berners-auction-week-deland-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-11');
-INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'ormond-thrift-half-off-2026-11', 'Ormond Beach Thrift — Half-Off Saturday', 'thrift', NULL, 'Ormond Beach', '32174',
-      29.285, -81.056, ARRAY['cash','card']::text[], 'estatesales_net', 'https://www.goodwillcfl.org/locations/', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'ormond-thrift-half-off-2026-11');
-INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-07', '09:00', '21:00', 50
-      FROM sales s WHERE s.slug = 'ormond-thrift-half-off-2026-11'
+      SELECT s.id, '2026-11-07', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'winter-park-estate-sale-on-green-cove-rd-winter-prak-fl-5143062'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-07');
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'nsb-multi-family-yard-2026-11', 'New Smyrna Multi-Family Yard Sale', 'yard', NULL, 'New Smyrna Beach', '32169',
-      29.025, -80.927, ARRAY['cash']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/New-Smyrna-Beach', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'nsb-multi-family-yard-2026-11');
+    SELECT 'crafter-s-paradise-sale-in-orlando-5136069', '“Crafter’s Paradise” Sale in Orlando', 'estate', NULL, 'Orlando', '32819',
+      28.4537, -81.4724, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Orlando/32819/traditional/5136069', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'crafter-s-paradise-sale-in-orlando-5136069');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-07', '07:00', '12:00', 0
-      FROM sales s WHERE s.slug = 'nsb-multi-family-yard-2026-11'
+      SELECT s.id, '2026-11-06', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'crafter-s-paradise-sale-in-orlando-5136069'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-06');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-07', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'crafter-s-paradise-sale-in-orlando-5136069'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-07');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-08', '07:00', '11:00', 30
-      FROM sales s WHERE s.slug = 'nsb-multi-family-yard-2026-11'
+      SELECT s.id, '2026-11-08', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'crafter-s-paradise-sale-in-orlando-5136069'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-08');
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'spruce-creek-estate-port-orange-2026-11', 'Spruce Creek Fly-In Estate — Mid-Century & Art', 'estate', NULL, 'Port Orange', '32128',
-      29.08, -81.05, ARRAY['cash','venmo']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/Port-Orange', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'spruce-creek-estate-port-orange-2026-11');
+    SELECT 'operation-estate-liquidation-5139666', 'Operation: Estate Liquidation', 'estate', NULL, 'Orlando', '32826',
+      28.5797, -81.1886, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Orlando/32826/traditional/5139666', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'operation-estate-liquidation-5139666');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
       SELECT s.id, '2026-11-13', '09:00', '15:00', 0
-      FROM sales s WHERE s.slug = 'spruce-creek-estate-port-orange-2026-11'
+      FROM sales s WHERE s.slug = 'operation-estate-liquidation-5139666'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-13');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-14', '09:00', '15:00', 30
-      FROM sales s WHERE s.slug = 'spruce-creek-estate-port-orange-2026-11'
+      SELECT s.id, '2026-11-14', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'operation-estate-liquidation-5139666'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-14');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-15', '10:00', '14:00', 50
-      FROM sales s WHERE s.slug = 'spruce-creek-estate-port-orange-2026-11'
+      SELECT s.id, '2026-11-15', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'operation-estate-liquidation-5139666'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-15');
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'pine-hills-bins-restock-2026-11', 'Pine Hills Outlet — Fresh Bins Monday', 'outlet_bins', NULL, 'Orlando', '32818',
-      28.5785, -81.4565, ARRAY['cash','card']::text[], 'estatesales_net', 'https://www.goodwillcfl.org/locations/', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'pine-hills-bins-restock-2026-11');
+    SELECT 'let-it-go-lifestyle-in-apopka-5112129', 'Let it Go Lifestyle in Apopka', 'estate', NULL, 'Apopka', '32712',
+      28.7361, -81.5476, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Apopka/32712/traditional/5112129', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'let-it-go-lifestyle-in-apopka-5112129');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-09', '08:00', '17:00', 0
-      FROM sales s WHERE s.slug = 'pine-hills-bins-restock-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-09');
+      SELECT s.id, '2026-11-13', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'let-it-go-lifestyle-in-apopka-5112129'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-13');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-14', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'let-it-go-lifestyle-in-apopka-5112129'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-14');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-15', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'let-it-go-lifestyle-in-apopka-5112129'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-15');
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'ormond-beach-mid-century-estate-2026-11', 'Ormond Beach Mid-Century Estate — Teak & Barware', 'estate', NULL, 'Ormond Beach', '32176',
-      29.3, -81.06, ARRAY['cash','card']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/Ormond-Beach', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'ormond-beach-mid-century-estate-2026-11');
+    SELECT 'the-eclectic-collective-5143245', 'The Eclectic Collective', 'estate', NULL, 'Orlando', '32803',
+      28.5556, -81.3484, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Orlando/32803/traditional/5143245', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'the-eclectic-collective-5143245');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-19', '09:00', '15:00', 0
-      FROM sales s WHERE s.slug = 'ormond-beach-mid-century-estate-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-19');
-INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-20', '09:00', '15:00', 25
-      FROM sales s WHERE s.slug = 'ormond-beach-mid-century-estate-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-20');
-INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-21', '09:00', '13:00', 50
-      FROM sales s WHERE s.slug = 'ormond-beach-mid-century-estate-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-21');
+      SELECT s.id, '2026-11-13', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'the-eclectic-collective-5143245'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-13');
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'nsb-coastal-cottage-estate-2026-11', 'New Smyrna Coastal Cottage Estate — Nautical & Art', 'estate', NULL, 'New Smyrna Beach', '32168',
-      29.03, -80.93, ARRAY['cash','venmo']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/New-Smyrna-Beach', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'nsb-coastal-cottage-estate-2026-11');
+    SELECT 'oviedo-moving-sale-big-house-5130591', 'Oviedo Moving Sale - Big house!', 'estate', NULL, 'Oviedo', '32765',
+      28.6651, -81.1963, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Oviedo/32765/traditional/5130591', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'oviedo-moving-sale-big-house-5130591');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-20', '08:00', '14:00', 0
-      FROM sales s WHERE s.slug = 'nsb-coastal-cottage-estate-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-20');
+      SELECT s.id, '2026-11-12', '08:00', '13:00', 0
+      FROM sales s WHERE s.slug = 'oviedo-moving-sale-big-house-5130591'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-12');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-21', '08:00', '14:00', 30
-      FROM sales s WHERE s.slug = 'nsb-coastal-cottage-estate-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-21');
-INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'deland-downtown-moving-sale-2026-11', 'DeLand Historic District Moving Sale — Antiques & Books', 'yard', NULL, 'DeLand', '32720',
-      29.03, -81.3, ARRAY['cash']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/DeLand', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'deland-downtown-moving-sale-2026-11');
+      SELECT s.id, '2026-11-13', '08:00', '13:00', 0
+      FROM sales s WHERE s.slug = 'oviedo-moving-sale-big-house-5130591'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-13');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-14', '07:30', '13:00', 0
-      FROM sales s WHERE s.slug = 'deland-downtown-moving-sale-2026-11'
+      SELECT s.id, '2026-11-14', '08:00', '13:00', 0
+      FROM sales s WHERE s.slug = 'oviedo-moving-sale-big-house-5130591'
       AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-14');
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'daytona-beachside-condo-estate-2026-11', 'Daytona Beachside Condo Estate — Furniture & Jewelry', 'estate', NULL, 'Daytona Beach', '32118',
-      29.21, -81.01, ARRAY['cash','card','zelle']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/Daytona-Beach', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'daytona-beachside-condo-estate-2026-11');
+    SELECT 'packed-home-stained-glass-fairy-lamp-vintage-quilts-nostalgi-5139180', 'Packed Home: Stained Glass, Fairy Lamp, Vintage Quilts & Nostalgia', 'estate', NULL, 'Winter Springs', '32708',
+      28.6881, -81.27, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Winter%20Springs/32708/traditional/5139180', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'packed-home-stained-glass-fairy-lamp-vintage-quilts-nostalgi-5139180');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-20', '09:00', '15:00', 0
-      FROM sales s WHERE s.slug = 'daytona-beachside-condo-estate-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-20');
+      SELECT s.id, '2026-11-12', '15:00', '18:00', 0
+      FROM sales s WHERE s.slug = 'packed-home-stained-glass-fairy-lamp-vintage-quilts-nostalgi-5139180'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-12');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-21', '09:00', '15:00', 50
-      FROM sales s WHERE s.slug = 'daytona-beachside-condo-estate-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-21');
+      SELECT s.id, '2026-11-13', '09:00', '13:00', 0
+      FROM sales s WHERE s.slug = 'packed-home-stained-glass-fairy-lamp-vintage-quilts-nostalgi-5139180'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-13');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-14', '09:00', '13:00', 0
+      FROM sales s WHERE s.slug = 'packed-home-stained-glass-fairy-lamp-vintage-quilts-nostalgi-5139180'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-14');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-15', '09:00', '13:00', 0
+      FROM sales s WHERE s.slug = 'packed-home-stained-glass-fairy-lamp-vintage-quilts-nostalgi-5139180'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-15');
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'port-orange-garage-tools-2026-11', 'Port Orange Garage Sale — Tools & Fishing Gear', 'yard', NULL, 'Port Orange', '32127',
-      29.12, -80.99, ARRAY['cash']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/Port-Orange', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'port-orange-garage-tools-2026-11');
+    SELECT 'berner-s-weekly-auction-5138292', 'Berner''s Weekly Auction', 'auction', NULL, 'DeLand', '32724',
+      29.0065, -81.287, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Deland/32724/traditional/5138292', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'berner-s-weekly-auction-5138292');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-21', '07:00', '12:00', 0
-      FROM sales s WHERE s.slug = 'port-orange-garage-tools-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-21');
+      SELECT s.id, '2026-11-04', '17:30', '22:00', 0
+      FROM sales s WHERE s.slug = 'berner-s-weekly-auction-5138292'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-04');
 INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
-    SELECT 'berners-auction-thanksgiving-week-deland-2026-11', 'Berner''s Auction — Pre-Holiday Collectibles Night', 'auction', NULL, 'DeLand', '32724',
-      29.0065, -81.287, ARRAY['cash','card']::text[], 'estatesales_net', 'https://www.estatesales.net/FL/Daytona-Beach', 'upcoming'
-    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'berners-auction-thanksgiving-week-deland-2026-11');
+    SELECT 'something-for-everyone-in-pelican-bay-5124612', 'Something for everyone in Pelican Bay', 'estate', NULL, 'Daytona Beach', '32119',
+      29.161, -81.0256, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Daytona%20Beach/32119/traditional/5124612', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'something-for-everyone-in-pelican-bay-5124612');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-18', '18:30', '22:00', 0
-      FROM sales s WHERE s.slug = 'berners-auction-thanksgiving-week-deland-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-18');
+      SELECT s.id, '2026-11-06', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'something-for-everyone-in-pelican-bay-5124612'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-06');
 INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
-      SELECT s.id, '2026-11-25', '18:30', '22:00', 0
-      FROM sales s WHERE s.slug = 'berners-auction-thanksgiving-week-deland-2026-11'
-      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-25');
+      SELECT s.id, '2026-11-07', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'something-for-everyone-in-pelican-bay-5124612'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-07');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-08', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'something-for-everyone-in-pelican-bay-5124612'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-08');
+INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
+    SELECT 'sherrington-estate-sale-5136183', 'SHERRINGTON ESTATE SALE', 'estate', NULL, 'Ormond Beach', '32174',
+      29.2922, -81.1614, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Ormond%20Beach/32174/traditional/5136183', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'sherrington-estate-sale-5136183');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-06', '08:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'sherrington-estate-sale-5136183'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-06');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-07', '08:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'sherrington-estate-sale-5136183'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-07');
+INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
+    SELECT 'huge-estate-sale-disney-art-hallmark-lionel-trains-waterford-5130090', 'Huge Estate Sale! Disney, Art, Hallmark, Lionel Trains, Waterford, Holiday Décor & More!', 'estate', NULL, 'Ormond Beach', '32174',
+      29.2922, -81.1614, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Ormond%20Beach/32174/traditional/5130090', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'huge-estate-sale-disney-art-hallmark-lionel-trains-waterford-5130090');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-06', '08:30', '14:00', 0
+      FROM sales s WHERE s.slug = 'huge-estate-sale-disney-art-hallmark-lionel-trains-waterford-5130090'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-06');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-07', '08:30', '14:00', 0
+      FROM sales s WHERE s.slug = 'huge-estate-sale-disney-art-hallmark-lionel-trains-waterford-5130090'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-07');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-08', '08:30', '14:00', 0
+      FROM sales s WHERE s.slug = 'huge-estate-sale-disney-art-hallmark-lionel-trains-waterford-5130090'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-08');
+INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
+    SELECT 'berner-s-weekly-auction-5143836', 'Berner''s Weekly Auction', 'auction', NULL, 'DeLand', '32724',
+      29.0065, -81.287, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Deland/32724/traditional/5143836', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'berner-s-weekly-auction-5143836');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-11', '18:30', '22:00', 0
+      FROM sales s WHERE s.slug = 'berner-s-weekly-auction-5143836'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-11');
+INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
+    SELECT 'sweet-memories-estate-sales-invites-you-to-edgewater-5142384', 'Sweet Memories Estate Sales invites you to Edgewater!', 'estate', NULL, 'Edgewater', '32141',
+      28.9288, -80.9191, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Edgewater/32141/traditional/5142384', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'sweet-memories-estate-sales-invites-you-to-edgewater-5142384');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-12', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'sweet-memories-estate-sales-invites-you-to-edgewater-5142384'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-12');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-13', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'sweet-memories-estate-sales-invites-you-to-edgewater-5142384'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-13');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-14', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'sweet-memories-estate-sales-invites-you-to-edgewater-5142384'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-14');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-15', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'sweet-memories-estate-sales-invites-you-to-edgewater-5142384'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-15');
+INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
+    SELECT 'precious-finds-in-port-orange-5139969', 'Precious finds in Port Orange', 'estate', NULL, 'Port Orange', '32127',
+      29.1085, -80.9757, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Port%20Orange/32127/traditional/5139969', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'precious-finds-in-port-orange-5139969');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-12', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'precious-finds-in-port-orange-5139969'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-12');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-13', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'precious-finds-in-port-orange-5139969'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-13');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-14', '09:00', '15:00', 0
+      FROM sales s WHERE s.slug = 'precious-finds-in-port-orange-5139969'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-14');
+INSERT INTO sales (slug, title, type, address, city, zip, lat, lng, payment_methods, source, source_url, status)
+    SELECT 'a-fabulous-find-in-deland-5116830', 'A Fabulous Find in Deland', 'estate', NULL, 'DeLand', '32724',
+      29.0572, -81.2256, NULL, 'estatesales_net', 'https://www.estatesales.net/FL/Deland/32724/traditional/5116830', 'upcoming'
+    WHERE NOT EXISTS (SELECT 1 FROM sales WHERE slug = 'a-fabulous-find-in-deland-5116830');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-13', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'a-fabulous-find-in-deland-5116830'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-13');
+INSERT INTO sale_days (sale_id, date, start_time, end_time, discount_pct)
+      SELECT s.id, '2026-11-14', '09:00', '14:00', 0
+      FROM sales s WHERE s.slug = 'a-fabulous-find-in-deland-5116830'
+      AND NOT EXISTS (SELECT 1 FROM sale_days sd WHERE sd.sale_id = s.id AND sd.date = '2026-11-14');
 COMMIT;
