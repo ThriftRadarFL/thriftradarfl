@@ -86,3 +86,12 @@ Blocked on your logins: GitHub push, Supabase, Vercel, MapTiler (interactive map
 - **Add to my route** (red button on sale pages): saves the sale and opens `/plan?day=<next sale day>` with that day preselected
 - Screens 390px (0 overflow): `screens/mobile/new.png`, `sales_precious-finds-…png`, `plan_from-sale.png`, `home.png`, `404.png`
 - Tests: 73 passing + 4 Postgres skips (`PG_TEST_URL`); typecheck, lint, build green. Nothing pushed, no logins needed
+
+## 7 PM pass
+- **JSON→Postgres:** re-audited, nothing left. Every `data/*.json` store (sales/publish flag, venues, deal rules, submissions, contact, subscribers, audit) has a table, a migration and a Postgres path that falls back to JSON. `tests/pg.test.ts` passes 5/5 against PGlite (`/tmp/pgl/node_modules/.bin/pglite-server -p 54329` → `PG_TEST_URL=postgres://postgres@127.0.0.1:54329/postgres`). Saved sales and routes stay in the browser on purpose (no accounts)
+- **A11y:** axe (WCAG 2.1 AA + best-practice) is clean on 26 pages at 1280px and 390px. Fixed: the 404 page had no `<h1>`, and the two search forms had the same landmark name
+- **Hardening:** added a root `global-error.tsx` with its own inline styles, so it still renders if the layout crashes. The error page now shows a reference digest and links to Contact. **Bug fixed:** `/deals` marked "today" based on the build date in the server's timezone, so it was frozen and wrong on Vercel (UTC). It now renders per request using the Eastern-time date. `nextDealDate` also works correctly on UTC servers. Saving favorites no longer throws in Safari private mode
+- **Today at this store** panel on every store page: today's deals (biggest discount first), open/closed hours for today, and the next deal ("Tomorrow — …"). `/stores` gets a Today badge (on phones it sits under the store name). JSON for widgets/shortcuts: `GET /api/venues/<slug>/today`
+- **Shareable saved lists:** *Share this list* on `/saved` makes a link like `/saved?list=a,b,c` (native share or copy). Opening it shows a "Shared with you" panel with *Save all to my list* and *Plan a route*. Slugs are cleaned and deduped, the list is capped at 50, and ended sales are counted. Nothing is stored on the server
+- Screens (390px, 0 overflow): `stores.png`, `stores_goodwill-port-orange.png`, `stores_berners-auction-deland.png`, `deals.png`, `saved_shared*.png`, `404.png`
+- Tests: 80 passing, 4 Postgres skips (`PG_TEST_URL`). Typecheck, lint and build (`NEXT_DIST_DIR=.next-build`) green. Nothing pushed, no new logins needed
