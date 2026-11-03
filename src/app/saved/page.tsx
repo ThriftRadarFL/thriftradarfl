@@ -4,6 +4,7 @@ import SavedList from "./SavedList";
 import SharedList from "./SharedList";
 import { parseSharedList } from "@/lib/share-list";
 export const metadata = { title: "Saved sales", description: "Sales you've saved on this device.", alternates: { canonical: "/saved" }, robots: { index: false } };
+export const dynamic = "force-dynamic"; // live sale/store links (no stale prerender)
 export default async function Saved({ searchParams }: { searchParams: Promise<{ list?: string | string[] }> }) {
   const sales = (await getSales()).map((s) => ({ slug: s.slug, title: s.title, city: s.city, first: s.days[0]?.date ?? "", last: s.days.at(-1)?.date ?? "" }));
   const shared = parseSharedList((await searchParams).list); const sharedSales = shared.map((x) => sales.find((s) => s.slug === x)).filter((s) => !!s);

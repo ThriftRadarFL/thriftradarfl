@@ -3,6 +3,7 @@ import { getSales, getVenues } from "@/lib/data";
 import { searchAll } from "@/lib/search";
 import { PageHead, typeLabel } from "@/components/ui";
 export const metadata = { title: "Search sales & stores", alternates: { canonical: "/search" }, robots: { index: false, follow: true } };
+export const dynamic = "force-dynamic"; // live sale/store links (no stale prerender)
 export default async function Search({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const q = ((await searchParams).q ?? "").trim().slice(0, 100);
   const r = q ? searchAll(q, await getSales(), await getVenues()) : { sales: [], venues: [] };

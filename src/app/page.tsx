@@ -10,6 +10,7 @@ import FavButton from "@/components/FavButton";
 import { cleanTags, TAG_LABEL } from "@/lib/flip-tips";
 const chip: Record<string, string> = { estate: "bg-coral", auction: "bg-royal", thrift: "bg-teal", outlet_bins: "bg-cta", yard: "bg-[#6b4fa0]" };
 const TYPES = ["estate", "auction", "yard", "thrift", "outlet_bins"];
+export const dynamic = "force-dynamic"; // live sale/store links (no stale prerender)
 export default async function Home({ searchParams }: { searchParams: Promise<{ city?: string; type?: string; past?: string }> }) {
   const sp = await searchParams; const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
   const [rawSales, venues, rules] = await Promise.all([getSales(), getVenues(), getDealRules()]);

@@ -32,3 +32,5 @@ export function handle<A extends unknown[]>(fn: (...a: A) => Promise<Response>) 
     }
   };
 }
+/** After an API write, drop cached/prerendered pages so links (map pins, sitemap, home) never point at removed slugs. No-op outside a Next request (tests). */
+export async function refreshPages() { try { const { revalidatePath } = await import("next/cache"); revalidatePath("/", "layout"); } catch { /* not in a Next request */ } }
