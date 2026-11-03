@@ -7,6 +7,10 @@ import { venueJsonLd } from "@/lib/jsonld";
 import { SITE_URL } from "@/lib/site";
 import ShareButtons from "@/components/ShareButtons";
 import CalendarLinks from "@/components/CalendarLinks";
+import StoreToday from "@/components/StoreToday";
+import { storeToday } from "@/lib/store-today";
+import { todayET } from "@/lib/cities";
+export const dynamic = "force-dynamic"; // "today at this store" follows the Eastern-time date
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const v = await getVenue((await params).slug); if (!v) return { title: "Store not found", robots: { index: false } };
   return { title: `${v.name} — hours, deal days & address`, description: `${v.name} at ${v.address}, ${v.city}, FL: hours, color-tag and half-off days.`, alternates: { canonical: `/stores/${v.slug}` } };
@@ -17,6 +21,7 @@ export default async function Store({ params }: { params: Promise<{ slug: string
   const hours = v.hoursJson ? Object.entries(v.hoursJson as unknown as Record<string, string>).filter(([, h]) => h) : [];
   const q = encodeURIComponent(`${v.address}, ${v.city} FL ${v.zip}`); const mine = dealRules.filter((r) => r.venue === v.slug);
   return (<div><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(venueJsonLd(v)).replace(/</g, "\\u003c") }} /><PageHead title={v.name} sub={`${typeLabel[v.type] ?? v.type} · ${v.city}, FL`} />
+    <StoreToday t={storeToday(v.slug, dealRules, todayET(), v.hoursJson)} />
     <div className="grid gap-4 md:grid-cols-3">
       <div className="panel md:col-span-2"><div className="panel-head">Location</div><div className="p-4 space-y-2">
         <p className="text-lg">{v.address}<br />{v.city}, FL {v.zip}</p>{v.phone && <p><a className="font-bold text-royal hover:underline" href={`tel:${v.phone.replace(/[^\d+]/g, "")}`}>{v.phone}</a></p>}
