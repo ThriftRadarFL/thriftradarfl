@@ -1,4 +1,4 @@
-// Generates scripts/supabase-0002.sql: self-sufficient, idempotent paste-into-SQL-Editor file: migrations 0002–0005 + upsert of ALL seed venues and deal rules + removal of dropped venues.
+// Generates scripts/supabase-0002.sql: self-sufficient, idempotent paste-into-SQL-Editor file: migrations 0002–0006 + upsert of ALL seed venues and deal rules + removal of dropped venues.
 import { writeFileSync, readFileSync, copyFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 const entries = JSON.parse(readFileSync("drizzle/meta/_journal.json", "utf8")).entries.filter((e: { idx: number }) => e.idx >= 2) as { idx: number; tag: string; when: number }[];
@@ -17,7 +17,7 @@ ${m.days.map((d) => `  (${q(d.date)}, ${q(d.start)}, ${q(d.end)}, ${d.discountPc
 const keepSales = mockSales.map((m) => q(m.slug)).join(", ");
 const rules = dealRules.map((r) => `  (${q(ruleId(r))}, ${q(r.venue)}, ${q(r.kind)}, ${r.day}, ${r.time ? q(r.time) : "NULL"}, ${q(r.color)}, ${r.discountPct ?? "NULL"}, ${q(r.label)}, ${r.verified})`).join(",\n");
 const venues = seedVenues.map((v) => `  (${q(v.slug)}, ${q(v.name)}, ${q(v.type)}::venue_type, ${q(v.address)}, ${q(v.city)}, ${q(v.zip)}, ${v.lat || "NULL"}, ${v.lng || "NULL"}, ${q(v.phone)}, ${v.hoursJson ? q(JSON.stringify(v.hoursJson)) + "::jsonb" : "NULL"}, ${q(v.notes)}, ${q(v.sourceUrl || null)}, ${q(v.org)})`).join(",\n");
-writeFileSync("scripts/supabase-0002.sql", `-- ThriftRadarFL migrations 0002–0005 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages, venue source_url/org_key)
+writeFileSync("scripts/supabase-0002.sql", `-- ThriftRadarFL migrations 0002–0006 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages, venue source_url/org_key)
 -- Safe to run more than once. Paste into Supabase → SQL Editor → Run.
 BEGIN;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS published boolean DEFAULT true NOT NULL;
@@ -25,6 +25,8 @@ ALTER TABLE sales ADD COLUMN IF NOT EXISTS description text;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS tags text[]; -- 0003
 ALTER TABLE venues ADD COLUMN IF NOT EXISTS source_url text; -- 0005
 ALTER TABLE venues ADD COLUMN IF NOT EXISTS org_key text; -- 0005
+CREATE TABLE IF NOT EXISTS color_tag_reports (id text PRIMARY KEY, venue text NOT NULL, color text NOT NULL, discount_pct integer, note text NOT NULL DEFAULT '', status text NOT NULL DEFAULT 'pending', week_of text NOT NULL, expires_on text NOT NULL, created_at timestamptz NOT NULL DEFAULT now()); -- 0006
+CREATE INDEX IF NOT EXISTS color_tag_reports_expires_idx ON color_tag_reports (expires_on); -- 0006
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS rule_key text;
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS label text;
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS verified boolean DEFAULT false NOT NULL;

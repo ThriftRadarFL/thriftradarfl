@@ -154,3 +154,24 @@ export async function audit(action: string, target = "", detail = "") {
   try { await viaDb(() => pg.dbAudit(e), () => mutate<AuditEntry[]>(auditFile, [], (l) => [e, ...l].slice(0, 2000)), true); } catch (err) { console.warn("[audit]", (err as Error).message); }
 }
 export const listAudit = (limit = 200) => viaDb(() => pg.dbListAudit(limit), async () => (await readJson<AuditEntry[]>(auditFile, [])).slice(0, limit));
+
+// Crowdsourced color-tag reports. Isolated from viaDb's global "DB down" switch: if only this table is missing/broken
+// (e.g. migration 0006 not applied yet), the rest of the site keeps reading Postgres; reads fall back to JSON, writes 503 when strict.
+import { pruneReports, type TagReport, type TagStatus } from "./color-tags";
+const _todayET = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+const tagsFile = path.join(DATA_DIR, "color-tags.json");
+async function viaDbTags<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write = false): Promise<T> {
+  if (!hasDb || Date.now() < dbDownUntil) { if (write && strictWrites()) throw dbOffline(); return jsonFn(); }
+  try { return await dbFn(); } catch (e) {
+    console.warn("[color-tags] db error:", String((e as Error)?.message ?? e).replace(/\b[a-z]+:\/\/\S+/gi, "<url>").slice(0, 120));
+    if (write && strictWrites()) throw dbOffline(); return jsonFn();
+  }
+}
+const tagSince = () => { const d = new Date(_todayET() + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() - 28); return d.toISOString().slice(0, 10); };
+export const listTagReports = () => viaDbTags(() => pg.dbListTagReports(tagSince()), async () => pruneReports(await readJson<TagReport[]>(tagsFile, []), _todayET()).sort((a, b) => b.at.localeCompare(a.at)));
+export async function addTagReport(r: Omit<TagReport, "id" | "at" | "status">) {
+  const rep: TagReport = { ...r, id: `ct-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`, at: new Date().toISOString(), status: "pending" };
+  await viaDbTags(() => pg.dbAddTagReport(rep), () => mutate<TagReport[]>(tagsFile, [], (l) => [...pruneReports(l, _todayET()), rep]), true); return rep.id;
+}
+export const setTagStatus = (id: string, status: TagStatus) => viaDbTags(() => pg.dbSetTagStatus(id, status), () => mutate<TagReport[], boolean>(tagsFile, [], (l) => ({ next: l.map((x) => (x.id === id ? { ...x, status } : x)), result: l.some((x) => x.id === id) })), true);
+export const deleteTagReport = (id: string) => viaDbTags(() => pg.dbDeleteTagReport(id), () => mutate<TagReport[], boolean>(tagsFile, [], (l) => ({ next: l.filter((x) => x.id !== id), result: l.some((x) => x.id === id) })), true);

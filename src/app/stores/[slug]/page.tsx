@@ -1,6 +1,8 @@
 import { t12, hours12, dayKey } from "@/lib/time";
 import { notFound } from "next/navigation";
-import { getVenue, getDealRules } from "@/lib/data";
+import { getVenue, getDealRules, listTagReports } from "@/lib/data";
+import { buildBoard } from "@/lib/color-tags";
+import TagSwatch from "@/components/TagSwatch";
 import { PageHead, typeLabel } from "@/components/ui";
 import { DAYS } from "@/lib/deal-rules";
 import { venueJsonLd } from "@/lib/jsonld";
@@ -20,12 +22,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 const hostOf = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, "") || u; } catch { return u; } };
 export default async function Store({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params; const v = await getVenue(slug); if (!v) notFound(); const dealRules = await getDealRules();
+  const { slug } = await params; const v = await getVenue(slug); if (!v) notFound(); const [dealRules, tagReports] = await Promise.all([getDealRules(), listTagReports().catch(() => [])]);
+  const tagRow = buildBoard(tagReports.filter((r) => r.venue === v.slug), todayET())[0]; const takesTags = ["thrift", "outlet_bins", "consignment"].includes(v.type);
   const hours = v.hoursJson ? Object.entries(v.hoursJson as unknown as Record<string, string>).filter(([, h]) => h) : [];
   const q = encodeURIComponent(`${v.address}, ${v.city} FL ${v.zip}`); const mine = dealRules.filter((r) => r.venue === v.slug);
   return (<div><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(venueJsonLd(v)).replace(/</g, "\\u003c") }} /><div className="min-w-0 break-words [overflow-wrap:anywhere]"><PageHead title={v.name} sub={`${typeLabel[v.type] ?? v.type} · ${v.city}, FL`} />
     <StoreToday t={storeToday(v.slug, dealRules, todayET(), v.hoursJson)} />
     <BestDay b={bestDay(v.slug, dealRules, v.hoursJson)} today={dowOf(todayET())} />
+    {takesTags && <div className="panel mb-4 min-w-0"><div className="panel-head">Color tag this week · crowdsourced</div><div className="flex flex-wrap items-center gap-2 p-3 text-sm">
+      {tagRow ? <>{tagRow.colors.map((c) => <span key={c.color} className="inline-flex items-center gap-1"><TagSwatch color={c.color} big />{c.discountPct != null && <b>{c.discountPct}% off</b>}<span className="text-xs text-gray-600">({c.reports} {c.reports === 1 ? "report" : "reports"})</span></span>)}
+        <span className="w-full text-xs text-gray-600">Shopper-reported and <b>unverified</b> — check the sign in store. <a href="/color-tags#report" className="link">Report a change</a></span></>
+        : <span>No shopper reports yet this week. <a href="/color-tags#report" className="link">Seen the color-of-the-week sign? Report it →</a></span>}</div></div>}
     <div className="grid min-w-0 gap-4 break-words md:grid-cols-3">
       <div className="panel min-w-0 break-words md:col-span-2"><div className="panel-head">Location</div><div className="p-4 space-y-2">
         <p className="text-lg">{v.address}<br />{v.city}, FL {v.zip}</p>{v.phone && <p><a aria-label={`Call ${v.name} at ${v.phone}`} className="font-bold text-royal hover:underline" href={`tel:${v.phone.replace(/[^\d+]/g, "")}`}>{v.phone}</a></p>}

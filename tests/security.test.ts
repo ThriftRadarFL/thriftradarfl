@@ -36,7 +36,7 @@ test("limiter: sliding window, per key, bounded memory", () => {
   assert.equal(hit("b", 5, 60_000, t).limited, false, "other IP unaffected");
   assert.equal(hit("a", 5, 60_000, t + 61_000).limited, false, "window slides");
   hit("c", 5, 60_000, t); hit("d", 5, 60_000, t); // evicts oldest keys beyond 3
-  assert.deepEqual(Object.keys(LIMITS).sort(), ["contact", "submit", "subscribe"]);
+  assert.deepEqual(Object.keys(LIMITS).sort(), ["contact", "submit", "subscribe", "tag"]);
   assert.equal(clientIp(new Headers({ "x-forwarded-for": "1.2.3.4, 10.0.0.1" })), "1.2.3.4"); assert.equal(clientIp(new Headers()), "local");
 });
 test("honeypot detects filled hidden fields (object + FormData)", () => {

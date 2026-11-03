@@ -131,3 +131,16 @@ export const auditLog = pgTable("audit_log", {
   target: text("target"),
   detail: text("detail"),
 });
+
+// Crowdsourced color-tag reports (unverified; moderated; expire at end of week). See src/lib/color-tags.ts.
+export const colorTagReports = pgTable("color_tag_reports", {
+  id: text("id").primaryKey(),
+  venue: text("venue").notNull(),
+  color: text("color").notNull(),
+  discountPct: integer("discount_pct"),
+  note: text("note").notNull().default(""),
+  status: text("status").notNull().default("pending"),
+  weekOf: text("week_of").notNull(),
+  expiresOn: text("expires_on").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});

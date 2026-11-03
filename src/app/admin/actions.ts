@@ -11,7 +11,8 @@ function safe<A extends unknown[], R>(fn: (...a: A) => Promise<R>) {
 }
 const upsertSale = safe(data.upsertSale), upsertVenue = safe(data.upsertVenue), deleteSale = safe(data.deleteSale), deleteVenue = safe(data.deleteVenue),
   setSalePublished = safe(data.setSalePublished), upsertDealRule = safe(data.upsertDealRule), deleteDealRule = safe(data.deleteDealRule),
-  removeSubscriber = safe(data.removeSubscriber), resolveSubmission = safe(data.resolveSubmission), deleteContact = safe(data.deleteContact);
+  removeSubscriber = safe(data.removeSubscriber), resolveSubmission = safe(data.resolveSubmission), deleteContact = safe(data.deleteContact),
+  setTagStatus = safe(data.setTagStatus), deleteTagReport = safe(data.deleteTagReport);
 const audit = (...a: Parameters<typeof data.audit>) => data.audit(...a).catch((e) => console.error("[audit]", e));
 const getAllSales = data.getAllSales;
 import { csvToRecords } from "@/lib/csv";
@@ -73,4 +74,12 @@ export async function importCsv(_prev: CsvResult | null, fd: FormData): Promise<
   if (mode === "import" && !res.bad.length) { for (const v of valid) await upsertSale(v); await audit("sale.csv_import", `${valid.length} rows`, valid.map((v) => v.slug).join(", ")); revalidatePath("/", "layout"); }
   else if (mode === "import") res.warnings.push("Nothing imported — fix the rows with errors first (all-or-nothing).");
   return res;
+}
+
+/** Color-tag board moderation: approve (shows publicly, still labelled unverified), reject, or delete. */
+export async function moderateTag(fd: FormData) {
+  await guard(); const id = s(fd, "id"), act = s(fd, "act");
+  if (act === "delete") { await deleteTagReport(id); await audit("tag.delete", id); done("Deleted color-tag report", "#tags"); }
+  const status = act === "approve" ? "approved" : act === "reject" ? "rejected" : act === "unapprove" ? "pending" : null; if (!status) fail(["unknown action"]);
+  await setTagStatus(id, status!); await audit(`tag.${act}`, id); done(`Color-tag report ${status}`, "#tags");
 }

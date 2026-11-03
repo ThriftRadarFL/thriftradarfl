@@ -10,7 +10,10 @@ import CsvImport from "./CsvImport";
 import { importFromUrl } from "@/lib/importer";
 import { checkData, summarize } from "@/lib/data-quality";
 import type { Sale } from "@/lib/data";
-import { login, logout, saveSale, saveVenue, removeSale, removeVenue, togglePublish, saveRule, removeRule, removeSub, reviewSubmission, removeContact } from "./actions";
+import { login, logout, saveSale, saveVenue, removeSale, removeVenue, togglePublish, saveRule, removeRule, removeSub, reviewSubmission, removeContact, moderateTag } from "./actions";
+import { listTagReports } from "@/lib/data";
+import { isActive } from "@/lib/color-tags";
+import TagSwatch from "@/components/TagSwatch";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Admin", robots: { index: false, follow: false } };
 const inp = "mt-1 block w-full border border-line px-2 py-1.5 text-sm font-normal";
@@ -28,6 +31,7 @@ export default async function Admin({ searchParams }: SP) {
     <form action={login} className="panel max-w-sm p-4 space-y-3"><F n="password" l="Password" t="password" req />
       {sp.err && <p role="alert" className="text-sm text-red-700">Wrong password.</p>}<button className="btn-red w-full">Log in</button></form></div>);
   const [sales, venues, subs, rules, pending, contacts, log] = await Promise.all([getAllSales(), getVenues(), listSubscribers(), getDealRules(), listSubmissions(), listContacts(), listAudit(100)]);
+  const tagReports = await listTagReports().catch(() => []); const tagPending = tagReports.filter((r) => r.status === "pending"); const tagToday = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
   const found = sales.find((s) => s.slug === sp.sale);
   let draft: Partial<Sale> | null = null, importErr = "";
   if (sp.import) { try { draft = await importFromUrl(sp.import); } catch (e) { importErr = (e as Error).message; } }
@@ -39,7 +43,7 @@ export default async function Admin({ searchParams }: SP) {
   return (<div><PageHead title="Admin" sub={`Data: ${dataMode()}${db.configured && !db.up ? ` (database unreachable: ${db.lastError} — using JSON fallback)` : ""}`} />
     {sp.msg && <p role="status" className={`mb-3 border p-2 text-sm font-bold ${isErr ? "border-red-300 bg-red-50 text-red-800" : "border-line bg-paper"}`}>{sp.msg}</p>}
     <nav aria-label="Admin sections" className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"><form action={logout}><button className="btn-gray text-xs">Log out</button></form>
-      <a href="#pending" className="underline">Pending ({pending.length})</a><a href="#sales" className="underline">Sales ({sales.length})</a><a href="#venues" className="underline">Venues ({venues.length})</a>
+      <a href="#pending" className="underline">Pending ({pending.length})</a><a href="#tags" className="underline">Color tags ({tagPending.length} pending)</a><a href="#sales" className="underline">Sales ({sales.length})</a><a href="#venues" className="underline">Venues ({venues.length})</a>
       <a href="#rules" className="underline">Deal rules ({rules.length})</a><a href="#subs" className="underline">Subscribers ({subs.length})</a><a href="#messages" className="underline">Messages ({contacts.length})</a><a href="#import" className="underline">CSV import</a><a href="#audit" className="underline">Audit log</a><a href="#quality" className="underline">Data quality ({dq.errors ? `${dq.errors} errors` : `${dq.warnings} warnings`})</a>
       <a href="/api/admin/subscribers" className="underline">Export CSV</a><a href="/api/admin/export?what=submissions" className="underline">Submissions CSV</a><a href="/api/admin/export?what=contacts" className="underline">Messages CSV</a><a href="/api/admin/export?what=audit" className="underline">Audit log CSV</a><a href="/digest/preview" className="underline" target="_blank" rel="noopener">Preview digest</a><a href="/api/calendar" className="underline">Calendar feed</a></nav>
     <div className="grid gap-4 lg:grid-cols-2">
@@ -50,6 +54,12 @@ export default async function Admin({ searchParams }: SP) {
         <div className="mt-1 flex gap-3"><form action={reviewSubmission}><input type="hidden" name="id" value={p.id} /><input type="hidden" name="approve" value="true" /><button className="text-xs font-bold text-teal hover:underline">Approve &amp; publish</button></form>
           <form action={reviewSubmission}><input type="hidden" name="id" value={p.id} /><input type="hidden" name="approve" value="false" /><ConfirmButton message={`Reject "${p.sale.title}"?`}>Reject</ConfirmButton></form></div></li>)}
         {!pending.length && <li className="px-3 py-2 text-gray-600">No submissions waiting.</li>}</ul></Panel>
+      <Panel id="tags" title={`Color-tag reports (${tagPending.length} pending · ${tagReports.filter((r) => isActive(r, tagToday)).length} live)`}><p className="border-b border-line px-3 py-2 text-xs text-gray-600">Crowdsourced and unverified. Approve only plausible reports (real store, sensible %); approved ones show on <a href="/color-tags" className="underline">/color-tags</a> until their Saturday, labelled unverified.</p>
+        <ul className="max-h-96 overflow-y-auto text-sm">{tagReports.map((r) => <li key={r.id} className={row}><TagSwatch color={r.color} /><b>{vname(r.venue)}</b><span>{r.discountPct != null ? `${r.discountPct}% off` : "no %"}</span>
+          <span className="text-xs text-gray-600">{r.status} · week {r.weekOf} · {r.at.slice(0, 16).replace("T", " ")} UTC</span>{r.note && <span className="w-full text-xs text-gray-700">“{r.note}”</span>}
+          <span className="ml-auto flex gap-2">{(r.status === "pending" ? ["approve", "reject"] : ["unapprove"]).map((a) => <form key={a} action={moderateTag}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="act" value={a} /><button className="text-xs font-bold text-teal hover:underline">{a}</button></form>)}
+            <form action={moderateTag}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="act" value="delete" /><ConfirmButton message="Delete this report?">delete</ConfirmButton></form></span></li>)}
+          {!tagReports.length && <li className="px-3 py-2 text-gray-600">No color-tag reports.</li>}</ul></Panel>
       <Panel id="messages" title={`Contact messages (${contacts.length})`}><ul className="text-sm">{[...contacts].reverse().map((c) => <li key={c.id} className="border-b border-line px-3 py-2 last:border-0">
         <b>{c.name}</b> <a className="text-xs underline" href={`mailto:${c.email}`}>{c.email}</a> <span className="text-xs text-gray-600">{c.at.slice(0, 16).replace("T", " ")}</span>
         <p className="whitespace-pre-wrap text-xs">{c.message}</p><form action={removeContact}><input type="hidden" name="id" value={c.id} /><ConfirmButton message="Delete this message?">delete</ConfirmButton></form></li>)}

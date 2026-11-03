@@ -52,7 +52,7 @@ export function createLimiter(maxKeys = 10_000) {
 }
 const shared = createLimiter();
 /** Limits for public write endpoints (per IP). */
-export const LIMITS = { subscribe: { max: 5, windowMs: 60_000 }, submit: { max: 5, windowMs: 3_600_000 }, contact: { max: 5, windowMs: 3_600_000 } } as const;
+export const LIMITS = { subscribe: { max: 5, windowMs: 60_000 }, submit: { max: 5, windowMs: 3_600_000 }, contact: { max: 5, windowMs: 3_600_000 }, tag: { max: 6, windowMs: 3_600_000 } } as const;
 export function limitHit(name: keyof typeof LIMITS, ip: string, now?: number) { const l = LIMITS[name]; return shared(`${name}:${ip}`, l.max, l.windowMs, now); }
 
 /** Hidden fields bots fill in. "website" (submit/contact forms) and "company" (digest form). */

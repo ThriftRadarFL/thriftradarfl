@@ -43,6 +43,13 @@
       "when": 1793653629848,
       "tag": "0005_venue_source_org",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793700000000,
+      "tag": "0006_color_tag_reports",
+      "breakpoints": true
     }
   ]
 }

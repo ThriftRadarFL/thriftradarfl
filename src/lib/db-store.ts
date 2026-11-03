@@ -82,3 +82,26 @@ export async function dbListAudit(limit = 200) {
   const r = await D().select().from(t.auditLog).orderBy(sql`${t.auditLog.at} desc`).limit(limit);
   return r.map((x) => ({ at: x.at.toISOString(), action: x.action, target: x.target ?? "", detail: x.detail ?? "" }));
 }
+
+import type { TagReport, TagStatus, TagColor } from "./color-tags";
+const toTag = (r: typeof t.colorTagReports.$inferSelect): TagReport => ({ id: r.id, at: r.createdAt.toISOString(), venue: r.venue, color: r.color as TagColor, discountPct: r.discountPct, note: r.note, status: r.status as TagStatus, weekOf: r.weekOf, expiresOn: r.expiresOn });
+// Self-healing: if migration 0006 hasn't been applied (Postgres 42P01 "relation does not exist"), create the table
+// (same idempotent SQL as drizzle/0006_color_tag_reports.sql) once and retry. Additive only; never alters existing tables.
+let tagTableReady: Promise<unknown> | null = null;
+const TAG_DDL = [`CREATE TABLE IF NOT EXISTS "color_tag_reports" ("id" text PRIMARY KEY NOT NULL, "venue" text NOT NULL, "color" text NOT NULL, "discount_pct" integer, "note" text DEFAULT '' NOT NULL, "status" text DEFAULT 'pending' NOT NULL, "week_of" text NOT NULL, "expires_on" text NOT NULL, "created_at" timestamp with time zone DEFAULT now() NOT NULL)`,
+  `CREATE INDEX IF NOT EXISTS "color_tag_reports_expires_idx" ON "color_tag_reports" ("expires_on")`];
+const missingTable = (e: unknown) => { const x = e as { code?: string; cause?: { code?: string } }; return (x?.cause?.code ?? x?.code) === "42P01"; };
+async function withTagTable<T>(fn: () => Promise<T>): Promise<T> {
+  try { return await fn(); } catch (e) {
+    if (!missingTable(e)) throw e;
+    tagTableReady ??= (async () => { for (const q of TAG_DDL) await D().execute(sql.raw(q)); })().catch((err) => { tagTableReady = null; throw err; });
+    await tagTableReady; return fn();
+  }
+}
+/** Reports still worth showing/moderating (not expired before `since`), newest first. */
+export async function dbListTagReports(since: string): Promise<TagReport[]> {
+  return withTagTable(async () => (await D().select().from(t.colorTagReports).where(sql`${t.colorTagReports.expiresOn} >= ${since} and ${t.colorTagReports.status} <> 'rejected'`).orderBy(sql`${t.colorTagReports.createdAt} desc`)).map(toTag));
+}
+export async function dbAddTagReport(r: TagReport) { await withTagTable(() => D().insert(t.colorTagReports).values({ id: r.id, venue: r.venue, color: r.color, discountPct: r.discountPct, note: r.note, status: r.status, weekOf: r.weekOf, expiresOn: r.expiresOn, createdAt: new Date(r.at) })); }
+export async function dbSetTagStatus(id: string, status: TagStatus) { const r = await withTagTable(() => D().update(t.colorTagReports).set({ status }).where(eq(t.colorTagReports.id, id)).returning({ id: t.colorTagReports.id })); return r.length > 0; }
+export async function dbDeleteTagReport(id: string) { const r = await withTagTable(() => D().delete(t.colorTagReports).where(eq(t.colorTagReports.id, id)).returning({ id: t.colorTagReports.id })); return r.length > 0; }

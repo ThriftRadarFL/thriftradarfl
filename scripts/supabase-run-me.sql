@@ -1,4 +1,4 @@
--- ThriftRadarFL migrations 0002–0005 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages, venue source_url/org_key)
+-- ThriftRadarFL migrations 0002–0006 (publish flag, sale tags, audit log, editable deal rules, submissions, contact messages, venue source_url/org_key)
 -- Safe to run more than once. Paste into Supabase → SQL Editor → Run.
 BEGIN;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS published boolean DEFAULT true NOT NULL;
@@ -6,6 +6,8 @@ ALTER TABLE sales ADD COLUMN IF NOT EXISTS description text;
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS tags text[]; -- 0003
 ALTER TABLE venues ADD COLUMN IF NOT EXISTS source_url text; -- 0005
 ALTER TABLE venues ADD COLUMN IF NOT EXISTS org_key text; -- 0005
+CREATE TABLE IF NOT EXISTS color_tag_reports (id text PRIMARY KEY, venue text NOT NULL, color text NOT NULL, discount_pct integer, note text NOT NULL DEFAULT '', status text NOT NULL DEFAULT 'pending', week_of text NOT NULL, expires_on text NOT NULL, created_at timestamptz NOT NULL DEFAULT now()); -- 0006
+CREATE INDEX IF NOT EXISTS color_tag_reports_expires_idx ON color_tag_reports (expires_on); -- 0006
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS rule_key text;
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS label text;
 ALTER TABLE deal_rules ADD COLUMN IF NOT EXISTS verified boolean DEFAULT false NOT NULL;
@@ -250,4 +252,5 @@ INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '0d94fd5a7ef8
 INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '76d3b8b402be3fae2c50a786d723deada6b99b812aeb796dd7ba671da1432453', 1793649227644 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '76d3b8b402be3fae2c50a786d723deada6b99b812aeb796dd7ba671da1432453'); -- 0003_sale_tags
 INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '010aad04d4073afd808e34d68e9241ec33cfb3e06272397a1e557817d9223259', 1793649333851 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '010aad04d4073afd808e34d68e9241ec33cfb3e06272397a1e557817d9223259'); -- 0004_audit_log
 INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT '379a838a8e72b9db0367721925205d219cad8461d73ba39da178624891dc4a38', 1793653629848 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = '379a838a8e72b9db0367721925205d219cad8461d73ba39da178624891dc4a38'); -- 0005_venue_source_org
+INSERT INTO drizzle.__drizzle_migrations (hash, created_at) SELECT 'eafcca3ae1fad616786411266b7118bf5e0b92e6b40af6f8aa97cb33288a1df8', 1793700000000 WHERE NOT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = 'eafcca3ae1fad616786411266b7118bf5e0b92e6b40af6f8aa97cb33288a1df8'); -- 0006_color_tag_reports
 COMMIT;

@@ -54,3 +54,13 @@ test("pg: submissions queue + contact messages + subscribers + audit", opt, asyn
   assert.equal(await D.addDigestSubscriber("X@Y.co", "volusia"), true); assert.equal(await D.addDigestSubscriber("x@y.co", "volusia"), false); assert.equal(await D.removeSubscriber("x@Y.CO"), true);
   await D.audit("test", "t", "d"); assert.equal((await D.listAudit(1))[0].action, "test"); pgOnly();
 });
+
+test("pg: color-tag reports round-trip + table self-creates if migration 0006 missing", opt, async () => {
+  const postgres = (await import("postgres")).default; const c = postgres(url!, { prepare: false, max: 1 }); await c.unsafe('DROP TABLE IF EXISTS "color_tag_reports"'); await c.end();
+  assert.deepEqual(await D.listTagReports(), []); // 42P01 → CREATE TABLE IF NOT EXISTS → retry
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" }); const { weekBounds, buildBoard } = await import("../src/lib/color-tags");
+  const id = await D.addTagReport({ venue: "goodwill-port-orange", color: "blue", discountPct: 50, note: "n", ...weekBounds(today) });
+  assert.equal((await D.listTagReports())[0].status, "pending"); assert.equal(await D.setTagStatus(id, "approved"), true);
+  assert.equal(buildBoard(await D.listTagReports(), today)[0].colors[0].discountPct, 50);
+  await D.setTagStatus(id, "rejected"); assert.deepEqual(await D.listTagReports(), []); pgOnly();
+});
