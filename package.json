@@ -20,7 +20,8 @@
     "copy:maplibre-worker": "node -e \"require('fs').copyFileSync('node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs','public/maplibre-gl-worker.mjs')\"",
     "predev": "npm run -s copy:maplibre-worker",
     "prebuild": "npm run -s copy:maplibre-worker",
-    "postinstall": "npm run -s copy:maplibre-worker"
+    "postinstall": "npm run -s copy:maplibre-worker",
+    "sweep": "node scripts/sweep.mjs"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",

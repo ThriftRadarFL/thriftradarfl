@@ -1,4 +1,4 @@
-import { getVenues, upsertVenue } from "@/lib/data";
+import { getVenues, upsertVenue, audit } from "@/lib/data";
 import { parseVenue } from "@/lib/validate";
 import { isAdminRequest } from "@/lib/auth";
 import { handle, json, readBody, HttpError } from "@/lib/api";
@@ -10,5 +10,5 @@ export const GET = handle(async (req: Request) => {
 export const POST = handle(async (req: Request) => {
   if (!isAdminRequest(req)) throw new HttpError(401, "unauthorized");
   const r = parseVenue(await readBody(req)); if (!r.ok) throw new HttpError(400, "validation failed", r.errors);
-  await upsertVenue(r.value); return json({ data: r.value }, 201);
+  await upsertVenue(r.value); await audit("venue.create", r.value.slug, "via API"); return json({ data: r.value }, 201);
 });

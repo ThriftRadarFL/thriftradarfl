@@ -1,4 +1,4 @@
-import { getDealRules, upsertDealRule, deleteDealRule } from "@/lib/data";
+import { getDealRules, upsertDealRule, deleteDealRule, audit } from "@/lib/data";
 import { parseDealRule } from "@/lib/validate";
 import { isAdminRequest } from "@/lib/auth";
 import { handle, json, readBody, HttpError } from "@/lib/api";
@@ -11,10 +11,10 @@ export async function GET(req: Request) {
 export const POST = handle(async (req: Request) => {
   if (!isAdminRequest(req)) throw new HttpError(401, "unauthorized");
   const r = parseDealRule(await readBody(req)); if (!r.ok) throw new HttpError(400, "validation failed", r.errors);
-  await upsertDealRule(r.value); return json({ data: r.value }, 201);
+  await upsertDealRule(r.value); await audit("rule.save", r.value.id ?? r.value.label, "via API"); return json({ data: r.value }, 201);
 });
 export const DELETE = handle(async (req: Request) => {
   if (!isAdminRequest(req)) throw new HttpError(401, "unauthorized");
   const id = new URL(req.url).searchParams.get("id"); if (!id) throw new HttpError(400, "id required");
-  if (!(await deleteDealRule(id))) throw new HttpError(404, "not found"); return json({ data: { id, deleted: true } });
+  if (!(await deleteDealRule(id))) throw new HttpError(404, "not found"); await audit("rule.delete", id, "via API"); return json({ data: { id, deleted: true } });
 });
