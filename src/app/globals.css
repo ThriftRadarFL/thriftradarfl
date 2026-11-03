@@ -55,3 +55,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
 select, input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) { min-height: 2.5rem; }
 label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { min-height: 2.5rem; cursor: pointer; }
 input[type="checkbox"], input[type="radio"] { min-width: 1.25rem; min-height: 1.25rem; }
+/* Long slash-joined listing titles ("Vintage/MCM/Antiques/…") must wrap at 390px. */
+main { min-width: 0; overflow-wrap: break-word; }
+main h1, main h2, main h3 { overflow-wrap: anywhere; }
+/* Map zoom/compass controls: 40px touch targets. */
+.maplibregl-ctrl-group button { width: 40px !important; height: 40px !important; }
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon { background-size: 26px; }
+.maplibregl-popup-close-button { width: 32px; height: 32px; font-size: 20px; }

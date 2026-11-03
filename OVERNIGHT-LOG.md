@@ -13,3 +13,10 @@
 - Feature: estate-sale keyword alerts. /digest form takes up to 5 comma-separated keywords (stored in existing `subscribers.interests`, no migration; re-subscribing updates them). New daily cron `/api/cron/alerts` (12:00 UTC, CRON_SECRET, dry-run without RESEND_API_KEY or ?dry=1, ?hours=) emails sales first listed in the last 24h whose title/description/tags mention a keyword (whole word, simple plurals). Weekly digest adds a per-subscriber "Your keyword matches" block. Matches use listing text only.
 - Data: estate-sales-new-nov3.csv is header-only (nothing to merge); other asset CSVs already merged.
 - Tests 125 (121 pass, 4 PG skipped). Deployed to https://thriftradarfl.vercel.app and checked live.
+
+## 2026-11-03 ~12:45 AM ET — Keel QA round 2
+- 390px overflow on sale pages was the PageHead h1 (slash-joined titles like "Vintage/MCM/Antiques/…"), not the nav: h1/h2 now `overflow-wrap:anywhere`, `main` min-w-0. Headless scan of all 18 sale + 44 store pages + key pages at 390px: scrollWidth 390 everywhere.
+- Store badge now "Today 9 AM–9 PM" + "Open now"/"Closed now" computed in America/New_York (store page, compare, embed).
+- Unverified notes deduped (`cleanNotes` applied to all seed venues, so future merges can't stack warnings).
+- Map: list beside/below the map mirrors pins with a 📍 "Show on map" button per row (opens the popup and focuses its link); zoom controls 40px; planner checkboxes larger.
+- Hours: City Thrift Semoran Mon–Sat 9–9, Sun 10–7; Salvation Army #2 and #4 Mon–Sat 10–6, Sun closed (unverified). Sharing Center Longwood still unpinned (no OSM/Census match), flagged "Not on the map yet".

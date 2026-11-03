@@ -12,7 +12,8 @@ export default function StoreToday({ t, compact }: { t: T; compact?: boolean }) 
   }
   return (<section aria-labelledby="today-h" className="panel mb-4 overflow-hidden">
     <h2 id="today-h" className="panel-head flex flex-wrap items-center justify-between gap-2"><span>Today at this store · {t.dayName} {date}</span>
-      {t.hours && <span className="rounded-sm bg-white/15 px-2 py-0.5 text-xs normal-case tracking-normal">{t.hours === "Closed" ? "Closed today" : `Open ${t.hours}`}</span>}</h2>
+      {t.hours && <span className="flex items-center gap-1.5 text-xs normal-case tracking-normal"><span className="rounded-sm bg-white/15 px-2 py-0.5">{t.hours === "Closed" ? "Closed today" : `Today ${t.hours}`}</span>
+        {t.openNow && <span className={`rounded-sm px-2 py-0.5 font-bold ${t.openNow === "open" ? "bg-green-700" : "bg-cta"}`}>{t.openNow === "open" ? "Open now" : "Closed now"}</span>}</span>}</h2>
     <div className="bg-gradient-to-b from-white to-paper p-4 text-sm">
       {t.today.length ? <ul className="space-y-2">{t.today.map((r) => <li key={r.id ?? r.label} className="flex flex-wrap items-center gap-2">
         {r.discountPct ? <span className="pill bg-cta">{r.discountPct}% OFF</span> : <span className="pill bg-royal">Deal</span>}

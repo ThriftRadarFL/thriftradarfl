@@ -33,7 +33,7 @@ export function storeWidgetHtml(v: EmbedVenue, rules: DealRule[], today: string,
   const todayLine = t.today.length
     ? `<span class="p r">${t.today[0].discountPct ? `${t.today[0].discountPct}% OFF` : "TODAY"}</span><b>${esc(t.today[0].label)}</b>${t.today[0].verified ? "" : ' <span class="u">(unverified)</span>'}`
     : t.next ? `<span class="p g">No deal today</span>Next: <b>${esc(whenLabel(t.next.inDays, t.next.rule.day))}</b> — ${esc(t.next.rule.label)}` : `<span class="p g">No weekly deals listed</span>`;
-  const hours = t.hours ? (t.hours === "Closed" ? "Closed today" : `Open today ${esc(t.hours)}`) : "";
+  const hours = t.hours ? (t.hours === "Closed" ? "Closed today" : `Today ${esc(t.hours)}${t.openNow ? ` · ${t.openNow === "open" ? "Open now" : "Closed now"}` : ""}`) : "";
   const list = opts.compact ? "" : `<ul>${mine.length ? mine.map((r) => `<li${r.day === t.dow ? ' class="t"' : ""}><span class="d">${DAYS[r.day]}</span>${esc(r.label)}${r.time ? ` · ${esc(t12(r.time))}` : ""}${r.verified ? "" : ' <span class="u">(unverified)</span>'}</li>`).join("") : '<li class="u">This store has no weekly deal days on file yet.</li>'}</ul>`
     + (best ? `<p style="margin:6px 0 0"><span class="p k">BEST DAY</span><b>${esc(best.best.name)}</b> <span class="u">${esc(best.reason)}</span></p>` : "");
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">

@@ -159,17 +159,17 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'habitat-seminole-apopka-restore-sanford', (SELECT id FROM organizations WHERE name = 'Habitat for Humanity ReStore' LIMIT 1),
       'Habitat Seminole-Apopka ReStore - Sanford', 'thrift', '1100 Americana Blvd', 'Sanford', '32773', 28.76253, -81.28421, '(407) 215-2000',
-      '{"mon-sat":"9:00-18:00"}'::jsonb, 'Hours from a directory listing, unverified. UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-18:00"}'::jsonb, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'habitat-seminole-apopka-restore-sanford');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-orlando-thrift-store-2', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),
       'Salvation Army Orlando Thrift Store 2', 'thrift', '4075-A S Goldenrod Rd', 'Orlando', '32822', 28.4886, -81.28524, '(407) 295-9311',
-      NULL, 'Hours: Mon-Sat 10am-6pm (aggregator); Sun closed. Hours unverified; Apple Maps lists (689) 986-0780. Source: https://www.salvationarmyusa.org/fl/orlando/ (checked 2026-11-02).', true
+      '{"mon-sat":"10:00-18:00","sun":"closed"}'::jsonb, 'Hours Mon-Sat 10am-6pm, Sun closed per thethriftshopper.com and Apple Maps, unverified (checked 2026-11-03). Apple Maps lists (689) 986-0780. Source: https://www.salvationarmyusa.org/fl/orlando/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'salvation-army-orlando-thrift-store-2');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-orlando-thrift-store-4', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),
       'Salvation Army Orlando Thrift Store 4', 'thrift', '1330 N Semoran Blvd', 'Casselberry', '32707', 28.63025, -81.318, '(407) 295-9311',
-      NULL, 'Map pin from US Census geocoder (matched 1330 State Hwy 436). Hours not on official page; aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).', true
+      '{"mon-sat":"10:00-18:00","sun":"closed"}'::jsonb, 'Hours Mon-Sat 10am-6pm, Sun closed per thriftstores.io and Nextdoor, unverified; one directory says opens 9am (checked 2026-11-03). Map pin from US Census geocoder (matched 1330 State Hwy 436). Aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'salvation-army-orlando-thrift-store-4');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-daytona-thrift-store', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),
@@ -224,12 +224,12 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'city-thrift-edgewater', (SELECT id FROM organizations WHERE name = 'City Thrift (independent)' LIMIT 1),
       'City Thrift - Edgewater', 'thrift', '6015 Edgewater Dr', 'Orlando', '32810', 28.61163, -81.41683, NULL,
-      '{"mon-sat":"9:00-21:00","sun":"10:00-19:00"}'::jsonb, 'Hours from a directory listing, unverified. UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-9pm; Sun 10am-7pm (aggregator). No official site found. Source: https://thriftnearby.com/fl/orlando/city-thrift-1803/ (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-21:00","sun":"10:00-19:00"}'::jsonb, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-9pm; Sun 10am-7pm (aggregator). No official site found. Source: https://thriftnearby.com/fl/orlando/city-thrift-1803/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'city-thrift-edgewater');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'city-thrift-semoran', (SELECT id FROM organizations WHERE name = 'City Thrift (independent)' LIMIT 1),
       'City Thrift - Semoran', 'thrift', '1803 S Semoran Blvd', 'Orlando', '32822', 28.52088, -81.3102, NULL,
-      NULL, 'UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/ (checked 2026-11-02).', true
+      '{"mon-sat":"9:00-21:00","sun":"10:00-19:00"}'::jsonb, 'Hours Mon-Sat 9am-9pm, Sun 10am-7pm per Yelp (claimed, Oct 2026) and MapQuest; one directory says Sun 11am-7pm (checked 2026-11-03). UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'city-thrift-semoran');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'salvation-army-w-colonial-orlando', (SELECT id FROM organizations WHERE name = 'The Salvation Army' LIMIT 1),

@@ -25,7 +25,7 @@ export default function Planner({ sales, today, site, initialDay }: { sales: S[]
         <option value="">Any day</option>{days.map((d) => <option key={d} value={d}>{new Date(d + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</option>)}</select></label>
       <fieldset><legend className="text-xs font-bold">Stops ({chosen.length}/{onDay.length})</legend>
         {onDay.map((s) => <label key={s.slug} className="flex min-h-11 items-center gap-2 border-b border-line last:border-0">
-          <input type="checkbox" className="h-5 w-5" checked={chosen.includes(s)} onChange={(e) => { const cur = picked ?? onDay.map((x) => x.slug); setPicked(e.target.checked ? [...cur, s.slug] : cur.filter((x) => x !== s.slug)); }} />
+          <input type="checkbox" className="h-6 w-6 shrink-0" checked={chosen.includes(s)} onChange={(e) => { const cur = picked ?? onDay.map((x) => x.slug); setPicked(e.target.checked ? [...cur, s.slug] : cur.filter((x) => x !== s.slug)); }} />
           <span className="min-w-0 flex-1 truncate">{s.title}</span><span className="text-xs text-gray-600">{s.city}</span></label>)}
         {!onDay.length && <p className="text-gray-600">None of your saved sales run that day.</p>}</fieldset>
       <button type="button" onClick={locate} className="btn-gray w-full">📍 Start from my location</button><p role="status" className="text-xs text-gray-600">{geoMsg}</p></div></section>

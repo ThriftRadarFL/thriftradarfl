@@ -12,7 +12,7 @@ export function popupNode(p: Pick<MapPin, "name" | "info" | "href" | "kind">): H
   const a = document.createElement("a"); a.href = p.href; a.className = "btn-red mt-2 !min-h-10 text-xs"; a.textContent = "View details →"; a.setAttribute("aria-label", `View details: ${p.name}`); d.append(a);
   return d;
 }
-export default function SaleMap({ pins, apiKey, me }: { pins: MapPin[]; apiKey: string; me?: { lat: number; lng: number } | null }) {
+export default function SaleMap({ pins, apiKey, me, focusKey }: { pins: MapPin[]; apiKey: string; me?: { lat: number; lng: number } | null; focusKey?: string | null }) {
   const el = useRef<HTMLDivElement>(null); const map = useRef<MlMap | null>(null); const ml = useRef<ML | null>(null);
   const meMarker = useRef<Marker | null>(null); const popup = useRef<Popup | null>(null); const [ready, setReady] = useState(false);
   const pinsRef = useRef(pins); pinsRef.current = pins;
@@ -50,5 +50,11 @@ export default function SaleMap({ pins, apiKey, me }: { pins: MapPin[]; apiKey: 
       meMarker.current = new lib.Marker({ element: d }).setLngLat([me.lng, me.lat]).addTo(m); b.extend([me.lng, me.lat]); }
     if (!b.isEmpty()) m.fitBounds(b, { padding: 40, maxZoom: 12, duration: 300 });
   }, [pins, me, ready]);
+  useEffect(() => { // list "📍" button → fly to the pin and open its popup (keyboard path to every pin)
+    const m = map.current, lib = ml.current; if (!ready || !m || !lib || !focusKey) return; const k = focusKey.replace(/#\d+$/, ""); const p = pinsRef.current.find((x) => x.key === k); if (!p) return;
+    m.flyTo({ center: [p.lng, p.lat], zoom: Math.max(m.getZoom(), 14) }); popup.current?.remove();
+    popup.current = new lib.Popup({ offset: 14, maxWidth: "240px" }).setLngLat([p.lng, p.lat]).setDOMContent(popupNode(p)).addTo(m);
+    (popup.current.getElement().querySelector("a") as HTMLAnchorElement | null)?.focus({ preventScroll: true }); el.current?.scrollIntoView({ block: "nearest" });
+  }, [focusKey, ready]);
   return <div ref={el} className="h-[360px] w-full sm:h-[440px] md:h-[520px]" role="region" aria-label="Interactive map of sales and stores. Tap a dot for details; tap a numbered cluster to zoom in." />;
 }

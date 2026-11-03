@@ -406,7 +406,7 @@
     "hoursJson": {
       "mon-sat": "9:00-18:00"
     },
-    "notes": "Hours from a directory listing, unverified. UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).",
+    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).",
     "sourceUrl": "https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford"
   },
   {
@@ -420,8 +420,11 @@
     "lat": 28.4886,
     "lng": -81.28524,
     "phone": "(407) 295-9311",
-    "hoursJson": null,
-    "notes": "Hours: Mon-Sat 10am-6pm (aggregator); Sun closed. Hours unverified; Apple Maps lists (689) 986-0780. Source: https://www.salvationarmyusa.org/fl/orlando/ (checked 2026-11-02).",
+    "hoursJson": {
+      "mon-sat": "10:00-18:00",
+      "sun": "closed"
+    },
+    "notes": "Hours Mon-Sat 10am-6pm, Sun closed per thethriftshopper.com and Apple Maps, unverified (checked 2026-11-03). Apple Maps lists (689) 986-0780. Source: https://www.salvationarmyusa.org/fl/orlando/ (checked 2026-11-02).",
     "sourceUrl": "https://www.salvationarmyusa.org/fl/orlando/"
   },
   {
@@ -435,8 +438,11 @@
     "lat": 28.63025,
     "lng": -81.318,
     "phone": "(407) 295-9311",
-    "hoursJson": null,
-    "notes": "Map pin from US Census geocoder (matched 1330 State Hwy 436). Hours not on official page; aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).",
+    "hoursJson": {
+      "mon-sat": "10:00-18:00",
+      "sun": "closed"
+    },
+    "notes": "Hours Mon-Sat 10am-6pm, Sun closed per thriftstores.io and Nextdoor, unverified; one directory says opens 9am (checked 2026-11-03). Map pin from US Census geocoder (matched 1330 State Hwy 436). aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).",
     "sourceUrl": "https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/"
   },
   {
@@ -629,7 +635,7 @@
       "mon-sat": "9:00-21:00",
       "sun": "10:00-19:00"
     },
-    "notes": "Hours from a directory listing, unverified. UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-9pm; Sun 10am-7pm (aggregator). No official site found. Source: https://thriftnearby.com/fl/orlando/city-thrift-1803/ (checked 2026-11-02).",
+    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-9pm; Sun 10am-7pm (aggregator). No official site found. Source: https://thriftnearby.com/fl/orlando/city-thrift-1803/ (checked 2026-11-02).",
     "sourceUrl": "https://thriftnearby.com/fl/orlando/city-thrift-1803/"
   },
   {
@@ -643,8 +649,11 @@
     "lat": 28.52088,
     "lng": -81.3102,
     "phone": null,
-    "hoursJson": null,
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/ (checked 2026-11-02).",
+    "hoursJson": {
+      "mon-sat": "9:00-21:00",
+      "sun": "10:00-19:00"
+    },
+    "notes": "Hours Mon-Sat 9am-9pm, Sun 10am-7pm per Yelp (claimed, Oct 2026) and MapQuest; one directory says Sun 11am-7pm (checked 2026-11-03). UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/ (checked 2026-11-02).",
     "sourceUrl": "https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/"
   },
   {

@@ -11,7 +11,7 @@ export default function MapExplorer({ pins, apiKey, today }: { pins: Pin[]; apiK
   const [day, setDay] = useState(""); const [type, setType] = useState(""); const [city, setCity] = useState(""); const [stores, setStores] = useState(true);
   const [me, setMe] = useState<LatLng | null>(null); const [msg, setMsg] = useState("");
   // MapLibre is ~800 KB of JS: load it after the page is idle (phones included) so first paint stays fast.
-  const [live, setLive] = useState(false);
+  const [live, setLive] = useState(false); const [focusKey, setFocusKey] = useState<string | null>(null);
   useEffect(() => { if (!apiKey) return;
     const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
     if (w.requestIdleCallback) w.requestIdleCallback(() => setLive(true), { timeout: 2500 }); else setTimeout(() => setLive(true), 1200); }, [apiKey]);
@@ -35,12 +35,13 @@ export default function MapExplorer({ pins, apiKey, today }: { pins: Pin[]; apiK
       <p role="status" aria-live="polite" className="col-span-2 text-xs text-gray-600 sm:col-span-5">{shown.length} of {pins.length} pins{msg ? ` · ${msg}` : ""}</p></form>
     <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
       <div className="panel min-w-0 overflow-hidden md:col-span-2"><h2 className="panel-head">Map</h2>
-        {apiKey && live ? <SaleMap apiKey={apiKey} pins={mapPins} me={me} /> : <><SvgPlot pins={shown} />{apiKey && <button type="button" onClick={() => setLive(true)} className="btn-gray m-3">🗺 Load street map</button>}</>}</div>
+        {apiKey && live ? <SaleMap apiKey={apiKey} pins={mapPins} me={me} focusKey={focusKey} /> : <><SvgPlot pins={shown} />{apiKey && <button type="button" onClick={() => setLive(true)} className="btn-gray m-3">🗺 Load street map</button>}</>}</div>
       <section className="panel min-w-0 self-start"><h2 className="panel-head">{me ? "Nearest first" : "North to south"} ({withDist.length})</h2>
-        <ul className="max-h-[520px] divide-y divide-line overflow-y-auto text-sm">{withDist.map((p) => <li key={p.key} className="flex min-h-11 items-center gap-2 px-3">
+        <ul aria-label="Sales and stores on the map (same as the pins)" className="max-h-[520px] divide-y divide-line overflow-y-auto text-sm">{withDist.map((p) => <li key={p.key} className="flex min-h-11 items-center gap-2 px-3">
           <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: fill[p.type] ?? "#888" }} aria-hidden="true" />
-          <Link href={p.href} className="min-w-0 flex-1 truncate py-2 hover:text-royal">{p.name}</Link>
-          <span className="shrink-0 text-[11px] text-gray-600">{p.mi != null ? `${p.mi.toFixed(1)} mi` : p.city}</span></li>)}
+          <span className="min-w-0 flex-1 py-1.5"><Link href={p.href} className="block truncate font-bold hover:text-royal">{p.name}</Link>{p.info && <span className="block truncate text-[11px] text-gray-600">{p.info}</span>}</span>
+          <span className="shrink-0 text-[11px] text-gray-600">{p.mi != null ? `${p.mi.toFixed(1)} mi` : p.city}</span>
+          {live && <button type="button" onClick={() => setFocusKey(`${p.key}#${Date.now()}`)} aria-label={`Show ${p.name} on the map`} className="btn-gray h-10 w-10 shrink-0 p-0 text-base">📍</button>}</li>)}
           {!withDist.length && <li className="p-3 text-gray-600">Nothing matches. <button type="button" className="underline" onClick={reset}>Reset filters</button></li>}</ul></section></div>
     <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs" aria-label="Legend">{Object.entries(label).filter(([t]) => types.includes(t)).map(([t, l]) => <li key={t} className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-full" style={{ background: fill[t] }} />{l}</li>)}</ul>
   </div>);
