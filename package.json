@@ -22,7 +22,8 @@
     "prebuild": "npm run -s copy:maplibre-worker",
     "postinstall": "npm run -s copy:maplibre-worker",
     "sweep": "node scripts/sweep.mjs",
-    "data:check": "tsx scripts/data-check.ts"
+    "data:check": "tsx scripts/data-check.ts",
+    "data:prices": "tsx scripts/import-prices.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",
