@@ -125,10 +125,15 @@ export async function addContact(m: Omit<ContactMsg, "id" | "at">) {
 export async function deleteContact(id: string) { await viaDb(() => pg.dbDeleteContact(id), () => mutate<ContactMsg[]>(contactFile, [], (l) => l.filter((x) => x.id !== id)), true); }
 
 const subsJson = path.join(DATA_DIR, "digest-subscribers.json");
-type Sub = { email: string; area: string; at: string };
-export async function addDigestSubscriber(email: string, area: string) {
-  return viaDb(() => pg.dbAddSubscriber(email, area), () => mutate<Sub[], boolean>(subsJson, [], (list) =>
-    list.some((x) => x.email.toLowerCase() === email.toLowerCase()) ? { next: list, result: false } : { next: [...list, { email, area, at: new Date().toISOString() }], result: true }), true);
+export type Sub = { email: string; area: string; at: string; /** Estate-sale keyword alerts (stored in subscribers.interests). */ keywords?: string[] };
+/** Adds a subscriber (true) or, if the email exists, replaces its keyword alerts when any were given (false). */
+export async function addDigestSubscriber(email: string, area: string, keywords: string[] = []) {
+  return viaDb(() => pg.dbAddSubscriber(email, area, keywords), () => mutate<Sub[], boolean>(subsJson, [], (list) => {
+    const i = list.findIndex((x) => x.email.toLowerCase() === email.toLowerCase());
+    if (i < 0) return { next: [...list, { email, area, at: new Date().toISOString(), ...(keywords.length ? { keywords } : {}) }], result: true };
+    if (!keywords.length) return { next: list, result: false };
+    const next = list.slice(); next[i] = { ...next[i], keywords }; return { next, result: false };
+  }), true);
 }
 export async function listSubscribers(): Promise<Sub[]> { return viaDb(() => pg.dbListSubscribers(), () => readJson<Sub[]>(subsJson, [])); }
 export async function removeSubscriber(email: string) {

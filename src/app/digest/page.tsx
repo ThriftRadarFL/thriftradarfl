@@ -6,6 +6,6 @@ export default function Digest() {
     <div className="grid gap-4 md:grid-cols-2">
       <div className="panel"><div className="panel-head">Sign up</div><DigestForm /></div>
       <div className="panel"><div className="panel-head">What you get</div><ul className="p-4 space-y-2 text-sm list-disc pl-8">
-        <li>Top 10 estate sales by weekend</li><li>Half-off and color-tag days</li><li>Outlet bin restock tips</li><li>New auctions in your area</li></ul></div>
+        <li>Top 10 estate sales by weekend</li><li>Half-off and color-tag days</li><li>Outlet bin restock tips</li><li>New auctions in your area</li><li>Keyword alerts: an email when a new sale mentions “pyrex”, “tools”, or whatever you hunt for</li></ul></div>
     </div></div>);
 }

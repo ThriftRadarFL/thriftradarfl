@@ -76,7 +76,13 @@ export function parseContact(o: Record<string, unknown>): R<{ name: string; emai
   if (message.length < 10) e.push("message must be at least 10 characters"); if (message.length > CAPS.message) e.push("message too long");
   return e.length ? { ok: false, errors: e } : { ok: true, value: { name, email, message } };
 }
-export function parseSubscriber(o: Record<string, unknown>): R<{ email: string; area: string }> {
+/** Keyword alerts: comma/newline separated, lowercased, 2–30 chars of letters/digits/space/&'-, deduped, max 5. */
+export function parseKeywords(raw: unknown): string[] {
+  const parts = (Array.isArray(raw) ? raw.map(String) : String(raw ?? "").split(/[,\n;]+/))
+    .map((k) => k.toLowerCase().replace(/[^a-z0-9 &'-]/g, " ").replace(/\s+/g, " ").trim()).filter((k) => k.length >= 2 && k.length <= 30);
+  return [...new Set(parts)].slice(0, 5);
+}
+export function parseSubscriber(o: Record<string, unknown>): R<{ email: string; area: string; keywords: string[] }> {
   const email = String(o.email ?? "").trim(); const area = String(o.area ?? "").trim().replace(/[\u0000-\u001f]/g, "").slice(0, CAPS.area) || "All";
-  return isEmail(email) ? { ok: true, value: { email, area } } : { ok: false, errors: ["invalid email"] };
+  return isEmail(email) ? { ok: true, value: { email, area, keywords: parseKeywords(o.keywords) } } : { ok: false, errors: ["invalid email"] };
 }

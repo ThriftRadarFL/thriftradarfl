@@ -36,13 +36,14 @@ export async function dbUpsertVenue(v: Venue) {
   await D().insert(t.venues).values(vals).onConflictDoUpdate({ target: t.venues.slug, set: vals });
 }
 export async function dbDeleteVenue(slug: string) { await D().delete(t.venues).where(eq(t.venues.slug, slug)); }
-export async function dbAddSubscriber(email: string, area: string) {
-  const r = await D().insert(t.subscribers).values({ email: email.toLowerCase(), area }).onConflictDoNothing().returning({ id: t.subscribers.id });
+export async function dbAddSubscriber(email: string, area: string, keywords: string[] = []) {
+  const r = await D().insert(t.subscribers).values({ email: email.toLowerCase(), area, interests: keywords }).onConflictDoNothing().returning({ id: t.subscribers.id });
+  if (!r.length && keywords.length) await D().update(t.subscribers).set({ interests: keywords }).where(eq(sql`lower(${t.subscribers.email})`, email.toLowerCase()));
   return r.length > 0;
 }
 export async function dbListSubscribers() {
   const r = await D().select().from(t.subscribers).orderBy(asc(t.subscribers.createdAt));
-  return r.map((x) => ({ email: x.email, area: x.area ?? "", at: x.createdAt.toISOString() }));
+  return r.map((x) => ({ email: x.email, area: x.area ?? "", at: x.createdAt.toISOString(), ...(x.interests?.length ? { keywords: x.interests } : {}) }));
 }
 export async function dbRemoveSubscriber(email: string) {
   const r = await D().delete(t.subscribers).where(eq(sql`lower(${t.subscribers.email})`, email.toLowerCase())).returning({ id: t.subscribers.id }); return r.length > 0;
