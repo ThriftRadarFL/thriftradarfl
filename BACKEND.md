@@ -24,6 +24,7 @@ Deal rules source of truth for now: `src/lib/deal-rules.ts` (seeded into DB; UNV
 | GET | `/feed.xml?city=` | – | Atom feed of newest listed upcoming sales (by `created_at`); `city` slug → per-city feed (unknown → 404) |
 | GET | `/embed/stores/[slug]?compact=1` | – | iframe-able HTML widget (any origin may frame `/embed/*`; no JS) |
 | GET | `/api/admin/export?what=submissions\|contacts\|audit` | admin | CSV (formula-injection safe) |
+| GET | `/api/suggest?q=` | – | ≤8 city/store/upcoming-sale suggestions (2–60 chars), cached 120 s |
 | GET | `/api/health` | – | `mode` postgres/json-fallback/json, readOk, venues, latencyMs, *Configured booleans |
 | GET | `/api/sales?city=&type=&upcoming=1&from=YYYY-MM-DD` | – | |
 | POST | `/api/sales` | admin | 201; 409 if slug exists |
@@ -66,3 +67,5 @@ Admin-triggered, one URL at a time, host allowlist (estatesales.net/.org, auctio
 4. Resend + cron live. 5. MapTiler map. 6. Supabase Auth replaces ADMIN_PASSWORD. 7. Organizer submission form + moderation queue.
 - Every REST write (POST/PUT/DELETE on /api/sales, /api/venues, /api/deal-rules) is now written to the audit log with detail "via API". Verify a deploy with `npm run sweep` (see OVERNIGHT.md, 8 PM pass).
 - Public endpoint docs for third parties: `/developers` (source `src/lib/api-docs.ts`, test-checked against route files).
+- **Caching (10 PM):** public GET JSON goes through `cachedJson()` in `src/lib/api.ts`: `public, max-age=60, s-maxage=300, stale-while-revalidate=600` + weak ETag → 304 on `If-None-Match`. Errors/health/admin stay `no-store`. After an admin edit, CDN copies of the public API can be up to ~5 min stale (pages revalidate immediately).
+- **Data quality:** `src/lib/data-quality.ts` → `npm run data:check` (exit 1 on errors; `--strict` also fails on warnings; works against JSON or `DATABASE_URL`) and `/admin#quality`. Good pre-deploy step after `db:seed`.
