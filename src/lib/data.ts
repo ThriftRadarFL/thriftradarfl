@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { HttpError } from "./api";
 import { seedVenues, mockSales } from "./seed-data";
-import { hasDb } from "@/db";
+import { hasDb, resetDb } from "@/db";
 import * as pg from "./db-store";
 import { dealRules as seedDealRules, ruleId, type DealRule } from "./deal-rules";
 
@@ -39,7 +39,7 @@ function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: 
 
 // DB is used when DATABASE_URL is set AND reachable. Any DB error (timeout, protocol, auth) marks it down for 60s and
 // transparently falls back to the JSON files so builds and pages never break because the database is unreachable.
-// Tunable: DB_TIMEOUT_MS (default 1500) per query, DB_BACKOFF_MS (default 5 min) before retrying a down DB.
+// Tunable: DB_TIMEOUT_MS (default 4000) per query (one retry on a fresh pool), DB_BACKOFF_MS (default 30s) before retrying a down DB.
 const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 4000; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 30_000;
 let dbDownUntil = 0; let lastDbError = ""; let lastDbMessage = "";
 /** Strict writes: when a DB is configured in production (or DB_STRICT_WRITES=1), a failed DB write is a 503 — never a silent
@@ -49,10 +49,19 @@ const dbOffline = () => new HttpError(503, "Saving is temporarily unavailable: t
 async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write = false): Promise<T> {
   if (write && strictWrites() && Date.now() < dbDownUntil) throw dbOffline();
   if (!hasDb || Date.now() < dbDownUntil) return jsonFn();
-  try {
+  const attempt = async () => {
     let timer: NodeJS.Timeout | undefined;
     const timeout = new Promise<never>((_, rej) => { timer = setTimeout(() => rej(new Error("db timeout")), DB_TIMEOUT_MS); });
     try { return await Promise.race([dbFn(), timeout]); } finally { clearTimeout(timer); }
+  };
+  try {
+    try { return await attempt(); } catch (e) {
+      // A frozen serverless instance often wakes with stale pooled sockets that hang until the timeout. Drop the pool and
+      // retry once on a fresh connection before falling back to (possibly stale) seed JSON. Postgres errors with a SQLSTATE
+      // (bad query, constraint) are real errors, not connection problems, so they are not retried.
+      const code = (e as { code?: string }).code; if (write || (code && /^[0-9A-Z]{5}$/.test(code))) throw e;
+      resetDb(); return await attempt();
+    }
   } catch (e) {
     const err = e as { code?: string; message?: string; cause?: { code?: string; message?: string } };
     lastDbError = err.cause?.code ?? err.code ?? String(err.message ?? e).slice(0, 40);

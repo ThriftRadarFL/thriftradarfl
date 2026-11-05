@@ -11,6 +11,7 @@ import FavButton from "@/components/FavButton";
 import AddToRoute from "@/components/AddToRoute";
 import ShareButtons from "@/components/ShareButtons";
 import { cleanTags, TAG_LABEL, FLIP_TIPS, ebaySoldUrl } from "@/lib/flip-tips";
+export const dynamic = "force-dynamic"; // read-after-write: admin edits must show immediately
 type P = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: P) {
   const s = await getSale((await params).slug); if (!s) return { title: "Sale not found", robots: { index: false } };

@@ -1,11 +1,11 @@
 // Postgres (Drizzle) implementation of the data layer. Used automatically when DATABASE_URL is set.
 import { eq, asc, inArray, sql } from "drizzle-orm";
-import { db } from "@/db";
+import { getDb } from "@/db";
 import * as t from "@/db/schema";
 import type { Sale, Venue, Submission, ContactMsg } from "./data";
 import { KIND_COLOR, ruleId, type DealRule } from "./deal-rules";
 
-const D = () => { if (!db) throw new Error("DATABASE_URL not set"); return db; };
+const D = () => { const db = getDb(); if (!db) throw new Error("DATABASE_URL not set"); return db; };
 const hm = (x: string | null) => (x ?? "00:00").slice(0, 5);
 
 export async function dbGetSales(): Promise<Sale[]> {
