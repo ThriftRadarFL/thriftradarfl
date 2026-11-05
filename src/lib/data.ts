@@ -41,7 +41,7 @@ function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: 
 // transparently falls back to the JSON files so builds and pages never break because the database is unreachable.
 // Tunable: DB_TIMEOUT_MS (default 4000) per query (one retry on a fresh pool), DB_BACKOFF_MS (default 30s) before retrying a down DB.
 const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 4000; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 30_000;
-let dbDownUntil = 0; let lastDbError = ""; let lastDbMessage = "";
+let dbDownUntil = 0; let dbFails = 0; let lastDbError = ""; let lastDbMessage = "";
 /** Strict writes: when a DB is configured in production (or DB_STRICT_WRITES=1), a failed DB write is a 503 — never a silent
  *  JSON write that would vanish on the next deploy / differ per serverless instance. DB_STRICT_WRITES=0 opts out. */
 export const strictWrites = () => hasDb && (process.env.DB_STRICT_WRITES === "1" || (process.env.NODE_ENV === "production" && process.env.DB_STRICT_WRITES !== "0"));
@@ -49,18 +49,19 @@ const dbOffline = () => new HttpError(503, "Saving is temporarily unavailable: t
 async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write = false): Promise<T> {
   if (write && strictWrites() && Date.now() < dbDownUntil) throw dbOffline();
   if (!hasDb || Date.now() < dbDownUntil) return jsonFn();
-  const attempt = async () => {
+  const attempt = async (ms: number) => {
     let timer: NodeJS.Timeout | undefined;
-    const timeout = new Promise<never>((_, rej) => { timer = setTimeout(() => rej(new Error("db timeout")), DB_TIMEOUT_MS); });
+    const timeout = new Promise<never>((_, rej) => { timer = setTimeout(() => rej(new Error("db timeout")), ms); });
     try { return await Promise.race([dbFn(), timeout]); } finally { clearTimeout(timer); }
   };
   try {
-    try { return await attempt(); } catch (e) {
-      // A frozen serverless instance often wakes with stale pooled sockets that hang until the timeout. Drop the pool and
-      // retry once on a fresh connection before falling back to (possibly stale) seed JSON. Postgres errors with a SQLSTATE
-      // (bad query, constraint) are real errors, not connection problems, so they are not retried.
-      const code = (e as { code?: string }).code; if (write || (code && /^[0-9A-Z]{5}$/.test(code))) throw e;
-      resetDb(); return await attempt();
+    try { const out = await attempt(DB_TIMEOUT_MS); dbFails = 0; return out; } catch (e) {
+      // Reads only: a cold serverless instance can need >4s for its first pooled connection, and a frozen instance can wake
+      // with dead sockets (CONNECTION_*/ECONN*). Retry once (fresh pool for dead sockets) before using possibly-stale seed
+      // JSON. Postgres SQLSTATE errors are real query errors and are not retried; writes are never retried (no double inserts).
+      const code = String((e as { code?: string }).code ?? ""); if (write || /^[0-9A-Z]{5}$/.test(code)) throw e;
+      if (/^(CONNECTION_|ECONN|EPIPE)/.test(code)) resetDb();
+      const out = await attempt(DB_TIMEOUT_MS * 2); dbFails = 0; return out;
     }
   } catch (e) {
     const err = e as { code?: string; message?: string; cause?: { code?: string; message?: string } };
@@ -68,7 +69,8 @@ async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write 
     // Postgres message (e.g. 'column "x" does not exist') with any URL/credential-looking text scrubbed
     lastDbMessage = String(err.cause?.message ?? err.message ?? e).replace(/\b[a-z]+:\/\/\S+/gi, "<url>").replace(/(password|token|key|secret)\S*/gi, "<redacted>").slice(0, 160);
     if (Date.now() >= dbDownUntil) console.warn(`[data] database unreachable (${lastDbError}); using JSON fallback`);
-    dbDownUntil = Date.now() + DB_BACKOFF_MS; if (write && strictWrites()) throw dbOffline(); return jsonFn();
+    // One slow request falls back alone; only repeated failures put this instance in JSON mode for DB_BACKOFF_MS.
+    if (++dbFails >= 2) dbDownUntil = Date.now() + DB_BACKOFF_MS; if (write && strictWrites()) throw dbOffline(); return jsonFn();
   }
 }
 export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= dbDownUntil, lastError: lastDbError || null, lastErrorMessage: lastDbMessage || null });

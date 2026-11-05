@@ -12,5 +12,5 @@ let instance = client ? drizzle(client, { schema }) : null;
 export const getDb = () => instance;
 export function resetDb() {
   if (!url) return; const old = client; client = make(); instance = drizzle(client, { schema });
-  old?.end({ timeout: 0 }).catch(() => {});
+  old?.end({ timeout: 5 }).catch(() => {});
 }
