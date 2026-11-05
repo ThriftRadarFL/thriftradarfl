@@ -597,5 +597,26 @@
       }
     ],
     "tags": []
+  },
+  {
+    "slug": "estate-sale-408-knot-way-deland-2472137",
+    "title": "Estate Sale at 408 Knot Way",
+    "type": "estate",
+    "city": "DeLand",
+    "zip": "32724",
+    "lat": 29.023,
+    "lng": -81.2714,
+    "sourceUrl": "https://www.estatesales.org/estate-sales/fl/deland/32724/estate-sale-2472137",
+    "paymentMethods": [],
+    "description": "Address: 408 Knot Way, DeLand, FL 32724 (Volusia). Starts Fri Nov 6 at 8:30 AM ET. Closing time and end date not shown on the listing \u2014 check the listing before you go (5:00 PM in our hours table is a required placeholder, not from the listing). Company not shown on listing. Map pin from OpenStreetMap Nominatim for 408 Knot Way (street-precise). Source: estatesales.org.",
+    "days": [
+      {
+        "date": "2026-11-06",
+        "start": "08:30",
+        "end": "17:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
   }
 ]

@@ -12,8 +12,8 @@ test("companies directory: no defunct entry, Hidden Treasure uses its site phone
   assert.ok(companies.some((c) => !c.verified) && companies.some((c) => c.verified));
   assert.ok(STATIC_PAGES.includes("/estate-sale-companies"));
 });
-test("real sales only: 20 estatesales.net/.org listings, no demo/NSB rows, Berner's are auctions", () => {
-  assert.equal(sales.length, 20);
+test("real sales only: 21 estatesales.net/.org listings, no demo/NSB rows, Berner's are auctions", () => {
+  assert.equal(sales.length, 21);
   for (const s of sales as any[]) assert.match(s.sourceUrl, /estatesales\.net\/FL\/.+\/\d{6,}$|estatesales\.org\/estate-sales\/fl\/.+-\d{6,}$/);
   assert.ok(!(sales as any[]).some((s) => /new smyrna/i.test(s.city)));
   for (const s of (sales as any[]).filter((s) => /berner/i.test(s.title))) assert.equal(s.type, "auction");
