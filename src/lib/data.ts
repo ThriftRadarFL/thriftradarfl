@@ -85,17 +85,18 @@ function once<T>(key: string, fn: () => Promise<T>): Promise<T> {
   const p = fn().finally(() => { if (inflight.get(key) === p) inflight.delete(key); });
   inflight.set(key, p); return p;
 }
-// Short-lived per-instance cache for the hot public list reads (sales/venues/rules). Fresh for READ_TTL_MS; after that a stale
-// value is served immediately while one background refresh runs, so a hung/cold pooler never blocks TTFB once an instance is warm.
-// Writes below call bust() so admin edits show up immediately on this instance.
-const READ_TTL_MS = Number(process.env.READ_TTL_MS) || 60_000;
-const readCache = new Map<string, { at: number; v: Promise<unknown> }>();
+// Last-good cache for the hot public list reads (sales/venues/rules). Every request still asks the DB first so admin edits
+// show up immediately on every instance; but if the DB hasn't answered within READ_STALE_AFTER_MS and this instance already has a
+// last-good value, that value is served right away while the query finishes in the background (and refreshes the cache).
+// A hung/cold pooler therefore can't block TTFB on a warm instance; cold instances are bounded by the 2.5s(+4s) viaDb timeouts.
+const READ_STALE_AFTER_MS = Number(process.env.READ_STALE_AFTER_MS) || 1200;
+const readCache = new Map<string, unknown>();
 function cached<T>(key: string, fn: () => Promise<T>): Promise<T> {
-  const hit = readCache.get(key); const now = Date.now();
-  if (hit && now - hit.at < READ_TTL_MS) return hit.v as Promise<T>;
-  const p = once(key, fn);
-  if (hit) { p.then((v) => readCache.set(key, { at: Date.now(), v: Promise.resolve(v) }), () => {}); return hit.v as Promise<T>; }
-  readCache.set(key, { at: now, v: p }); p.catch(() => readCache.delete(key)); return p;
+  const p = once(key, fn).then((v) => { readCache.set(key, v); return v; });
+  if (!readCache.has(key)) return p;
+  const stale = readCache.get(key) as T; let t: NodeJS.Timeout | undefined;
+  const late = new Promise<T>((res) => { t = setTimeout(() => res(stale), READ_STALE_AFTER_MS); });
+  return Promise.race([p.catch(() => stale), late]).finally(() => clearTimeout(t));
 }
 export const bust = () => readCache.clear();
 export async function getVenues(): Promise<Venue[]> { return cached("venues", () => viaDb(() => pg.dbGetVenues(), () => readJson<Venue[]>(venuesFile, seedVenues as Venue[]))); }
