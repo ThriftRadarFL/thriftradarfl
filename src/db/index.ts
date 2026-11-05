@@ -6,8 +6,8 @@ const url = process.env.DATABASE_URL;
 export const hasDb = !!url;
 // Serverless instances get frozen between requests; pooled sockets can go stale and hang a query until our timeout.
 // resetDb() drops the pool so the next query opens a fresh connection (used by data.ts before retrying a timed-out read).
-// max:1 — Vercel serverless: many concurrent instances × large pools exhaust Supabase; one conn per isolate is the usual pattern.
-const make = () => postgres(url!, { prepare: false, connect_timeout: 5, max: 1, idle_timeout: 10, max_lifetime: 60 * 5 });
+// max:3 — enough for generateMetadata + page running in parallel; still small for Supabase transaction pooler.
+const make = () => postgres(url!, { prepare: false, connect_timeout: 5, max: 3, idle_timeout: 10, max_lifetime: 60 * 5 });
 let client = url ? make() : null;
 let instance = client ? drizzle(client, { schema }) : null;
 export const getDb = () => instance;

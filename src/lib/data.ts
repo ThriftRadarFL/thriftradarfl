@@ -78,12 +78,19 @@ export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= d
 
 const jsonSales = () => readJson<Sale[]>(salesFile, mockSales as Sale[]);
 const bySoonest = (s: Sale[]) => [...s].sort((a, b) => (a.days[0]?.date ?? "").localeCompare(b.days[0]?.date ?? ""));
+// Deduplicate concurrent identical lookups (Next may run generateMetadata + page in parallel on one isolate).
+const inflight = new Map<string, Promise<unknown>>();
+function once<T>(key: string, fn: () => Promise<T>): Promise<T> {
+  const hit = inflight.get(key) as Promise<T> | undefined; if (hit) return hit;
+  const p = fn().finally(() => { if (inflight.get(key) === p) inflight.delete(key); });
+  inflight.set(key, p); return p;
+}
 export async function getVenues(): Promise<Venue[]> { return viaDb(() => pg.dbGetVenues(), () => readJson<Venue[]>(venuesFile, seedVenues as Venue[])); }
 export async function getVenue(slug: string) {
-  return viaDb(
+  return once(`venue:${slug}`, () => viaDb(
     () => pg.dbGetVenue(slug),
     async () => (await readJson<Venue[]>(venuesFile, seedVenues as Venue[])).find((v) => v.slug === slug) ?? null,
-  );
+  ));
 }
 /** All sales including unpublished drafts (admin). */
 export async function getAllSales(): Promise<Sale[]> { return bySoonest(await viaDb(() => pg.dbGetSales(), jsonSales)); }
@@ -91,10 +98,10 @@ export async function getAllSales(): Promise<Sale[]> { return bySoonest(await vi
 export async function getSales(): Promise<Sale[]> { return (await getAllSales()).filter((s) => s.published !== false); }
 /** Single public sale by slug (targeted DB lookup — avoids loading every sale on /sales/[slug]). */
 export async function getSale(slug: string) {
-  return viaDb(
+  return once(`sale:${slug}`, () => viaDb(
     async () => { const s = await pg.dbGetSale(slug); return s && s.published !== false ? s : null; },
     async () => (await jsonSales()).find((s) => s.slug === slug && s.published !== false) ?? null,
-  );
+  ));
 }
 
 export async function upsertSale(sale: Sale) {

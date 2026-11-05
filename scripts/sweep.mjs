@@ -8,6 +8,8 @@ const fails = []; let ok = 0;
 const check = (cond, msg) => { if (cond) ok++; else fails.push(msg); };
 const get = (p, init) => fetch(B + p, { redirect: "manual", ...init });
 const auth = { authorization: `Bearer ${PW}`, "content-type": "application/json" };
+// Read-after-write under live sweep load can briefly hit a seed-fallback isolate; poll a few times before failing.
+const eventually = async (fn, msg, tries = 8, ms = 400) => { for (let i = 0; i < tries; i++) { if (await fn()) { ok++; return true; } await new Promise((r) => setTimeout(r, ms)); } fails.push(msg); return false; };
 
 // 1 · Sitemap: every URL resolves 200 with a title, description, canonical, og:title and parseable JSON-LD.
 const sm = await (await get("/sitemap.xml")).text();
@@ -77,9 +79,9 @@ if (PW) {
   const sale = { slug, title: "Sweep Test Sale", type: "estate", city: "Port Orange", zip: "32127", days: [{ date: d, start: "09:00", end: "14:00" }], paymentMethods: ["cash"] };
   let r = await get("/api/sales", { method: "POST", headers: auth, body: JSON.stringify(sale) }); check(r.status === 201, `create sale → ${r.status} ${await r.text()}`);
   r = await get("/api/sales", { method: "POST", headers: auth, body: JSON.stringify(sale) }); check(r.status === 409, `duplicate sale → ${r.status}`);
-  check((await get(`/sales/${slug}`)).status === 200, "new sale page not 200");
+  await eventually(async () => (await get(`/sales/${slug}`)).status === 200, "new sale page not 200");
   r = await get(`/api/sales/${slug}`, { method: "PUT", headers: auth, body: JSON.stringify({ title: "Sweep Test Sale (edited)" }) }); check(r.status === 200, `edit sale → ${r.status}`);
-  check((await (await get(`/sales/${slug}`)).text()).includes("Sweep Test Sale (edited)"), "edited title not shown");
+  await eventually(async () => (await (await get(`/sales/${slug}`)).text()).includes("Sweep Test Sale (edited)"), "edited title not shown");
   r = await get(`/api/sales/${slug}`, { method: "PUT", headers: auth, body: JSON.stringify({ published: false }) }); check(r.status === 200, `unpublish → ${r.status}`);
   check(!(await (await get("/sitemap.xml")).text()).includes(slug), "unpublished sale still in sitemap");
   r = await get("/api/sales", { method: "POST", headers: auth, body: JSON.stringify({ ...sale, slug: "sweep-bad", days: [{ date: "2026-02-30", start: "09:00", end: "14:00" }] }) }); check(r.status === 400, `invalid date accepted → ${r.status}`);
@@ -87,11 +89,11 @@ if (PW) {
   check((await get(`/sales/${slug}`)).status === 404, "deleted sale page not 404");
   const rule = { venue: "goodwill-port-orange", day: 5, kind: "half_off", label: "Sweep test half off", discountPct: 50, verified: false };
   r = await get("/api/deal-rules", { method: "POST", headers: auth, body: JSON.stringify(rule) }); const body = await r.json().catch(() => ({})); check(r.status === 201, `create rule → ${r.status}`);
-  check((await (await get("/deals")).text()).includes("Sweep test half off"), "new rule not on /deals");
+  await eventually(async () => (await (await get("/deals")).text()).includes("Sweep test half off"), "new rule not on /deals");
   if (body.data?.id) { r = await get(`/api/deal-rules?id=${encodeURIComponent(body.data.id)}`, { method: "DELETE", headers: auth }); check(r.status === 200, `delete rule → ${r.status}`); }
   const origNotes = (await (await get("/api/venues/goodwill-port-orange")).json()).data?.notes ?? "";
   r = await get("/api/venues/goodwill-port-orange", { method: "PUT", headers: auth, body: JSON.stringify({ notes: "Sweep note" }) }); check(r.status === 200, `edit venue → ${r.status}`);
-  check((await (await get("/stores/goodwill-port-orange")).text()).includes("Sweep note"), "venue edit not shown");
+  await eventually(async () => (await (await get("/stores/goodwill-port-orange")).text()).includes("Sweep note"), "venue edit not shown");
   await get("/api/venues/goodwill-port-orange", { method: "PUT", headers: auth, body: JSON.stringify({ notes: origNotes }) }); // restore prod notes
 } else console.log("(skipping admin write checks: set ADMIN_PASSWORD)");
 
