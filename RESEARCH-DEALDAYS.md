@@ -6,3 +6,9 @@
 
 ## Goodwill Industries of Central Florida — VERIFIED 2026-11-04
 Source: https://www.goodwillcfl.org/shop (official). Color of the Week ~50% off most color-tagged textiles/shoes/wares, refreshes Sundays, color posted in store; Seniors 55+ 10% off Mondays; active/retired military 10% off Wednesdays; no stacking; GICF retail stores in Brevard/Lake/Orange/Osceola/Seminole/Volusia. Applied to 14 retail stores (Port Orange + 13). NOT applied to outlets (Pine Hills, Taft — bins pricing unverified) or Winter Park Boutique (page lists boutique separately; confirm).
+
+## Minte Nov 5, 2026 — none published / still unknown (do not invent rules)
+- **GWCFL Winter Park Boutique + Pine Hills/Taft outlets:** hours already on file (Boutique Mon–Sun 9–9; Pine Hills 8–5; Taft 8–6). Color/Senior/Military apply? **UNKNOWN** — shop page says retail-only but locations also list them under Retail Stores; no explicit yes/no. Keep unconfirmed on `/goodwill-cfl`; no deal rules.
+- **Habitat ReStores:** Greater Volusia (Port Orange) + Southeast Volusia (New Smyrna) + West Orange (Winter Garden) — open; **no deal days published** on official ReStore pages (Facebook weekly specials only where noted). Habitat Orlando & Osceola ReStores **closed Jan 31 2019** — do not list as open.
+- **Salvation Army Holly Hill + two Orlando stores:** no deal days published on official pages — do not invent chainwide SA rules. (Existing W Colonial Yelp-sourced rule stays store-specific/unverified as before.)
+- CSV: `thriftradarfl-assets/gwcfl-boutique-outlets-nov5.csv`, `habitat-sa-deals-nov5.csv`, `sharing-center-coords-nov5.csv`.

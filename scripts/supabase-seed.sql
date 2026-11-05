@@ -248,8 +248,8 @@ INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phon
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'st-vincent-de-paul-nearly-new-flagler-beach');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'sharing-center-village-shoppes-longwood', (SELECT id FROM organizations WHERE name = 'The Sharing Center' LIMIT 1),
-      'The Sharing Center Village Shoppes (Thrift, Boutique, Furniture)', 'thrift', '600 N Highway 17-92 Suite 130', 'Longwood', '32750', 0, 0, '(407) 260-9155',
-      '{"mon-sat":"9:30-17:00","sun":"closed"}'::jsonb, 'Not on the map yet (address didn''t geocode). Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (checked 2026-11-02).', true
+      'The Sharing Center Village Shoppes (Thrift, Boutique, Furniture)', 'thrift', '600 N Highway 17-92 Suite 130', 'Longwood', '32750', 28.706466, -81.327064, '(407) 260-9155',
+      '{"mon-sat":"9:30-17:00","sun":"closed"}'::jsonb, 'Map pin from Google Maps address pin for 600 US-17 92 #130 (28.706466, -81.327064; checked 2026-11-05). Address-geocoded building/suite pin, not a The Sharing Center business listing. Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (checked 2026-11-02).', true
     WHERE NOT EXISTS (SELECT 1 FROM venues WHERE slug = 'sharing-center-village-shoppes-longwood');
 INSERT INTO venues (slug, org_id, name, type, address, city, zip, lat, lng, phone, hours_json, notes, active)
     SELECT 'prince-of-peace-like-new-shop-ormond-beach', (SELECT id FROM organizations WHERE name = 'Prince of Peace Catholic Church' LIMIT 1),

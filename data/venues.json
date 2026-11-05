@@ -716,14 +716,14 @@
     "address": "600 N Highway 17-92 Suite 130",
     "city": "Longwood",
     "zip": "32750",
-    "lat": 28.705,
-    "lng": -81.3275,
+    "lat": 28.706466,
+    "lng": -81.327064,
     "phone": "(407) 260-9155",
     "hoursJson": {
       "mon-sat": "9:30-17:00",
       "sun": "closed"
     },
-    "notes": "Map pin approximate and unverified (approx. coords from 400 N US 17-92, about 200 address numbers south of the real 600 N address; supplied by Minte 2026-11-04). Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (checked 2026-11-02).",
+    "notes": "Map pin from Google Maps address pin for 600 US-17 92 #130 (28.706466, -81.327064; checked 2026-11-05). Address-geocoded building/suite pin, not a The Sharing Center business listing. Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (checked 2026-11-02).",
     "sourceUrl": "https://thesharingcenter.org/shopwithus/"
   },
   {
