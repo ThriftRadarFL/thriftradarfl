@@ -30,7 +30,7 @@ test("recentlyAdded: 7-day window, upcoming only, newest first, skips undated + 
 test("atomFeed: valid-shaped Atom, escaped, absolute links, stable tag ids, updated = newest", async () => {
   const { atomFeed } = await load();
   const xml = atomFeed([mk("a", "2026-10-30T12:00:00Z", "2026-11-10"), mk("b", "2026-11-02T20:00:00Z", "2026-11-12")], "https://thriftradarfl.com/", now);
-  assert.match(xml, /^<\?xml version="1.0" encoding="utf-8"\?>\n<feed xmlns="http:\/\/www.w3.org\/2005\/Atom">/);
+  assert.match(xml, /^<\?xml version="1.0" encoding="utf-8"\?>\n<\?xml-stylesheet type="text\/xsl" href="\/feed.xsl"\?>\n<feed xmlns="http:\/\/www.w3.org\/2005\/Atom">/);
   assert.equal((xml.match(/<entry>/g) ?? []).length, 2); assert.ok(xml.indexOf("sale/b") < xml.indexOf("sale/a"));
   assert.ok(xml.includes('href="https://thriftradarfl.com/sales/a"')); assert.ok(xml.includes("<id>tag:thriftradarfl.com,2026:sale/a</id>"));
   assert.ok(xml.includes("<updated>2026-11-02T20:00:00.000Z</updated>")); assert.ok(xml.includes("&amp; &lt;co&gt;")); assert.ok(!xml.includes("<co>"));
