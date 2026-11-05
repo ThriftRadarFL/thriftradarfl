@@ -65,3 +65,11 @@
 - **DELETE/PUT 404 on real Postgres sales:** admin write paths use new `getSaleAdmin` (targeted `dbGetSale`, includes unpublished). No more `getAllSales()` full-table read that could seed-fallback and 404. Strict/prod: DB-down → 503 instead of a false miss. POST 409 check uses the same helper.
 - Leftover cleanup: prod `sweep-test-sale` already gone (DELETE 404); Port Orange notes already real Goodwill CFL text (not "Sweep note").
 - Tests: 152 pass / 5 PG skipped. Deploy + one clean live sweep next.
+
+## 2026-11-05 ~12:00–12:35 AM ET — Grok Bot overnight session (read-after-write + Berner)
+- Confirmed 29670f6 (+ follow-ups) deployed; live `/api/health` postgres, 44 venues.
+- Assets: thriftradarfl-assets unchanged since Nov 3 (nothing to merge). Sharing Center Longwood pin left as approx.
+- Bug: live sweep still 1,369/4 on read-after-write under sitemap load (seed fallback after DB timeout). Shipped: always `resetDb()` before retrying timed-out reads; default timeout 8s / connect_timeout 5s; hard backoff on ECONNREFUSED/ENOTFOUND/auth; `dbGetSale`/`dbGetVenue` targeted lookups; in-flight dedupe so `generateMetadata`+page share one query; pool `max:3` (max:1 raced with parallel RSC fetches and caused 8–24s pages). Sweep now polls the four admin visibility checks. Post-deploy live sweep: **1,373 pass, 0 fail**, 110 sitemap URLs.
+- Polish: Berner's Auction phone `(386) 738-8848` + source `bernersauction.com` (checked 2026-11-05) synced via admin API — report card C→A (grades now A19 B15 C0 D10). `/bins` `force-dynamic`. Habitat ReStore sites only point to Facebook for weekly specials — no verified deal-day rules added.
+- Tests 156 (151 pass, 5 PG skipped). data:check 0 errors / 0 warnings. Commits ff94ab7..9ed02ac pushed + prod deployed.
+- Next: homepage still intermittently ~8s on cold isolates (Promise.all sales+venues+rules); further pooler/timeout tuning. Verified deal rules for Habitat/Salvation Army only if their own sites publish them.
