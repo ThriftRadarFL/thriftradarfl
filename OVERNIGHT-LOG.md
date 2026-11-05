@@ -106,3 +106,9 @@
 - Tests 163 (158 pass, 5 PG skipped). data:check 0 errors / 0 warnings.
 - **ONE live sweep: 1,371 pass / 0 fail**, 111 sitemap URLs. PASS. The 20 admin write checks were skipped because ADMIN_PASSWORD wasn't exported to the sweep; admin login/logout was checked by hand above instead.
 - No deploy, because only the log changed.
+
+## 2026-11-05 ~1:15–1:45 AM ET — Grok Bot overnight session (/stores Open now filter)
+- Assets: thriftradarfl-assets unchanged since Nov 3 (nothing to merge). Winter Park Boutique + GWCFL outlets still unconfirmed.
+- Feature: **/stores "Open now (N)" filter** (`/stores?open=1`) using existing hoursJson + `openState` in Eastern time. Shows "N open right now · Show all", plus an empty state linking all stores and /deals when nothing is open (verified live at ~1:30 AM ET: 0 open). No new data invented.
+- Tests 163 (158 pass, 5 PG skipped). tsc + eslint clean. Commit 238faef pushed + prod deployed.
+- **Full live sweep WITH ADMIN_PASSWORD (admin write checks included): 1,391 pass / 0 fail**, 111 sitemap URLs, before and after deploy. Sweep test sale/rule deleted and Port Orange notes restored by the sweep itself.
