@@ -112,3 +112,11 @@
 - Feature: **/stores "Open now (N)" filter** (`/stores?open=1`) using existing hoursJson + `openState` in Eastern time. Shows "N open right now · Show all", plus an empty state linking all stores and /deals when nothing is open (verified live at ~1:30 AM ET: 0 open). No new data invented.
 - Tests 163 (158 pass, 5 PG skipped). tsc + eslint clean. Commit 238faef pushed + prod deployed.
 - **Full live sweep WITH ADMIN_PASSWORD (admin write checks included): 1,391 pass / 0 fail**, 111 sitemap URLs, before and after deploy. Sweep test sale/rule deleted and Port Orange notes restored by the sweep itself.
+
+## 2026-11-05 ~1:30–1:40 AM ET — Grok Bot overnight session (verify only, no code changes)
+- Live checks: /api/health, /deals, /goodwill-cfl, /stores?open=1, /bins all 200 in 0.45–0.70s.
+- No bugs found, and no polish was worth shipping without making things up, so no code changed.
+- Assets: thriftradarfl-assets unchanged since Nov 3 (nothing to merge). Winter Park Boutique + GWCFL outlets still unconfirmed.
+- Tests (npm test): 158 pass, 5 PG skipped, 0 fail.
+- **Full live sweep WITH ADMIN_PASSWORD (admin write checks included): 1,391 pass / 0 fail**, 111 sitemap URLs.
+- No deploy, because only the log changed.
