@@ -24,7 +24,7 @@ test("Nov 3 hours round 3 merged", () => {
   const by = Object.fromEntries((venues as any[]).map((v) => [v.slug, v]));
   assert.deepEqual(by["city-thrift-semoran"].hoursJson, { "mon-sat": "9:00-21:00", sun: "10:00-19:00" });
   for (const k of ["salvation-army-orlando-thrift-store-2", "salvation-army-orlando-thrift-store-4"]) { assert.deepEqual(by[k].hoursJson, { "mon-sat": "10:00-18:00", sun: "closed" }); assert.match(by[k].notes, /unverified/); }
-  const sc = by["sharing-center-village-shoppes-longwood"]; assert.ok(sc.lat > 28 && sc.lng < -81 && /approximate and unverified/i.test(sc.notes) && !/not on the map yet/i.test(sc.notes), "Sharing Center pinned approx, flagged unverified");
+  const sc = by["sharing-center-village-shoppes-longwood"]; assert.equal(sc.lat, 28.706466); assert.equal(sc.lng, -81.327064); assert.match(sc.notes, /Google Maps address pin/i); assert.doesNotMatch(sc.notes, /approximate and unverified/i); assert.doesNotMatch(sc.notes, /not on the map yet/i);
 });
 test("map has a keyboard list mirroring pins + 40px controls", () => {
   const m = readFileSync("src/app/map/MapExplorer.tsx", "utf8"); assert.match(m, /aria-label=\{`Show \$\{p\.name\} on the map`\}/); assert.match(readFileSync("src/components/SaleMap.tsx", "utf8"), /focusKey/);
