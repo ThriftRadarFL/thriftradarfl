@@ -42,3 +42,7 @@
 - Feature: **90-day price filter** on `/prices` (`?window=90` = whole sold range inside 90 days, `?window=90any` = any sales inside 90 days) + recency badge per item (Recent / Mixed with % of date span inside 90 days / Stale). `GET /api/prices?window=` (+ /developers docs). Medians are never recomputed — filter uses only each item's sourced date range. Today: 8 of 20 fully within 90 days, 20 of 20 with some.
 - Data: Sharing Center Longwood pinned at 28.7050, -81.3275 (approx coords from 400 N US 17-92, ~200 numbers south of the real 600 N address, from Minte) — notes say "Map pin approximate and unverified"; report card shows pin as partial. Synced to prod via admin API (hours preserved). No new files in thriftradarfl-assets since Nov 3.
 - Tests 156 (151 pass, 5 PG skipped). data:check 0 errors, 0 warnings. Commit 3330f25 deployed; live sweep: 1,369 pass, 0 fail, 111 sitemap URLs; /api/health postgres.
+
+## 2026-11-04 night — verified Goodwill CFL rules
+- Verified from goodwillcfl.org/shop: Color of the Week (Sun refresh, 50%), Seniors 55+ 10% Mon, Military 10% Wed. Added verified rules to 13 more GICF retail stores (39 rules, synced to prod via admin API); Port Orange senior rule gets discountPct 10 in seed. Outlets + Winter Park Boutique left unverified/untouched.
+- Live crawl: /, /bins, /prices, /map, /stores all 200; /bins already has empty states. No new files in thriftradarfl-assets.
