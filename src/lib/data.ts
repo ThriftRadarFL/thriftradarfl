@@ -40,7 +40,7 @@ function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: 
 // DB is used when DATABASE_URL is set AND reachable. Any DB error (timeout, protocol, auth) marks it down for 60s and
 // transparently falls back to the JSON files so builds and pages never break because the database is unreachable.
 // Tunable: DB_TIMEOUT_MS (default 8000) per query (one retry on a fresh pool), DB_BACKOFF_MS (default 30s) before retrying a down DB.
-const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 8000; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 30_000;
+const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 2500; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 30_000;
 let dbDownUntil = 0; let dbFails = 0; let lastDbError = ""; let lastDbMessage = "";
 /** Strict writes: when a DB is configured in production (or DB_STRICT_WRITES=1), a failed DB write is a 503 — never a silent
  *  JSON write that would vanish on the next deploy / differ per serverless instance. DB_STRICT_WRITES=0 opts out. */
@@ -48,20 +48,20 @@ export const strictWrites = () => hasDb && (process.env.DB_STRICT_WRITES === "1"
 const dbOffline = () => new HttpError(503, "Saving is temporarily unavailable: the database is offline. Please try again in a few minutes.", { code: "DB_DOWN" });
 async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write = false): Promise<T> {
   if (write && strictWrites() && Date.now() < dbDownUntil) throw dbOffline();
-  if (!hasDb || Date.now() < dbDownUntil) return jsonFn();
+  if (!hasDb || Date.now() < dbDownUntil) { if (write) bust(); return jsonFn(); }
   const attempt = async (ms: number) => {
     let timer: NodeJS.Timeout | undefined;
     const timeout = new Promise<never>((_, rej) => { timer = setTimeout(() => rej(new Error("db timeout")), ms); });
     try { return await Promise.race([dbFn(), timeout]); } finally { clearTimeout(timer); }
   };
   try {
-    try { const out = await attempt(DB_TIMEOUT_MS); dbFails = 0; return out; } catch (e) {
+    try { const out = await attempt(DB_TIMEOUT_MS); dbFails = 0; if (write) bust(); return out; } catch (e) {
       // Reads only: cold starts and frozen isolates often hang on a stale pooled socket until our timeout. Always drop the
       // pool before retrying (timeouts included — Promise.race does not cancel the hung query, so the old client keeps the
       // dead socket). Postgres SQLSTATE errors are real query errors and are not retried; writes are never retried.
       const code = String((e as { code?: string }).code ?? ""); if (write || /^[0-9A-Z]{5}$/.test(code)) throw e;
       resetDb();
-      const out = await attempt(DB_TIMEOUT_MS * 2); dbFails = 0; return out;
+      const out = await attempt(DB_TIMEOUT_MS + 1500); dbFails = 0; return out;
     }
   } catch (e) {
     const err = e as { code?: string; message?: string; cause?: { code?: string; message?: string } };
@@ -71,7 +71,7 @@ async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write 
     if (Date.now() >= dbDownUntil) console.warn(`[data] database unreachable (${lastDbError}); using JSON fallback`);
     // One slow request (timeout) falls back alone; refused/unknown-host/auth errors or 2 failures in a row put this instance in JSON mode for DB_BACKOFF_MS.
     const hard = /^(ECONNREFUSED|ENOTFOUND|EAI_AGAIN|28P01|28000|3D000)$/.test(String(lastDbError)); // DB really unreachable / bad creds
-    if (++dbFails >= 2 || hard) dbDownUntil = Date.now() + DB_BACKOFF_MS; if (write && strictWrites()) throw dbOffline(); return jsonFn();
+    if (++dbFails >= 2 || hard) dbDownUntil = Date.now() + DB_BACKOFF_MS; if (write && strictWrites()) throw dbOffline(); if (write) bust(); return jsonFn();
   }
 }
 export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= dbDownUntil, lastError: lastDbError || null, lastErrorMessage: lastDbMessage || null });
@@ -85,7 +85,20 @@ function once<T>(key: string, fn: () => Promise<T>): Promise<T> {
   const p = fn().finally(() => { if (inflight.get(key) === p) inflight.delete(key); });
   inflight.set(key, p); return p;
 }
-export async function getVenues(): Promise<Venue[]> { return viaDb(() => pg.dbGetVenues(), () => readJson<Venue[]>(venuesFile, seedVenues as Venue[])); }
+// Short-lived per-instance cache for the hot public list reads (sales/venues/rules). Fresh for READ_TTL_MS; after that a stale
+// value is served immediately while one background refresh runs, so a hung/cold pooler never blocks TTFB once an instance is warm.
+// Writes below call bust() so admin edits show up immediately on this instance.
+const READ_TTL_MS = Number(process.env.READ_TTL_MS) || 60_000;
+const readCache = new Map<string, { at: number; v: Promise<unknown> }>();
+function cached<T>(key: string, fn: () => Promise<T>): Promise<T> {
+  const hit = readCache.get(key); const now = Date.now();
+  if (hit && now - hit.at < READ_TTL_MS) return hit.v as Promise<T>;
+  const p = once(key, fn);
+  if (hit) { p.then((v) => readCache.set(key, { at: Date.now(), v: Promise.resolve(v) }), () => {}); return hit.v as Promise<T>; }
+  readCache.set(key, { at: now, v: p }); p.catch(() => readCache.delete(key)); return p;
+}
+export const bust = () => readCache.clear();
+export async function getVenues(): Promise<Venue[]> { return cached("venues", () => viaDb(() => pg.dbGetVenues(), () => readJson<Venue[]>(venuesFile, seedVenues as Venue[]))); }
 export async function getVenue(slug: string) {
   return once(`venue:${slug}`, () => viaDb(
     () => pg.dbGetVenue(slug),
@@ -93,7 +106,7 @@ export async function getVenue(slug: string) {
   ));
 }
 /** All sales including unpublished drafts (admin). */
-export async function getAllSales(): Promise<Sale[]> { return bySoonest(await viaDb(() => pg.dbGetSales(), jsonSales)); }
+export async function getAllSales(): Promise<Sale[]> { return bySoonest(await cached("sales", () => viaDb(() => pg.dbGetSales(), jsonSales))); }
 /** Public sales: published only. */
 export async function getSales(): Promise<Sale[]> { return (await getAllSales()).filter((s) => s.published !== false); }
 /** Single public sale by slug (targeted DB lookup — avoids loading every sale on /sales/[slug]). */
@@ -137,7 +150,7 @@ export async function deleteVenue(slug: string) {
 
 // Deal rules: JSON-backed (seeded from deal-rules.ts) so admins can edit them.
 const rulesFile = path.join(DATA_DIR, "deal-rules.json");
-export async function getDealRules(): Promise<DealRule[]> { return viaDb(() => pg.dbGetDealRules(), async () => (await readJson<DealRule[]>(rulesFile, seedDealRules)).map((r) => ({ ...r, id: r.id || ruleId(r) }))); }
+export async function getDealRules(): Promise<DealRule[]> { return cached("rules", () => viaDb(() => pg.dbGetDealRules(), async () => (await readJson<DealRule[]>(rulesFile, seedDealRules)).map((r) => ({ ...r, id: r.id || ruleId(r) })))); }
 const withIds = (rs: DealRule[]) => rs.map((r) => ({ ...r, id: r.id || ruleId(r) }));
 export async function upsertDealRule(r: DealRule) { await viaDb(() => pg.dbUpsertDealRule(r), () => mutate<DealRule[]>(rulesFile, seedDealRules, (all) => [...withIds(all).filter((x) => x.id !== r.id), r].sort((a, b) => a.day - b.day)), true); }
 export async function deleteDealRule(id: string) { return viaDb(() => pg.dbDeleteDealRule(id), () => mutate<DealRule[], boolean>(rulesFile, seedDealRules, (all) => { const w = withIds(all); return { next: w.filter((x) => x.id !== id), result: w.some((x) => x.id === id) }; }), true); }
@@ -203,10 +216,10 @@ import { pruneReports, type TagReport, type TagStatus } from "./color-tags";
 const _todayET = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 const tagsFile = path.join(DATA_DIR, "color-tags.json");
 async function viaDbTags<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write = false): Promise<T> {
-  if (!hasDb || Date.now() < dbDownUntil) { if (write && strictWrites()) throw dbOffline(); return jsonFn(); }
+  if (!hasDb || Date.now() < dbDownUntil) { if (write && strictWrites()) throw dbOffline(); if (write) bust(); return jsonFn(); }
   try { return await dbFn(); } catch (e) {
     console.warn("[color-tags] db error:", String((e as Error)?.message ?? e).replace(/\b[a-z]+:\/\/\S+/gi, "<url>").slice(0, 120));
-    if (write && strictWrites()) throw dbOffline(); return jsonFn();
+    if (write && strictWrites()) throw dbOffline(); if (write) bust(); return jsonFn();
   }
 }
 const tagSince = () => { const d = new Date(_todayET() + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() - 28); return d.toISOString().slice(0, 10); };
