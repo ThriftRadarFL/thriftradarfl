@@ -138,3 +138,12 @@
 - Commits 54556e8, 4c46e3a, 0a83c1a; deployed prod. Tests 163 pass / 5 skipped / 0 fail.
 - Live /city/orlando TTFB: 0.89, 0.41, 0.38, 0.36, 0.38s. Store page 0.40s.
 - **Live sweep WITH ADMIN_PASSWORD: 1,415 pass / 0 fail**, 113 sitemap URLs.
+
+## 2026-11-05 ~2:07 PM ET — Grok Bot (Minte estate-sales batch2: 408 Knot Way)
+- Added 1 estatesales.org sale from thriftradarfl-assets/estate-sales-nov5-batch2.csv:
+  - **408 Knot Way, DeLand (Volusia)** — starts Fri Nov 6 8:30 AM ET. Company not shown; end date/hours not shown (did not invent a second day or company). Schema requires an end time → **17:00 placeholder** with description disclaimer (not from listing). Pin **29.0230, -81.2714** from OSM Nominatim house node (street-precise, not approximate). No prices.
+  - slug: `estate-sale-408-knot-way-deland-2472137`
+  - live: https://thriftradarfl.vercel.app/sales/estate-sale-408-knot-way-deland-2472137
+- GWCFL Color of the Week: asset still says color not shown — left as in-store; no color invented.
+- Synced via admin API POST `/api/sales` → 201. data:check 0 errors / 0 warnings. Test count 20→21.
+- Commit 292f137 pushed; prod deployed (NEXT_DIST_DIR=.next-build). Live sale page **200**.
