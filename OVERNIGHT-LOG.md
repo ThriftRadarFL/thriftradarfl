@@ -64,7 +64,9 @@
 - **Parallel sweep 409:** admin write slug is now `sweep-test-sale-<time>-<rand>` per run (duplicate POST still checked against the same slug).
 - **DELETE/PUT 404 on real Postgres sales:** admin write paths use new `getSaleAdmin` (targeted `dbGetSale`, includes unpublished). No more `getAllSales()` full-table read that could seed-fallback and 404. Strict/prod: DB-down → 503 instead of a false miss. POST 409 check uses the same helper.
 - Leftover cleanup: prod `sweep-test-sale` already gone (DELETE 404); Port Orange notes already real Goodwill CFL text (not "Sweep note").
-- Tests: 152 pass / 5 PG skipped. Deploy + one clean live sweep next.
+- Tests: 152 pass / 5 PG skipped. Deployed b931874 to https://thriftradarfl.vercel.app.
+- Live verify: admin venue/deal-rules GET → `no-store`; public still `public, max-age=60`. Port Orange notes OK (not Sweep note). Fixed-slug `sweep-test-sale` DELETE 404 (already gone).
+- **ONE clean live sweep: 1,377 pass / 0 fail**, 110 sitemap URLs. PASS.
 
 ## 2026-11-05 ~12:00–12:35 AM ET — Grok Bot overnight session (read-after-write + Berner)
 - Confirmed 29670f6 (+ follow-ups) deployed; live `/api/health` postgres, 44 venues.
