@@ -11,7 +11,7 @@ export const GET = handle(async (req: Request, { params }: P) => {
 export const PUT = handle(async (req: Request, { params }: P) => {
   if (!isAdminRequest(req)) throw new HttpError(401, "unauthorized");
   const slug = (await params).slug; const ex = await getVenue(slug); if (!ex) throw new HttpError(404, "not found");
-  const r = parseVenue({ ...ex, hours: ex.hoursJson ? Object.values(ex.hoursJson)[0] : "", ...(await readBody(req)), slug }); if (!r.ok) throw new HttpError(400, "validation failed", r.errors);
+  const r = parseVenue({ ...ex, ...(await readBody(req)), slug }); if (!r.ok) throw new HttpError(400, "validation failed", r.errors);
   await upsertVenue(r.value); await audit("venue.save", slug, "via API"); await refreshPages(); return json({ data: r.value });
 });
 export const DELETE = handle(async (req: Request, { params }: P) => {

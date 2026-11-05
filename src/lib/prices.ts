@@ -23,3 +23,22 @@ export function profit(i: FeeInput) {
 /** "$3.99–$13.99" / "up to $7.99" for an est. thrift-cost range; midpoint used to prefill buy cost. */
 export const thriftRange = (e: PriceItem["estThrift"]) => !e ? "" : e.low !== null && e.high !== null ? `$${e.low.toFixed(2)}–$${e.high.toFixed(2)}` : e.high !== null ? `up to $${e.high.toFixed(2)}` : `from $${e.low!.toFixed(2)}`;
 export const thriftMid = (e: PriceItem["estThrift"]) => !e ? null : e.low !== null && e.high !== null ? (e.low + e.high) / 2 : (e.high ?? e.low);
+export type Recency = { level: "high" | "mixed" | "stale" | "unknown"; label: string; insideShare: number | null; start: string; end: string; ageDays: number | null };
+const DAY = 86400000;
+const parseRange = (r: string) => { const m = r.match(/(\d{4}-\d{2}-\d{2})\s*(?:to|–|-)\s*(\d{4}-\d{2}-\d{2})/); return m ? { start: m[1], end: m[2] } : null; };
+/** How much of an item's sold-data date span falls inside the last `days` (default 90). Medians are never recomputed — we only label/filter. */
+export function recency(i: Pick<PriceItem, "dateRange" | "median">, today: string, days = 90): Recency {
+  const r = i.median === null ? null : parseRange(i.dateRange);
+  if (!r) return { level: "unknown", label: "No dated sold data", insideShare: null, start: "", end: "", ageDays: null };
+  const t = Date.parse(today + "T00:00:00Z"), s = Date.parse(r.start + "T00:00:00Z"), e = Date.parse(r.end + "T00:00:00Z"), cut = t - days * DAY;
+  const ageDays = Math.max(0, Math.round((t - e) / DAY)); const span = Math.max(DAY, e - s + DAY);
+  const share = Math.max(0, Math.min(1, (e + DAY - Math.max(s, cut)) / span));
+  if (e < cut) return { level: "stale", label: `Older than ${days} days`, insideShare: 0, ...r, ageDays };
+  if (s >= cut) return { level: "high", label: `All sales within ${days} days`, insideShare: 1, ...r, ageDays };
+  return { level: "mixed", label: `~${Math.round(share * 100)}% of date span within ${days} days`, insideShare: share, ...r, ageDays };
+}
+/** window filter: "all" | "90" (whole sold range inside 90 days) | "90any" (any sales inside 90 days). */
+export function filterByWindow<T extends Pick<PriceItem, "dateRange" | "median">>(items: T[], today: string, win: string, days = 90) {
+  if (win !== "90" && win !== "90any") return items;
+  return items.filter((i) => { const r = recency(i, today, days).level; return win === "90" ? r === "high" : r === "high" || r === "mixed"; });
+}

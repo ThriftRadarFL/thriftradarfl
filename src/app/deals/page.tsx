@@ -14,7 +14,7 @@ export default async function Deals() {
   const [venues, dealRules] = await Promise.all([getVenues(), getDealRules()]); const name = (s: string) => venues.find((v) => v.slug === s)?.name ?? s;
   const today = dowOf(todayET());
   return (<div><PageHead title="Deal Days" sub="Color-tag days, half-off days and bin restocks by weekday" />
-    <p className="mb-3 border-l-4 border-cta bg-paper p-2 text-sm"><b>Heads up:</b> schedules marked <i>unverified</i> haven&apos;t been confirmed with the store yet — check signage or call ahead. Which color is on sale this week? See the shopper-reported <Link href="/color-tags" className="link">Color Tag Board</Link> (crowdsourced).</p>
+    <p className="mb-3 border-l-4 border-cta bg-paper p-2 text-sm"><b>Heads up:</b> schedules marked <i>unverified</i> haven&apos;t been confirmed with the store yet — check signage or call ahead. Which color is on sale this week? See the shopper-reported <Link href="/color-tags" className="link">Color Tag Board</Link> (crowdsourced). Restock and bin-rotation days by store: <Link href="/bins" className="link">Bins &amp; Restock Heatmap</Link>.</p>
     <div className="panel mb-4 p-3"><p className="mb-2 text-sm">Put every deal day in your phone&apos;s calendar — repeats weekly and updates when schedules change.</p><CalendarLinks path="/api/calendar/deals" label="all deal days" /><p className="mt-3 text-sm"><Link href="/deals/week" className="btn-red">🖨 This week&apos;s printable sheet</Link></p></div>
     <div className="panel"><div className="panel-head">Weekly schedule</div>
       <div className="grid grid-cols-1 gap-px bg-line sm:grid-cols-7">{order.map((d) => <div key={d} className={`bg-white sm:min-h-48 ${d === today ? "ring-2 ring-cta ring-inset" : ""}`}>

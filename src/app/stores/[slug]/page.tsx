@@ -34,7 +34,7 @@ export default async function Store({ params }: { params: Promise<{ slug: string
     {takesTags && <div className="panel mb-4 min-w-0"><div className="panel-head">Color tag this week · crowdsourced</div><div className="flex flex-wrap items-center gap-2 p-3 text-sm">
       {tagRow ? <>{tagRow.colors.map((c) => <span key={c.color} className="inline-flex items-center gap-1"><TagSwatch color={c.color} big />{c.discountPct != null && <b>{c.discountPct}% off</b>}<span className="text-xs text-gray-600">({c.reports} {c.reports === 1 ? "report" : "reports"})</span></span>)}
         <span className="w-full text-xs text-gray-600">Shopper-reported and <b>unverified</b> — check the sign in store. <a href="/color-tags#report" className="link">Report a change</a></span></>
-        : <span>No shopper reports yet this week. <a href="/color-tags#report" className="link">Seen the color-of-the-week sign? Report it →</a></span>}</div></div>}
+        : <span>No shopper reports yet this week. <a href="/color-tags#report" className="link">Seen the color-of-the-week sign? Report it →</a></span>} <a href="/bins" className="link">Restock days →</a></div></div>}
     <ReportCardPanel c={reportCard(v, dealRules, todayET(), takesTags ? tagCountsThisWeek(tagReports.filter((r) => r.venue === v.slug), todayET()).get(v.slug) ?? 0 : null)} />
     <div className="grid min-w-0 gap-4 break-words md:grid-cols-3">
       <div className="panel min-w-0 break-words md:col-span-2"><div className="panel-head">Location</div><div className="p-4 space-y-2">

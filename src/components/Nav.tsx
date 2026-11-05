@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import NavLinks from "./NavLinks";
 import NavSearch from "./NavSearch";
-const links = [["/", "This Week"], ["/new", "New"], ["/today", "Today"], ["/map", "Map"], ["/calendar", "Calendar"], ["/weekend", "Weekend"], ["/stores", "Stores"], ["/deals", "Deal Days"], ["/color-tags", "Color Tags"], ["/city", "Cities"], ["/saved", "♥ Saved"], ["/plan", "Route"], ["/prices", "Prices"], ["/estate-sale-companies", "Companies"], ["/calculator", "Calculator"], ["/digest", "Digest"]];
+const links = [["/", "This Week"], ["/new", "New"], ["/today", "Today"], ["/map", "Map"], ["/calendar", "Calendar"], ["/weekend", "Weekend"], ["/stores", "Stores"], ["/deals", "Deal Days"], ["/color-tags", "Color Tags"], ["/bins", "Bins"], ["/city", "Cities"], ["/saved", "♥ Saved"], ["/plan", "Route"], ["/prices", "Prices"], ["/estate-sale-companies", "Companies"], ["/calculator", "Calculator"], ["/digest", "Digest"]];
 export default function Nav() {
   return (<header className="print:hidden">
     <div className="bg-royal-dark text-white"><div className="mx-auto flex max-w-[1160px] flex-wrap items-center gap-2 px-4 py-3">
