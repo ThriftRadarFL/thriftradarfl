@@ -98,3 +98,11 @@
 - Polish: 404 page now also links Goodwill CFL deals, bins & outlets, and all stores.
 - Tests 163 (158 pass, 5 PG skipped). Commit 769e382 pushed + prod deployed.
 - **ONE live sweep: 1,391 pass / 0 fail**, 111 sitemap URLs. PASS.
+
+## 2026-11-05 ~1:10–1:30 AM ET — Grok Bot overnight session (390px verification, no code changes)
+- Assets: thriftradarfl-assets unchanged since Nov 3 (nothing to merge).
+- Headless 390px checks on live (Playwright): /map clusters render, 61/62 pins, store pin popup opens with hours + "View details"; /digest email field rejects invalid input in the browser and `POST /api/subscribers` with a bad email returns 400 (no real signups made); /color-tags empty submit is blocked by required store/color fields; /admin wrong password shows "Wrong password.", real login → dashboard (no horizontal overflow) → logout works, and no data was changed; `/api/subscribers` 401 without auth / 200 with Bearer; /bins, /goodwill-cfl, /prices?window=90 and 90any all return 200 with no overflow and no JS page errors.
+- Nothing was broken, so this session made no feature changes. The product looks finished for now.
+- Tests 163 (158 pass, 5 PG skipped). data:check 0 errors / 0 warnings.
+- **ONE live sweep: 1,371 pass / 0 fail**, 111 sitemap URLs. PASS. The 20 admin write checks were skipped because ADMIN_PASSWORD wasn't exported to the sweep; admin login/logout was checked by hand above instead.
+- No deploy, because only the log changed.
