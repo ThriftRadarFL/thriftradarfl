@@ -6,6 +6,7 @@ import { STATIC_PAGES } from "../src/lib/seo";
 import {
   GWCFL_OFFERS, GWCFL_SHOP_URL, GWCFL_STACKING_NOTE, GWCFL_COUNTIES,
   gwcflCoveredRetail, gwcflUnconfirmed, hasVerifiedColorOfWeek,
+  collapseDayRules, gwcflChainOfferKey, isGwcflChainRule,
 } from "../src/lib/goodwill-cfl";
 
 test("GWCFL facts match goodwillcfl.org/shop (no invented boutique/outlet coverage)", () => {
@@ -45,4 +46,43 @@ test("page + sitemap + no Winter Park Boutique invention", () => {
   assert.ok(existsSync("src/app/admin/actions.ts"));
   const admin = readFileSync("src/app/admin/actions.ts", "utf8");
   assert.match(admin, /toggleVerify/);
+});
+
+test("collapseDayRules: collapses ≥2 verified GWCFL chain pills; keeps outlets/unverified individual", () => {
+  const covered = gwcflCoveredRetail(venues as never, dealRules);
+  const slugs = new Set(covered.map((v) => v.slug));
+  assert.ok(slugs.size >= 2);
+  const sun = collapseDayRules(0, dealRules, slugs);
+  assert.equal(sun.summaries.length, 1);
+  assert.equal(sun.summaries[0].key, "color");
+  assert.ok(sun.summaries[0].storeCount >= 14);
+  assert.ok(!sun.others.some((r) => isGwcflChainRule(r, slugs) && gwcflChainOfferKey(r) === "color"));
+  const mon = collapseDayRules(1, dealRules, slugs);
+  assert.ok(mon.summaries.some((s) => s.key === "senior"));
+  // Pine Hills outlet restock stays individual (not covered retail)
+  assert.ok(mon.others.some((r) => r.venue === "goodwill-pine-hills-outlet"));
+  const tue = collapseDayRules(2, dealRules, slugs);
+  assert.equal(tue.summaries.length, 0, "Tue has no chain offer");
+  assert.ok(tue.others.some((r) => r.venue === "goodwill-port-orange" && r.kind === "restock"));
+  // Single matching rule is not collapsed
+  const one = collapseDayRules(0, dealRules.filter((r) => r.venue === "goodwill-port-orange"), slugs);
+  assert.equal(one.summaries.length, 0);
+  assert.equal(one.others.filter((r) => r.day === 0).length, 1);
+});
+
+test("gwcflChainOfferKey: only verified color/senior/military patterns", () => {
+  assert.equal(gwcflChainOfferKey({ venue: "x", day: 0, kind: "color_tag", label: "Color of the Week", color: "bg-teal", verified: true }), "color");
+  assert.equal(gwcflChainOfferKey({ venue: "x", day: 1, kind: "senior_day", label: "Seniors 55+ 10% off", color: "bg-gray-700", verified: true }), "senior");
+  assert.equal(gwcflChainOfferKey({ venue: "x", day: 3, kind: "senior_day", label: "Military 10% off", color: "bg-gray-700", verified: true }), "military");
+  assert.equal(gwcflChainOfferKey({ venue: "x", day: 0, kind: "color_tag", label: "Color of the Week", color: "bg-teal", verified: false }), null);
+  assert.equal(gwcflChainOfferKey({ venue: "x", day: 2, kind: "restock", label: "Restock", color: "bg-royal", verified: true }), null);
+});
+
+test("/deals page collapses GWCFL chain pills + has openGraph", () => {
+  const src = readFileSync("src/app/deals/page.tsx", "utf8");
+  assert.match(src, /collapseDayRules/);
+  assert.match(src, /Goodwill CFL retail/);
+  assert.match(src, /openGraph/);
+  assert.ok(existsSync("src/app/deals/opengraph-image.tsx"));
+  assert.doesNotMatch(src, /Winter Park Boutique[^.]{0,80}50%/i);
 });

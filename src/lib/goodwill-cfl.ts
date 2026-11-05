@@ -56,3 +56,75 @@ export function gwcflUnconfirmed(venues: Venue[], rules: DealRule[]): Venue[] {
     .slice()
     .sort((a, b) => a.city.localeCompare(b.city) || a.name.localeCompare(b.name));
 }
+
+/** Match a verified GICF retail rule to a published chain-wide offer key (color / senior / military). */
+export function gwcflChainOfferKey(r: DealRule): (typeof GWCFL_OFFERS)[number]["key"] | null {
+  if (!r.verified) return null;
+  if (r.day === 0 && r.kind === "color_tag") return "color";
+  if (r.day === 1 && r.kind === "senior_day" && /senior/i.test(r.label)) return "senior";
+  if (r.day === 3 && r.kind === "senior_day" && /military/i.test(r.label)) return "military";
+  return null;
+}
+
+/** True when this rule is a verified chain-wide offer at a covered GICF retail store (safe to collapse on /deals). */
+export function isGwcflChainRule(r: DealRule, coveredSlugs: ReadonlySet<string>): boolean {
+  return coveredSlugs.has(r.venue) && gwcflChainOfferKey(r) != null;
+}
+
+export type GwcflDaySummary = {
+  key: (typeof GWCFL_OFFERS)[number]["key"];
+  title: string;
+  detail: string;
+  color: string;
+  storeCount: number;
+  discountPct?: number;
+};
+
+/**
+ * Split one weekday's deal rules into a single GWCFL chain summary (when ≥2 covered stores share it)
+ * plus every other rule listed individually. Never invents boutique/outlet coverage.
+ */
+export function collapseDayRules(
+  day: number,
+  rules: DealRule[],
+  coveredSlugs: ReadonlySet<string>,
+): { summaries: GwcflDaySummary[]; others: DealRule[] } {
+  const dayRules = rules.filter((r) => r.day === day);
+  const buckets = new Map<(typeof GWCFL_OFFERS)[number]["key"], DealRule[]>();
+  const others: DealRule[] = [];
+  for (const r of dayRules) {
+    const key = isGwcflChainRule(r, coveredSlugs) ? gwcflChainOfferKey(r) : null;
+    if (!key) {
+      others.push(r);
+      continue;
+    }
+    const list = buckets.get(key) ?? [];
+    list.push(r);
+    buckets.set(key, list);
+  }
+  const summaries: GwcflDaySummary[] = [];
+  const collapsed = new Set<(typeof GWCFL_OFFERS)[number]["key"]>();
+  for (const offer of GWCFL_OFFERS) {
+    if (offer.day !== day) continue;
+    const list = buckets.get(offer.key);
+    if (!list?.length) continue;
+    // Fewer than 2 → keep individual pills (no clutter to collapse yet)
+    if (list.length < 2) continue;
+    const pct = list.find((r) => r.discountPct != null)?.discountPct;
+    summaries.push({
+      key: offer.key,
+      title: offer.title,
+      detail: offer.detail,
+      color: list[0].color || (offer.key === "color" ? "bg-teal" : "bg-gray-700"),
+      storeCount: list.length,
+      discountPct: pct,
+    });
+    collapsed.add(offer.key);
+  }
+  // Non-collapsed bucket keys (single-store matches or unexpected) stay as individual pills
+  for (const [key, list] of buckets) {
+    if (collapsed.has(key)) continue;
+    others.push(...list);
+  }
+  return { summaries, others };
+}
