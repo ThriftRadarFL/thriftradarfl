@@ -120,3 +120,13 @@
 - Tests (npm test): 158 pass, 5 PG skipped, 0 fail.
 - **Full live sweep WITH ADMIN_PASSWORD (admin write checks included): 1,391 pass / 0 fail**, 111 sitemap URLs.
 - No deploy, because only the log changed.
+
+## 2026-11-05 1:36 PM ET — Grok Bot overnight session (motion polish + Minte Nov 5 data)
+- **Motion polish (CSS-first, late-2000s BoA feel):** panel/card enter fade+6px rise (~180ms, light stagger); glossy red CTA + `.btn-red` hover lift/shine + active press; `.tile` + nav-tab hover (no layout jump); BoA shimmer skeletons (replaced `animate-pulse`); homepage hero + Today panel entrance; map list-row focus highlight + MapLibre `.trfl-popup` soft enter. `prefers-reduced-motion: reduce` still disables animations/transitions. Tests in `tests/motion-polish.test.ts`.
+- **Minte data merge (no invented deal rules):**
+  - Sharing Center Longwood pin → **28.706466, -81.327064** (Google Maps address pin CSV); notes updated; synced via admin API.
+  - GWCFL Boutique/Pine Hills/Taft hours already matched CSV; Color/Senior/Military stay **UNKNOWN** — `/goodwill-cfl` still lists them unconfirmed; no new rules.
+  - SA Casselberry (#4) + W Colonial → Mon–Sat **10–6** (satruck); Habitat open ReStores annotated **no deal days published**; Sanford Habitat flagged **CLOSED** in notes; Orlando/Osceola ReStores not in seed (closed 2019). RESEARCH-DEALDAYS.md updated.
+- **390px:** live Playwright overflow check on /, /today, /map, /stores, /deals, /goodwill-cfl, /sales, /weekend, Sharing Center store page — all scrollWidth 390, no overflow from transforms.
+- Tests 168 (163 pass, 5 PG skipped). Commits: e829090 (motion), e36471e (Sharing Center), 94f4470 (SA/Habitat notes), 8435ded (test fix). Deployed prod https://thriftradarfl.vercel.app.
+- **ONE live sweep WITH ADMIN_PASSWORD: 1,391 pass / 0 fail**, 111 sitemap URLs. PASS.
