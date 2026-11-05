@@ -48,3 +48,4 @@
 - Live crawl: /, /bins, /prices, /map, /stores all 200; /bins already has empty states. No new files in thriftradarfl-assets.
 - Bug fixed: page lambdas fell back to stale seed JSON for 5 min after one cold-start DB timeout (1.5s), so admin edits/new rules didn't show on pages (sweep: 4 read-after-write fails). DB timeout → 4s, backoff → 30s. Sweep now restores Port Orange notes instead of leaving "Sweep note" on prod (restored).
 - /feed.xml now references /feed.xsl (BoA-styled, viewport meta, overflow-wrap) so phones render a readable, wrapping list instead of raw XML; feed readers unaffected. XSLT verified on live feed (18 entries).
+- Open: live sweep 1,381 pass / 4 fail — read-after-write checks fail only under sweep load (manual probe: new rule visible on /deals within 5s, every poll). Likely DB pool/timeouts under concurrency → seed fallback on some instances; needs pool-size/connection investigation next session.
