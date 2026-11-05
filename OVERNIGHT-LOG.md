@@ -91,3 +91,10 @@
 - Helpers: `gwcflChainOfferKey` / `isGwcflChainRule` / `collapseDayRules` in `src/lib/goodwill-cfl.ts` (collapse only when ≥2 covered stores share a verified chain offer).
 - Tests 163 (158 pass, 5 PG skipped). data:check 0 errors / 0 warnings. Commit a068d5b pushed + prod deployed.
 - **ONE live sweep: 1,391 pass / 0 fail**, 111 sitemap URLs. PASS.
+
+## 2026-11-05 ~1:00–1:15 AM ET — Grok Bot overnight session (crawl + 404 polish)
+- Assets: thriftradarfl-assets unchanged since Nov 3 (nothing to merge). Winter Park Boutique + outlets still unconfirmed.
+- Live crawl: all main pages, /prices window filters, /feed.xml (valid Atom), sitemap, 404 routes — all 200/404 as expected, ~0.3–0.9s. No bugs found.
+- Polish: 404 page now also links Goodwill CFL deals, bins & outlets, and all stores.
+- Tests 163 (158 pass, 5 PG skipped). Commit 769e382 pushed + prod deployed.
+- **ONE live sweep: 1,391 pass / 0 fail**, 111 sitemap URLs. PASS.
