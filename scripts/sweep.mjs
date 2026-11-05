@@ -75,7 +75,9 @@ const sec = await get("/"); for (const h of ["content-security-policy", "x-conte
 // 4 · Admin write flow over the REST API (JSON mode): create → read → edit → publish toggle → delete, plus venue + deal rule.
 if (PW) {
   check((await get("/api/sales", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" })).status === 401, "POST /api/sales without auth not 401");
-  const slug = "sweep-test-sale"; const d = new Date(Date.now() + 3 * 864e5).toISOString().slice(0, 10);
+  // Unique slug per run so overlapping sweeps cannot 409 each other on a shared "sweep-test-sale".
+  const slug = `sweep-test-sale-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+  const d = new Date(Date.now() + 3 * 864e5).toISOString().slice(0, 10);
   const sale = { slug, title: "Sweep Test Sale", type: "estate", city: "Port Orange", zip: "32127", days: [{ date: d, start: "09:00", end: "14:00" }], paymentMethods: ["cash"] };
   let r = await get("/api/sales", { method: "POST", headers: auth, body: JSON.stringify(sale) }); check(r.status === 201, `create sale → ${r.status} ${await r.text()}`);
   r = await get("/api/sales", { method: "POST", headers: auth, body: JSON.stringify(sale) }); check(r.status === 409, `duplicate sale → ${r.status}`);
@@ -91,10 +93,17 @@ if (PW) {
   r = await get("/api/deal-rules", { method: "POST", headers: auth, body: JSON.stringify(rule) }); const body = await r.json().catch(() => ({})); check(r.status === 201, `create rule → ${r.status}`);
   await eventually(async () => (await (await get("/deals")).text()).includes("Sweep test half off"), "new rule not on /deals");
   if (body.data?.id) { r = await get(`/api/deal-rules?id=${encodeURIComponent(body.data.id)}`, { method: "DELETE", headers: auth }); check(r.status === 200, `delete rule → ${r.status}`); }
-  const origNotes = (await (await get("/api/venues/goodwill-port-orange")).json()).data?.notes ?? "";
+  // Admin Bearer read → no-store (bypasses CDN); never capture a stale public-cache "Sweep note" as the restore target.
+  const notesRes = await get("/api/venues/goodwill-port-orange", { headers: auth });
+  check((notesRes.headers.get("cache-control") ?? "") === "no-store", `admin venue GET cache-control ${notesRes.headers.get("cache-control")}`);
+  const origNotes = (await notesRes.json()).data?.notes ?? "";
+  check(!/^Sweep note$/i.test(origNotes.trim()), "origNotes already Sweep note (stale cache or prior failed restore)");
   r = await get("/api/venues/goodwill-port-orange", { method: "PUT", headers: auth, body: JSON.stringify({ notes: "Sweep note" }) }); check(r.status === 200, `edit venue → ${r.status}`);
   await eventually(async () => (await (await get("/stores/goodwill-port-orange")).text()).includes("Sweep note"), "venue edit not shown");
-  await get("/api/venues/goodwill-port-orange", { method: "PUT", headers: auth, body: JSON.stringify({ notes: origNotes }) }); // restore prod notes
+  r = await get("/api/venues/goodwill-port-orange", { method: "PUT", headers: auth, body: JSON.stringify({ notes: origNotes }) }); // restore prod notes
+  check(r.status === 200, `restore venue notes → ${r.status}`);
+  // Confirm restore via admin (no-store) read — not the public CDN copy.
+  await eventually(async () => { const n = (await (await get("/api/venues/goodwill-port-orange", { headers: auth })).json()).data?.notes ?? ""; return n === origNotes && !/^Sweep note$/i.test(n.trim()); }, "venue notes not restored");
 } else console.log("(skipping admin write checks: set ADMIN_PASSWORD)");
 
 console.log(`${ok} checks passed, ${fails.length} failed, ${urls.length} sitemap URLs`);

@@ -11,10 +11,10 @@ const U = "http://localhost:3000";
 const req = (p: string, init?: RequestInit) => new Request(U + p, init);
 const ctx = (slug: string) => ({ params: Promise.resolve({ slug }) });
 /* eslint-disable @typescript-eslint/no-explicit-any */
-let sales: any, saleOne: any, subs: any, ics: any, cal: any, digest: any, unsub: any, rules: any, venues: any, health: any, auth: any;
+let sales: any, saleOne: any, venueOne: any, subs: any, ics: any, cal: any, digest: any, unsub: any, rules: any, venues: any, health: any, auth: any;
 before(async () => {
-  [sales, saleOne, subs, ics, cal, digest, unsub, rules, venues, health, auth] = await Promise.all([
-    import("../src/app/api/sales/route"), import("../src/app/api/sales/[slug]/route"), import("../src/app/api/subscribers/route"), import("../src/app/api/ics/[slug]/route"),
+  [sales, saleOne, venueOne, subs, ics, cal, digest, unsub, rules, venues, health, auth] = await Promise.all([
+    import("../src/app/api/sales/route"), import("../src/app/api/sales/[slug]/route"), import("../src/app/api/venues/[slug]/route"), import("../src/app/api/subscribers/route"), import("../src/app/api/ics/[slug]/route"),
     import("../src/app/api/calendar/route"), import("../src/app/api/cron/digest/route"), import("../src/app/api/unsubscribe/route"), import("../src/app/api/deal-rules/route"),
     import("../src/app/api/venues/route"), import("../src/app/api/health/route"), import("../src/lib/auth")]);
 });
@@ -84,4 +84,17 @@ test("PUT /api/sales/{slug} honours published:false (hidden, out of public API) 
   assert.equal((await put({ published: true })).status, 200);
   const got = await (await saleOne.GET(req(`/api/sales/${slug}`), ctx(slug))).json(); assert.equal(got.data.title, "Pub Flag edited");
   assert.equal((await saleOne.DELETE(req(`/api/sales/${slug}`, { method: "DELETE", headers: H }), ctx(slug))).status, 204);
+});
+
+test("admin GET venues/{slug} + deal-rules are no-store; public stays cached; sales PUT/DELETE use getSaleAdmin", async () => {
+  const H = { authorization: "Bearer test-pw" };
+  const pubV = await venueOne.GET(req("/api/venues/goodwill-port-orange"), ctx("goodwill-port-orange"));
+  assert.match(pubV.headers.get("cache-control") ?? "", /public/);
+  const admV = await venueOne.GET(req("/api/venues/goodwill-port-orange", { headers: H }), ctx("goodwill-port-orange"));
+  assert.equal(admV.headers.get("cache-control"), "no-store");
+  const pubR = await rules.GET(req("/api/deal-rules")); assert.match(pubR.headers.get("cache-control") ?? "", /public/);
+  const admR = await rules.GET(req("/api/deal-rules", { headers: H })); assert.equal(admR.headers.get("cache-control"), "no-store");
+  // Source lock: admin write paths look up via getSaleAdmin (targeted DB), not getAllSales seed fallback.
+  const src = await import("node:fs").then((fs) => fs.readFileSync("src/app/api/sales/[slug]/route.ts", "utf8"));
+  assert.match(src, /getSaleAdmin/); assert.doesNotMatch(src, /getAllSales/);
 });

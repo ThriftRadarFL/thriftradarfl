@@ -5,7 +5,11 @@ import { handle, json, cachedJson, readBody, HttpError } from "@/lib/api";
 export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   const v = new URL(req.url).searchParams.get("venue"); const all = await getDealRules();
-  const d = v ? all.filter((r) => r.venue === v) : all; return cachedJson(req, { data: d, count: d.length, note: "verified=false rules are not yet confirmed with the store" });
+  const d = v ? all.filter((r) => r.venue === v) : all;
+  const body = { data: d, count: d.length, note: "verified=false rules are not yet confirmed with the store" };
+  // Admin/auth reads skip CDN cache (public users still get the normal cachedJson headers).
+  if (isAdminRequest(req)) return json(body);
+  return cachedJson(req, body);
 }
 // Admin-only (Bearer ADMIN_PASSWORD): upsert one rule by id (defaults to ruleId of venue/day/label).
 export const POST = handle(async (req: Request) => {

@@ -103,6 +103,18 @@ export async function getSale(slug: string) {
     async () => (await jsonSales()).find((s) => s.slug === slug && s.published !== false) ?? null,
   ));
 }
+/** Any sale by slug (incl. unpublished). Targeted DB lookup for admin write paths.
+ *  Avoids getAllSales() full-table reads that, on timeout, fell back to seed JSON and 404'd a sale that
+ *  still existed in Postgres. In strict/prod, a down DB is 503 (not a seed miss); without strictWrites
+ *  (local/tests) we still read the JSON file. */
+export async function getSaleAdmin(slug: string): Promise<Sale | null> {
+  const fromJson = async () => (await jsonSales()).find((s) => s.slug === slug) ?? null;
+  if (!hasDb) return fromJson();
+  return once(`sale-any:${slug}`, () => viaDb(
+    () => pg.dbGetSale(slug),
+    async () => { if (strictWrites()) throw dbOffline(); return fromJson(); },
+  ));
+}
 
 export async function upsertSale(sale: Sale) {
   return viaDb(() => pg.dbUpsertSale(sale), () => mutate<Sale[]>(salesFile, mockSales as Sale[], (all) => {
@@ -110,7 +122,7 @@ export async function upsertSale(sale: Sale) {
     return [...all.filter((s) => s.slug !== sale.slug), { ...sale, addedAt: prev?.addedAt ?? sale.addedAt ?? new Date().toISOString() }]; }), true);
 }
 export async function setSalePublished(slug: string, published: boolean) {
-  const s = (await getAllSales()).find((x) => x.slug === slug); if (!s) return false; await upsertSale({ ...s, published }); return true;
+  const s = await getSaleAdmin(slug); if (!s) return false; await upsertSale({ ...s, published }); return true;
 }
 export async function deleteSale(slug: string) {
   return viaDb(() => pg.dbDeleteSale(slug), () => mutate<Sale[]>(salesFile, mockSales as Sale[], (all) => all.filter((s) => s.slug !== slug)), true);

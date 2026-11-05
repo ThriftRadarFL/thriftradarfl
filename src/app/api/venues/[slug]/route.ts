@@ -6,7 +6,10 @@ export const dynamic = "force-dynamic";
 type P = { params: Promise<{ slug: string }> };
 export const GET = handle(async (req: Request, { params }: P) => {
   const v = await getVenue((await params).slug); if (!v) throw new HttpError(404, "not found");
-  return cachedJson(req, { data: { ...v, dealRules: (await getDealRules()).filter((r) => r.venue === v.slug) } });
+  const data = { ...v, dealRules: (await getDealRules()).filter((r) => r.venue === v.slug) };
+  // Admin/auth reads bypass the public CDN cache so restore/edit flows never capture a stale "Sweep note".
+  if (isAdminRequest(req)) return json({ data });
+  return cachedJson(req, { data });
 });
 export const PUT = handle(async (req: Request, { params }: P) => {
   if (!isAdminRequest(req)) throw new HttpError(401, "unauthorized");

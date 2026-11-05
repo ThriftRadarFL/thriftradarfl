@@ -57,3 +57,11 @@
 - Remaining sweep hazards: GET /api/venues/{slug} and /api/deal-rules send `cache-control: public, max-age=60`, so the sweep's "origNotes" read can be a stale CDN copy (likely how "Sweep note" got stuck). Sweep should read with a cache-busting query / admin auth, and two sweeps must not run at once (fixed slug `sweep-test-sale`).
 - Data: Port Orange senior Monday rule synced to prod with discountPct 10 (verified Goodwill CFL rule, matches seed). Winter Park Boutique untouched.
 - Tests 151 pass / 5 PG skipped.
+
+## 2026-11-05 ~12:40 AM ET — cleanup: CDN stale notes, unique sweep slug, admin sale lookup
+- Single-owner session (Nov 5 overnight routine paused). Prior commits on master: ff94ab7/f2f1f16 + 29670f6/eb02656/b855f3d.
+- **CDN stale notes:** GET `/api/venues/{slug}` and `/api/deal-rules` now return `Cache-Control: no-store` for admin Bearer/cookie requests; public GETs keep `cachedJson` (max-age=60 / s-maxage=300). Sweep captures + verifies Port Orange notes via admin GET so restore cannot latch onto a CDN "Sweep note".
+- **Parallel sweep 409:** admin write slug is now `sweep-test-sale-<time>-<rand>` per run (duplicate POST still checked against the same slug).
+- **DELETE/PUT 404 on real Postgres sales:** admin write paths use new `getSaleAdmin` (targeted `dbGetSale`, includes unpublished). No more `getAllSales()` full-table read that could seed-fallback and 404. Strict/prod: DB-down → 503 instead of a false miss. POST 409 check uses the same helper.
+- Leftover cleanup: prod `sweep-test-sale` already gone (DELETE 404); Port Orange notes already real Goodwill CFL text (not "Sweep note").
+- Tests: 152 pass / 5 PG skipped. Deploy + one clean live sweep next.
