@@ -9,5 +9,8 @@ export default function NotFound() {
         <li><Link className="font-bold text-royal hover:underline" href="/calendar">14-day calendar</Link></li>
         <li><Link className="font-bold text-royal hover:underline" href="/deals">Store deal days</Link></li>
         <li><Link className="font-bold text-royal hover:underline" href="/map">Map</Link></li>
+        <li><Link className="font-bold text-royal hover:underline" href="/goodwill-cfl">Goodwill CFL deals</Link></li>
+        <li><Link className="font-bold text-royal hover:underline" href="/bins">Goodwill bins &amp; outlets</Link></li>
+        <li><Link className="font-bold text-royal hover:underline" href="/stores">All stores</Link></li>
       </ul></div></div>);
 }
