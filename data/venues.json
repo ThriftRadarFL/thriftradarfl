@@ -30,7 +30,7 @@
     "hoursJson": {
       "daily": "8:00-17:00"
     },
-    "notes": "goodwillcfl.org lists Mon–Sun 8 A.M.–5 P.M. (checked 2026-11-02). Restock times unverified.",
+    "notes": "goodwillcfl.org lists Mon\u2013Sun 8 A.M.\u20135 P.M. (checked 2026-11-02). Restock times unverified.",
     "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
@@ -47,7 +47,7 @@
     "hoursJson": {
       "daily": "8:00-18:00"
     },
-    "notes": "goodwillcfl.org lists Mon–Sun 8 A.M.–6 P.M. (checked 2026-11-02). Restock times unverified.",
+    "notes": "goodwillcfl.org lists Mon\u2013Sun 8 A.M.\u20136 P.M. (checked 2026-11-02). Restock times unverified.",
     "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
@@ -60,12 +60,12 @@
     "zip": "32724",
     "lat": 29.0065,
     "lng": -81.287,
-    "phone": null,
+    "phone": "(386) 738-8848",
     "hoursJson": {
       "wed": "18:30-22:00"
     },
-    "notes": "Weekly Wednesday auction.",
-    "sourceUrl": "https://www.estatesales.net/FL/Daytona-Beach"
+    "notes": "Weekly Wednesday auction. Phone from https://bernersauction.com/ (checked 2026-11-05).",
+    "sourceUrl": "https://bernersauction.com/"
   },
   {
     "slug": "goodwill-deland",
@@ -319,7 +319,7 @@
     "hoursJson": {
       "tue-sat": "8:30-17:00"
     },
-    "notes": "Habitat for Humanity ReStore: furniture, appliances, building materials. The store's site lists conflicting hours (Tue–Sat vs Mon–Sat 8:30–5) — call ahead. Address, phone and hours from https://wvhabitat.org/the-restore/ (checked 2026-11-02).",
+    "notes": "Habitat for Humanity ReStore: furniture, appliances, building materials. The store's site lists conflicting hours (Tue\u2013Sat vs Mon\u2013Sat 8:30\u20135) \u2014 call ahead. Address, phone and hours from https://wvhabitat.org/the-restore/ (checked 2026-11-02).",
     "sourceUrl": "https://wvhabitat.org/the-restore/"
   },
   {
@@ -671,7 +671,7 @@
       "mon-sat": "9:00-18:00",
       "sun": "closed"
     },
-    "notes": "Hours Mon–Sat 9 AM–6 PM, closed Sun. Wednesday Customer Appreciation Day (50% off all tag colors but one) and rotating color-tag sales are store-specific and come from a business-owner reply on Yelp — unverified with the store. Source: https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/ (checked 2026-11-02).",
+    "notes": "Hours Mon\u2013Sat 9 AM\u20136 PM, closed Sun. Wednesday Customer Appreciation Day (50% off all tag colors but one) and rotating color-tag sales are store-specific and come from a business-owner reply on Yelp \u2014 unverified with the store. Source: https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/ (checked 2026-11-02).",
     "sourceUrl": "https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/"
   },
   {

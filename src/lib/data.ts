@@ -39,8 +39,8 @@ function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: 
 
 // DB is used when DATABASE_URL is set AND reachable. Any DB error (timeout, protocol, auth) marks it down for 60s and
 // transparently falls back to the JSON files so builds and pages never break because the database is unreachable.
-// Tunable: DB_TIMEOUT_MS (default 4000) per query (one retry on a fresh pool), DB_BACKOFF_MS (default 30s) before retrying a down DB.
-const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 4000; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 30_000;
+// Tunable: DB_TIMEOUT_MS (default 5000) per query (one retry on a fresh pool), DB_BACKOFF_MS (default 30s) before retrying a down DB.
+const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 5000; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 30_000;
 let dbDownUntil = 0; let dbFails = 0; let lastDbError = ""; let lastDbMessage = "";
 /** Strict writes: when a DB is configured in production (or DB_STRICT_WRITES=1), a failed DB write is a 503 — never a silent
  *  JSON write that would vanish on the next deploy / differ per serverless instance. DB_STRICT_WRITES=0 opts out. */
@@ -56,11 +56,11 @@ async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write 
   };
   try {
     try { const out = await attempt(DB_TIMEOUT_MS); dbFails = 0; return out; } catch (e) {
-      // Reads only: a cold serverless instance can need >4s for its first pooled connection, and a frozen instance can wake
-      // with dead sockets (CONNECTION_*/ECONN*). Retry once (fresh pool for dead sockets) before using possibly-stale seed
-      // JSON. Postgres SQLSTATE errors are real query errors and are not retried; writes are never retried (no double inserts).
+      // Reads only: cold starts and frozen isolates often hang on a stale pooled socket until our timeout. Always drop the
+      // pool before retrying (timeouts included — Promise.race does not cancel the hung query, so the old client keeps the
+      // dead socket). Postgres SQLSTATE errors are real query errors and are not retried; writes are never retried.
       const code = String((e as { code?: string }).code ?? ""); if (write || /^[0-9A-Z]{5}$/.test(code)) throw e;
-      if (/^(CONNECTION_|ECONN|EPIPE)/.test(code)) resetDb();
+      resetDb();
       const out = await attempt(DB_TIMEOUT_MS * 2); dbFails = 0; return out;
     }
   } catch (e) {
@@ -69,8 +69,9 @@ async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write 
     // Postgres message (e.g. 'column "x" does not exist') with any URL/credential-looking text scrubbed
     lastDbMessage = String(err.cause?.message ?? err.message ?? e).replace(/\b[a-z]+:\/\/\S+/gi, "<url>").replace(/(password|token|key|secret)\S*/gi, "<redacted>").slice(0, 160);
     if (Date.now() >= dbDownUntil) console.warn(`[data] database unreachable (${lastDbError}); using JSON fallback`);
-    // One slow request falls back alone; only repeated failures put this instance in JSON mode for DB_BACKOFF_MS.
-    if (++dbFails >= 2) dbDownUntil = Date.now() + DB_BACKOFF_MS; if (write && strictWrites()) throw dbOffline(); return jsonFn();
+    // One slow request (timeout) falls back alone; refused/unknown-host/auth errors or 2 failures in a row put this instance in JSON mode for DB_BACKOFF_MS.
+    const hard = /^(ECONNREFUSED|ENOTFOUND|EAI_AGAIN|28P01|28000|3D000)$/.test(String(lastDbError)); // DB really unreachable / bad creds
+    if (++dbFails >= 2 || hard) dbDownUntil = Date.now() + DB_BACKOFF_MS; if (write && strictWrites()) throw dbOffline(); return jsonFn();
   }
 }
 export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= dbDownUntil, lastError: lastDbError || null, lastErrorMessage: lastDbMessage || null });
@@ -78,12 +79,23 @@ export const dbStatus = () => ({ configured: hasDb, up: hasDb && Date.now() >= d
 const jsonSales = () => readJson<Sale[]>(salesFile, mockSales as Sale[]);
 const bySoonest = (s: Sale[]) => [...s].sort((a, b) => (a.days[0]?.date ?? "").localeCompare(b.days[0]?.date ?? ""));
 export async function getVenues(): Promise<Venue[]> { return viaDb(() => pg.dbGetVenues(), () => readJson<Venue[]>(venuesFile, seedVenues as Venue[])); }
-export async function getVenue(slug: string) { return (await getVenues()).find((v) => v.slug === slug) ?? null; }
+export async function getVenue(slug: string) {
+  return viaDb(
+    () => pg.dbGetVenue(slug),
+    async () => (await readJson<Venue[]>(venuesFile, seedVenues as Venue[])).find((v) => v.slug === slug) ?? null,
+  );
+}
 /** All sales including unpublished drafts (admin). */
 export async function getAllSales(): Promise<Sale[]> { return bySoonest(await viaDb(() => pg.dbGetSales(), jsonSales)); }
 /** Public sales: published only. */
 export async function getSales(): Promise<Sale[]> { return (await getAllSales()).filter((s) => s.published !== false); }
-export async function getSale(slug: string) { return (await getSales()).find((s) => s.slug === slug) ?? null; }
+/** Single public sale by slug (targeted DB lookup — avoids loading every sale on /sales/[slug]). */
+export async function getSale(slug: string) {
+  return viaDb(
+    async () => { const s = await pg.dbGetSale(slug); return s && s.published !== false ? s : null; },
+    async () => (await jsonSales()).find((s) => s.slug === slug && s.published !== false) ?? null,
+  );
+}
 
 export async function upsertSale(sale: Sale) {
   return viaDb(() => pg.dbUpsertSale(sale), () => mutate<Sale[]>(salesFile, mockSales as Sale[], (all) => {

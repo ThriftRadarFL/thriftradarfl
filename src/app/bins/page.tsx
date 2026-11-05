@@ -4,7 +4,7 @@ import { getVenues, getDealRules } from "@/lib/data";
 import { DAYS } from "@/lib/deal-rules";
 import { buildHeatmap, heatLevel, HEAT_BG, HEAT_FG, KIND_LABEL } from "@/lib/restock-heatmap";
 import { todayET } from "@/lib/cities";
-export const revalidate = 300;
+export const dynamic = "force-dynamic"; // admin deal-rule edits must show on the heatmap
 export const metadata = { title: "Bins & Restock Heatmap — when Goodwill outlets and thrift stores restock", description: "Which days Central Florida Goodwill outlet bins and thrift stores restock, rotate bins or run bin discount days. Mostly unverified — every cell shows its source status.", alternates: { canonical: "/bins" } };
 export default async function Bins() {
   const [venues, rules] = await Promise.all([getVenues(), getDealRules()]);

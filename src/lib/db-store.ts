@@ -26,10 +26,25 @@ export async function dbUpsertSale(s: Sale) {
 }
 export async function dbDeleteSale(slug: string) { await D().delete(t.sales).where(eq(t.sales.slug, slug)); }
 
+export async function dbGetSale(slug: string): Promise<Sale | null> {
+  const [r] = await D().select().from(t.sales).where(eq(t.sales.slug, slug));
+  if (!r) return null;
+  const days = await D().select().from(t.saleDays).where(eq(t.saleDays.saleId, r.id)).orderBy(asc(t.saleDays.date));
+  return { slug: r.slug, title: r.title, type: r.type, city: r.city, zip: r.zip ?? "", lat: r.lat ?? 0, lng: r.lng ?? 0,
+    sourceUrl: r.sourceUrl ?? "", paymentMethods: r.paymentMethods ?? [], published: r.published, addedAt: r.createdAt.toISOString(), ...(r.tags?.length ? { tags: r.tags } : {}), ...(r.description ? { description: r.description } : {}),
+    days: days.map((d) => ({ date: String(d.date), start: hm(d.startTime), end: hm(d.endTime), discountPct: d.discountPct })) };
+}
+
 export async function dbGetVenues(): Promise<Venue[]> {
   const rows = await D().select().from(t.venues).where(eq(t.venues.active, true)).orderBy(asc(t.venues.name));
   return rows.map((v) => ({ slug: v.slug, org: v.orgKey ?? "", name: v.name, type: v.type, address: v.address, city: v.city, zip: v.zip, lat: v.lat ?? 0, lng: v.lng ?? 0,
     phone: v.phone, hoursJson: (v.hoursJson as Record<string, string> | null) ?? null, notes: v.notes ?? "", ...(v.sourceUrl ? { sourceUrl: v.sourceUrl } : {}) }));
+}
+export async function dbGetVenue(slug: string): Promise<Venue | null> {
+  const [v] = await D().select().from(t.venues).where(eq(t.venues.slug, slug));
+  if (!v || !v.active) return null;
+  return { slug: v.slug, org: v.orgKey ?? "", name: v.name, type: v.type, address: v.address, city: v.city, zip: v.zip, lat: v.lat ?? 0, lng: v.lng ?? 0,
+    phone: v.phone, hoursJson: (v.hoursJson as Record<string, string> | null) ?? null, notes: v.notes ?? "", ...(v.sourceUrl ? { sourceUrl: v.sourceUrl } : {}) };
 }
 export async function dbUpsertVenue(v: Venue) {
   const vals = { slug: v.slug, name: v.name, type: v.type as (typeof t.venueType.enumValues)[number], address: v.address, city: v.city, zip: v.zip, lat: v.lat, lng: v.lng, phone: v.phone, hoursJson: v.hoursJson, notes: v.notes, sourceUrl: v.sourceUrl || null, orgKey: v.org || null };
