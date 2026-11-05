@@ -75,3 +75,11 @@
 - Polish: Berner's Auction phone `(386) 738-8848` + source `bernersauction.com` (checked 2026-11-05) synced via admin API — report card C→A (grades now A19 B15 C0 D10). `/bins` `force-dynamic`. Habitat ReStore sites only point to Facebook for weekly specials — no verified deal-day rules added.
 - Tests 156 (151 pass, 5 PG skipped). data:check 0 errors / 0 warnings. Commits ff94ab7..9ed02ac pushed + prod deployed.
 - Next: homepage still intermittently ~8s on cold isolates (Promise.all sales+venues+rules); further pooler/timeout tuning. Verified deal rules for Habitat/Salvation Army only if their own sites publish them.
+
+## 2026-11-05 ~1:00 AM ET — Grok Bot overnight session (Goodwill CFL explainer)
+- Assets: thriftradarfl-assets unchanged since Nov 3 (nothing to merge). Winter Park Boutique still unverified — no invented rules.
+- Bug/polish: Port Orange senior deal label aligned to verified **Seniors 55+ 10% off** (was “ask in store for amount”); seed + SQL + prod rule id swapped via admin API. `/bins` empty cells + admin how-to for `restock` / `bins_rotation` / `dollar_day` kinds.
+- Feature: **Goodwill CFL deals** (`/goodwill-cfl`, nav “GWCFL”, sitemap). Explains Color of the Week (50% most tagged textiles/shoes/wares, refreshes Sundays, color in-store only), seniors 55+ 10% Mondays, military 10% Wednesdays, no stacking — **only** facts from https://www.goodwillcfl.org/shop/. Lists retail stores that already have a verified Sunday color_tag rule; separately lists outlets + Winter Park Boutique as **not confirmed**. Links from /deals, /color-tags, GWCFL store pages, FAQ.
+- Admin UX: one-click **verify / unverify** on each deal rule (no re-open form); rules list shows kind + restock→/bins hint.
+- Tests 160 (155 pass, 5 PG skipped). data:check 0 errors / 0 warnings. Commit b0ded30 pushed + prod deployed.
+- **ONE live sweep: 1,391 pass / 0 fail**, 111 sitemap URLs. PASS.
