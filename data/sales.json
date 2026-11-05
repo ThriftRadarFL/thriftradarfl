@@ -124,7 +124,7 @@
   },
   {
     "slug": "crafter-s-paradise-sale-in-orlando-5136069",
-    "title": "“Crafter’s Paradise” Sale in Orlando",
+    "title": "\u201cCrafter\u2019s Paradise\u201d Sale in Orlando",
     "type": "estate",
     "city": "Orlando",
     "zip": "32819",
@@ -397,7 +397,7 @@
   },
   {
     "slug": "huge-estate-sale-disney-art-hallmark-lionel-trains-waterford-5130090",
-    "title": "Huge Estate Sale! Disney, Art, Hallmark, Lionel Trains, Waterford, Holiday Décor & More!",
+    "title": "Huge Estate Sale! Disney, Art, Hallmark, Lionel Trains, Waterford, Holiday D\u00e9cor & More!",
     "type": "estate",
     "city": "Ormond Beach",
     "zip": "32174",
@@ -545,6 +545,54 @@
         "date": "2026-11-14",
         "start": "09:00",
         "end": "14:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "estate-sale-9-deerwood-st-palm-coast-2471781",
+    "title": "Estate Sale at 9 Deerwood St",
+    "type": "estate",
+    "city": "Palm Coast",
+    "zip": "32137",
+    "lat": 29.5757,
+    "lng": -81.2238,
+    "sourceUrl": "https://www.estatesales.org/estate-sales/fl/palm-coast/32137/estate-sale-at-9-deerwood-2471781",
+    "paymentMethods": [],
+    "description": "Address: 9 Deerwood St, Palm Coast, FL 32137. Fri Nov 6 & Sat Nov 7, 9am-1pm. Map pin is approximate (ZIP 32137 center). Run by Ray of Sunshine Estate Sales. Source: estatesales.org.",
+    "days": [
+      {
+        "date": "2026-11-06",
+        "start": "09:00",
+        "end": "13:00",
+        "discountPct": 0
+      },
+      {
+        "date": "2026-11-07",
+        "start": "09:00",
+        "end": "13:00",
+        "discountPct": 0
+      }
+    ],
+    "tags": []
+  },
+  {
+    "slug": "one-day-only-estate-liquidation-orlando-2471770",
+    "title": "One Day Only Estate Liquidation",
+    "type": "estate",
+    "city": "Orlando",
+    "zip": "32812",
+    "lat": 28.4847,
+    "lng": -81.3244,
+    "sourceUrl": "https://www.estatesales.org/estate-sales/fl/orlando/32812/one-day-only-estate-liquidation-2471770",
+    "paymentMethods": [],
+    "description": "Address: 4701 Brenda Dr, Orlando, FL 32812. One day only, Sat Nov 7, 8am-1pm (hours from the sale description). Map pin is approximate (ZIP 32812 center). Run by Orlando Estate Sale Ladies, LLC. Source: estatesales.org.",
+    "days": [
+      {
+        "date": "2026-11-07",
+        "start": "08:00",
+        "end": "13:00",
         "discountPct": 0
       }
     ],

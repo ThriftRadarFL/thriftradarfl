@@ -317,9 +317,10 @@
     "lng": -81.32401,
     "phone": "(386) 734-7268",
     "hoursJson": {
-      "tue-sat": "8:30-17:00"
+      "tue-sat": "8:30-17:00",
+      "sun-mon": "closed"
     },
-    "notes": "Habitat for Humanity ReStore: furniture, appliances, building materials. The store's site lists conflicting hours (Tue\u2013Sat vs Mon\u2013Sat 8:30\u20135) \u2014 call ahead. Address, phone and hours from https://wvhabitat.org/the-restore/ (checked 2026-11-02).",
+    "notes": "Habitat for Humanity ReStore: furniture, appliances, building materials. Store hours Tue\u2013Sat 8:30\u20135, closed Sun\u2013Mon (the Mon\u2013Sat 8:30\u20135 listing is the administrative office). Source: https://wvhabitat.org/the-restore/ (checked 2026-11-05).",
     "sourceUrl": "https://wvhabitat.org/the-restore/"
   },
   {
@@ -716,14 +717,14 @@
     "address": "600 N Highway 17-92 Suite 130",
     "city": "Longwood",
     "zip": "32750",
-    "lat": 28.706466,
-    "lng": -81.327064,
+    "lat": 28.706418,
+    "lng": -81.327891,
     "phone": "(407) 260-9155",
     "hoursJson": {
       "mon-sat": "9:30-17:00",
       "sun": "closed"
     },
-    "notes": "Map pin from Google Maps address pin for 600 US-17 92 #130 (28.706466, -81.327064; checked 2026-11-05). Address-geocoded building/suite pin, not a The Sharing Center business listing. Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (checked 2026-11-02).",
+    "notes": "Map pin from ArcGIS Subaddress geocode for 600 N Highway 17-92 Suite 130 (28.706418, -81.327891; checked 2026-11-05; tighter than the earlier Google Maps address pin). Address-geocoded suite pin, not a The Sharing Center business listing. Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (checked 2026-11-02).",
     "sourceUrl": "https://thesharingcenter.org/shopwithus/"
   },
   {
