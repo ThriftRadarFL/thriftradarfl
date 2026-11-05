@@ -19,12 +19,12 @@ h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter
 @layer components {
   .panel { @apply bg-white border border-line rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.15)] min-w-0 [overflow-wrap:anywhere]; }
   .panel-head { @apply bg-gradient-to-b from-royal to-royal-dark text-white px-4 py-2 text-sm font-bold uppercase tracking-wide; }
-  .btn-red { @apply inline-block min-h-10 bg-cta text-white font-bold px-4 py-2 rounded-sm border border-cta-dark shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-cta-dark; }
+  .btn-red { @apply relative inline-flex items-center justify-center min-h-10 bg-cta text-white font-bold px-4 py-2 rounded-sm border border-cta-dark shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] overflow-hidden; }
   .btn-gray { @apply inline-block min-h-10 bg-white text-royal font-bold px-4 py-2 rounded-sm border border-line hover:bg-paper; }
   .pill { @apply inline-block px-2 py-0.5 text-xs font-bold rounded-sm text-white; }
   .daybox { @apply flex flex-col items-center justify-center w-11 shrink-0 border border-line bg-paper text-center leading-tight; }
   /* Glossy late-2000s red CTA: top highlight band + darker bottom, pressed state */
-  .btn-gloss { @apply inline-flex min-h-11 items-center justify-center gap-1 rounded-[3px] border border-[#8f0011] px-5 py-2 font-bold text-white; background: linear-gradient(#f0303f 0%, #d4001a 48%, #b80016 52%, #a30014 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 1px 2px rgba(0,0,0,0.35); text-shadow: 0 -1px 0 rgba(0,0,0,0.3); }
+  .btn-gloss { @apply relative inline-flex min-h-11 items-center justify-center gap-1 overflow-hidden rounded-[3px] border border-[#8f0011] px-5 py-2 font-bold text-white; background: linear-gradient(#f0303f 0%, #d4001a 48%, #b80016 52%, #a30014 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 1px 2px rgba(0,0,0,0.35); text-shadow: 0 -1px 0 rgba(0,0,0,0.3); }
   .btn-gloss:hover { background: linear-gradient(#ff4352 0%, #e0061f 48%, #c3001a 52%, #ad0016 100%); }
   .btn-gloss:active { box-shadow: inset 0 2px 4px rgba(0,0,0,0.35); }
   .hero-gloss { background: radial-gradient(120% 140% at 85% -20%, #3a74d6 0%, rgba(58,116,214,0) 55%), linear-gradient(180deg, #1452b8 0%, #0b3d91 55%, #072a66 100%); }
@@ -34,9 +34,157 @@ h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter
   .link { @apply text-royal font-bold hover:underline; }
 }
 
+/* ---- Motion polish (late-2000s BoA feel; keep short; transform-only lifts) ---- */
+@keyframes trfl-panel-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes trfl-hero-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes trfl-shine {
+  from { transform: translateX(-130%); }
+  to { transform: translateX(130%); }
+}
+@keyframes trfl-skel {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+@keyframes trfl-popup-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Panels / sale cards: soft fade+rise on enter; light sibling stagger */
+.panel {
+  animation: trfl-panel-in 180ms ease-out both;
+}
+.panel:nth-child(2) { animation-delay: 35ms; }
+.panel:nth-child(3) { animation-delay: 70ms; }
+.panel:nth-child(4) { animation-delay: 105ms; }
+.panel:nth-child(5) { animation-delay: 140ms; }
+.panel:nth-child(6) { animation-delay: 175ms; }
+.panel:nth-child(n+7) { animation-delay: 200ms; }
+/* Sale/store tile grids: articles & city links that use .panel */
+.grid > .panel:nth-child(1), .grid > article.panel:nth-child(1) { animation-delay: 0ms; }
+.grid > .panel:nth-child(2), .grid > article.panel:nth-child(2) { animation-delay: 40ms; }
+.grid > .panel:nth-child(3), .grid > article.panel:nth-child(3) { animation-delay: 80ms; }
+.grid > .panel:nth-child(4), .grid > article.panel:nth-child(4) { animation-delay: 120ms; }
+.grid > .panel:nth-child(5), .grid > article.panel:nth-child(5) { animation-delay: 160ms; }
+.grid > .panel:nth-child(6), .grid > article.panel:nth-child(6) { animation-delay: 200ms; }
+.grid > .panel:nth-child(n+7), .grid > article.panel:nth-child(n+7) { animation-delay: 220ms; }
+
+/* Homepage hero + Today side panel */
+.hero-gloss { animation: trfl-hero-in 220ms ease-out both; }
+.hero-gloss .panel,
+.motion-today {
+  animation: trfl-panel-in 220ms ease-out 60ms both;
+}
+.tile {
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+.tile:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 #fff, 0 3px 6px rgba(11, 61, 145, 0.18);
+}
+.tile:active { transform: translateY(0); }
+
+/* Glossy CTA + primary red buttons: hover lift/shine + active press */
+.btn-gloss, .btn-red {
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease, background 140ms ease;
+  will-change: transform;
+}
+.btn-gloss::after, .btn-red::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.38) 50%, transparent 65%);
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+.btn-gloss:hover, .btn-red:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+.btn-gloss:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 3px 6px rgba(0,0,0,0.35); }
+.btn-red:hover {
+  background: var(--color-cta-dark);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 4px rgba(0,0,0,0.28);
+}
+.btn-gloss:hover::after, .btn-red:hover::after { animation: trfl-shine 420ms ease-out; }
+.btn-gloss:active, .btn-red:active {
+  transform: translateY(1px);
+  filter: brightness(0.98);
+}
+.btn-gloss:active { box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); }
+.btn-red:active { box-shadow: inset 0 2px 3px rgba(0,0,0,0.35); }
+.btn-gloss:disabled, .btn-red:disabled { transform: none; filter: none; }
+.btn-gloss:disabled::after, .btn-red:disabled::after { display: none; }
+
+/* Nav tab links: gentle hover, no layout jump */
+.nav-tab {
+  transition: background-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+.nav-tab:hover:not([aria-current="page"]) {
+  box-shadow: inset 0 -2px 0 rgba(11, 61, 145, 0.35);
+}
+
+/* Map list rows + MapLibre popup (CSS only; no MapLibre rewrite) */
+.map-list-row {
+  transition: background-color 140ms ease, box-shadow 140ms ease;
+}
+.map-list-row:hover { background: #f3f6fb; }
+.map-list-row--focus {
+  background: #e8eef8;
+  box-shadow: inset 3px 0 0 var(--color-royal);
+}
+.maplibregl-popup.trfl-popup .maplibregl-popup-content {
+  animation: trfl-popup-in 180ms ease-out both;
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+  padding: 10px 12px;
+}
+.maplibregl-popup.trfl-popup .maplibregl-popup-tip {
+  border-top-color: #fff;
+}
+
+/* Loading skeletons: BoA panel shimmer (less jumpy than pulse alone) */
+.skel-wrap { animation: none !important; }
+.skel-wrap .panel { animation: none !important; }
+.skel {
+  background: linear-gradient(90deg, #dfe4ec 0%, #f7f8fa 42%, #c9d1dc 58%, #dfe4ec 100%);
+  background-size: 220% 100%;
+  animation: trfl-skel 1.35s ease-in-out infinite;
+  border-radius: 2px;
+}
+.skel-bar { display: block; height: 0.65rem; border-radius: 2px; }
+.skel-head {
+  background: linear-gradient(90deg, #072a66 0%, #1a5bb8 40%, #0b3d91 60%, #072a66 100%);
+  background-size: 220% 100%;
+  animation: trfl-skel 1.5s ease-in-out infinite;
+}
+
+/* Skeletons / busy regions: skip enter motion so content swap feels calmer */
+[aria-busy="true"] .panel,
+[role="status"].skel-wrap .panel {
+  animation: none !important;
+}
+
 /* Accessibility: visible keyboard focus everywhere */
 :focus-visible { outline: 3px solid #f5b400; outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+/* Honor reduced motion: disable (not just shorten) decorative motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .btn-gloss:hover, .btn-red:hover, .btn-gloss:active, .btn-red:active, .tile:hover, .tile:active {
+    transform: none !important;
+  }
+}
 .prose-page h2 { font-size: 1.1rem; margin: 1.25rem 0 0.4rem; color: var(--color-royal); }
 .prose-page p, .prose-page li { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.5rem; }
 .prose-page ul { list-style: disc; padding-left: 1.25rem; }

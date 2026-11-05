@@ -13,7 +13,7 @@ export default async function Today() {
   const todaySales = sales.filter((s) => s.days.some((d) => d.date === iso));
   const deals = dealRules.filter((r) => r.day === dow);
   return (<div><PageHead title={`Today · ${DAYS[dow]} ${iso.slice(5).replace("-", "/")}`} sub="What's worth driving to today: open estate sales and store deal days" />
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-4 md:grid-cols-2 motion-today-grid">
       <div className="panel"><div className="panel-head">Estate sales open today ({todaySales.length})</div><div className="space-y-2 p-3">
         {todaySales.map((s) => { const x = s.days.find((d) => d.date === iso)!; return <Link key={s.slug} href={`/sales/${s.slug}`} className="block rounded border border-line p-2 text-sm hover:border-royal">
           <b className="text-royal">{s.title}</b><div className="text-xs text-gray-600">{s.city} · {range12(x.start, x.end)}{x.discountPct ? ` · ${x.discountPct}% off` : ""}</div></Link>; })}

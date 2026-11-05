@@ -6,7 +6,7 @@ import { sharedListPath } from "@/lib/share-list";
 type S = { slug: string; title: string; city: string; first: string; last: string };
 export default function SavedList({ sales }: { sales: S[] }) {
   const favs = useFavs(); const [msg, setMsg] = useState("");
-  if (favs === null) return <div className="panel animate-pulse space-y-3 p-4" aria-busy="true"><span className="sr-only">Loading saved sales…</span>{[0, 1, 2].map((i) => <div key={i} className="h-12 rounded-sm bg-[#e6e9ee]" />)}</div>;
+  if (favs === null) return <div className="panel skel-wrap space-y-3 p-4" aria-busy="true"><span className="sr-only">Loading saved sales…</span>{[0, 1, 2].map((i) => <div key={i} className="skel h-12 rounded-sm" />)}</div>;
   const mine = sales.filter((s) => favs.includes(s.slug)); const gone = favs.filter((f) => !sales.some((s) => s.slug === f));
   if (!mine.length) return <p className="panel p-4 text-sm">No saved sales yet. Tap <span aria-hidden="true">♡</span> <b>Save</b> on any sale to keep it here (stored only in this browser). <Link href="/sales" className="link">Browse sales</Link></p>;
   const share = async () => {

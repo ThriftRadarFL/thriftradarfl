@@ -33,7 +33,7 @@ export default function SaleMap({ pins, apiKey, me, focusKey }: { pins: MapPin[]
           const z = await (m.getSource("pins") as GeoJSONSource).getClusterExpansionZoom(f.properties.cluster_id as number);
           m.easeTo({ center: (f.geometry as GeoJSON.Point).coordinates as [number, number], zoom: z }); });
         m.on("click", "pin", (e: MapLayerMouseEvent) => { const f = e.features?.[0]; if (!f) return; const p = pinsRef.current.find((x) => x.key === f.properties.key); if (!p) return;
-          popup.current?.remove(); popup.current = new lib.Popup({ offset: 14, closeButton: true, maxWidth: "240px" }).setLngLat([p.lng, p.lat]).setDOMContent(popupNode(p)).addTo(m); });
+          popup.current?.remove(); popup.current = new lib.Popup({ offset: 14, closeButton: true, maxWidth: "240px", className: "trfl-popup" }).setLngLat([p.lng, p.lat]).setDOMContent(popupNode(p)).addTo(m); });
         for (const l of ["clusters", "pin"]) { m.on("mouseenter", l, () => { m.getCanvas().style.cursor = "pointer"; }); m.on("mouseleave", l, () => { m.getCanvas().style.cursor = ""; }); }
         setReady(true);
       });
@@ -53,7 +53,7 @@ export default function SaleMap({ pins, apiKey, me, focusKey }: { pins: MapPin[]
   useEffect(() => { // list "📍" button → fly to the pin and open its popup (keyboard path to every pin)
     const m = map.current, lib = ml.current; if (!ready || !m || !lib || !focusKey) return; const k = focusKey.replace(/#\d+$/, ""); const p = pinsRef.current.find((x) => x.key === k); if (!p) return;
     m.flyTo({ center: [p.lng, p.lat], zoom: Math.max(m.getZoom(), 14) }); popup.current?.remove();
-    popup.current = new lib.Popup({ offset: 14, maxWidth: "240px" }).setLngLat([p.lng, p.lat]).setDOMContent(popupNode(p)).addTo(m);
+    popup.current = new lib.Popup({ offset: 14, maxWidth: "240px", className: "trfl-popup" }).setLngLat([p.lng, p.lat]).setDOMContent(popupNode(p)).addTo(m);
     (popup.current.getElement().querySelector("a") as HTMLAnchorElement | null)?.focus({ preventScroll: true }); el.current?.scrollIntoView({ block: "nearest" });
   }, [focusKey, ready]);
   return <div ref={el} className="h-[360px] w-full sm:h-[440px] md:h-[520px]" role="region" aria-label="Interactive map of sales and stores. Tap a dot for details; tap a numbered cluster to zoom in." />;

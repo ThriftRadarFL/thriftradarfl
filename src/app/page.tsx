@@ -38,7 +38,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
             <p className="mt-1.5 text-xs text-blue-100">No account needed. Or browse <Link href="/today" className="font-bold text-white underline">today</Link>, <Link href="/map" className="font-bold text-white underline">the map</Link> or <Link href="/city" className="font-bold text-white underline">your city</Link>.</p>
           </form>
         </div>
-        <div className="overflow-hidden rounded-sm border border-[#0a2f70] bg-white text-ink shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
+        <div className="motion-today overflow-hidden rounded-sm border border-[#0a2f70] bg-white text-ink shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
           <h2 className="panel-head flex items-center justify-between"><span>Today · {DAYS[dow]} {Number(today.slice(5, 7))}/{Number(today.slice(8))}</span><Link href="/today" className="text-xs font-normal normal-case tracking-normal text-white underline">Full list ›</Link></h2>
           <dl className="grid grid-cols-3 border-b border-line text-center">
             {[["Open today", sum.openToday, "/today"], ["Deal days", sum.todayDealCount, "/deals"], ["This weekend", sum.weekendSales, "/weekend"]].map(([l, n, h]) => <div key={l as string} className="flex flex-col-reverse border-r border-line px-1 py-2 last:border-0">
