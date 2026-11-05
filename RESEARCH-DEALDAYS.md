@@ -12,3 +12,5 @@ Source: https://www.goodwillcfl.org/shop (official). Color of the Week ~50% off 
 - **Habitat ReStores:** Greater Volusia (Port Orange) + Southeast Volusia (New Smyrna) + West Orange (Winter Garden) — open; **no deal days published** on official ReStore pages (Facebook weekly specials only where noted). Habitat Orlando & Osceola ReStores **closed Jan 31 2019** — do not list as open.
 - **Salvation Army Holly Hill + two Orlando stores:** no deal days published on official pages — do not invent chainwide SA rules. (Existing W Colonial Yelp-sourced rule stays store-specific/unverified as before.)
 - CSV: `thriftradarfl-assets/gwcfl-boutique-outlets-nov5.csv`, `habitat-sa-deals-nov5.csv`, `sharing-center-coords-nov5.csv`.
+- **SA Casselberry (#4, 1330 Semoran) + SA W Colonial Orlando:** hours **Mon–Sat 10–6, Sun closed** per satruck.org (2026-11-05). No deal days on satruck listings — do not invent. Existing W Colonial Yelp Wednesday Appreciation rule remains store-specific/unverified.
+- **Habitat Seminole-Apopka Sanford ReStore:** reported permanent close (medium) — flagged CLOSED in seed notes. Orlando/Osceola Habitat ReStores not in seed (closed 2019).

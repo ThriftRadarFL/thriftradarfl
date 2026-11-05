@@ -337,7 +337,7 @@
       "tue-sat": "9:00-16:30",
       "sun-mon": "closed"
     },
-    "notes": "Habitat for Humanity ReStore: furniture, appliances, building materials, home goods. Address, phone and hours from https://www.habitatgvc.org/restore (checked 2026-11-02).",
+    "notes": "Habitat for Humanity ReStore: furniture, appliances, building materials, home goods. Address, phone and hours from https://www.habitatgvc.org/restore (checked 2026-11-02). No deal days published on the official ReStore page (checked 2026-11-05).",
     "sourceUrl": "https://www.habitatgvc.org/restore"
   },
   {
@@ -371,7 +371,7 @@
     "hoursJson": {
       "mon-sat": "9:00-17:00"
     },
-    "notes": "Hours: Mon-Sat 9am-5pm; donations 9am-1pm. Source: https://habitatsev.org/restore/ (checked 2026-11-02).",
+    "notes": "Hours: Mon-Sat 9am-5pm; donations 9am-1pm. Source: https://habitatsev.org/restore/ (checked 2026-11-02). No deal days published on the official ReStore page (checked 2026-11-05).",
     "sourceUrl": "https://habitatsev.org/restore/"
   },
   {
@@ -389,7 +389,7 @@
       "mon-sat": "9:00-18:00",
       "sun": "closed"
     },
-    "notes": "Hours: Mon-Sat 9am-6pm; Sun closed. Source: https://www.westorangehabitat.org/restore (checked 2026-11-02).",
+    "notes": "Hours: Mon-Sat 9am-6pm; Sun closed. Source: https://www.westorangehabitat.org/restore (checked 2026-11-02). No deal days published on the official ReStore page (checked 2026-11-05).",
     "sourceUrl": "https://www.westorangehabitat.org/restore"
   },
   {
@@ -406,7 +406,7 @@
     "hoursJson": {
       "mon-sat": "9:00-18:00"
     },
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-6pm (aggregator). Official site does not list ReStore pages; confirm open. Source: https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford (checked 2026-11-02).",
+    "notes": "CLOSED (reported permanent close; Minte 2026-11-05 from habitatseminoleapopka.org/restore-sanford/). Do not visit. Prior UNVERIFIED aggregator listing kept only as a closed record. Source: https://habitatseminoleapopka.org/restore-sanford/",
     "sourceUrl": "https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford"
   },
   {
@@ -442,7 +442,7 @@
       "mon-sat": "10:00-18:00",
       "sun": "closed"
     },
-    "notes": "Hours Mon-Sat 10am-6pm, Sun closed per thriftstores.io and Nextdoor, unverified; one directory says opens 9am (checked 2026-11-03). Map pin from US Census geocoder (matched 1330 State Hwy 436). aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).",
+    "notes": "Hours Mon-Sat 10am-6pm, Sun closed per satruck.org thrift locator (checked 2026-11-05). Hours Mon-Sat 10am-6pm, Sun closed per thriftstores.io and Nextdoor, unverified; one directory says opens 9am (checked 2026-11-03). Map pin from US Census geocoder (matched 1330 State Hwy 436). aggregator store phone 407-671-4419. Source: https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/ (checked 2026-11-02).",
     "sourceUrl": "https://www.salvationarmyusa.org/fl/casselberry/n-semoran-blvd/"
   },
   {
@@ -668,10 +668,10 @@
     "lng": -81.427908,
     "phone": "(321) 398-5520",
     "hoursJson": {
-      "mon-sat": "9:00-18:00",
+      "mon-sat": "10:00-18:00",
       "sun": "closed"
     },
-    "notes": "Hours Mon\u2013Sat 9 AM\u20136 PM, closed Sun. Wednesday Customer Appreciation Day (50% off all tag colors but one) and rotating color-tag sales are store-specific and come from a business-owner reply on Yelp \u2014 unverified with the store. Source: https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/ (checked 2026-11-02).",
+    "notes": "Hours Mon\u2013Sat 10 AM\u20136 PM, closed Sun (satruck.org thrift locator, checked 2026-11-05). Wednesday Customer Appreciation Day (50% off all tag colors but one) and rotating color-tag sales are store-specific and come from a business-owner reply on Yelp \u2014 unverified with the store. Source: https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/ (checked 2026-11-02).",
     "sourceUrl": "https://www.salvationarmyusa.org/fl/orlando/w-colonial-dr-1/"
   },
   {
