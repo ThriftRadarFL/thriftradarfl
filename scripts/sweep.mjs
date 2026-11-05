@@ -58,6 +58,12 @@ for (const [p, want, ct] of api) { const r = await get(p); check(r.status === wa
   { const s = await (await get("/stores/goodwill-port-orange")).text(); check(s.includes("Info report card"), "store page missing report card"); const r = await (await get("/api/report-cards?venue=goodwill-port-orange")).json(); check(r.count === 1 && /^[A-F]$/.test(r.data[0].grade), "report-cards API shape"); }
   check(/<script/i.test(await e.text()) === false, "embed has a script"); const c = await (await get("/stores/compare?s=goodwill-pine-hills-outlet,goodwill-taft-outlet")).text(); check(c.includes("Best pick") || c.includes("Best day"), "compare table missing");
   check(/frame-ancestors 'self'/.test((await get("/stores/goodwill-port-orange")).headers.get("content-security-policy") ?? ""), "store page framable"); }
+// Goodwill CFL Color-of-the-Week explainer (verified facts only)
+{ const g = await (await get("/goodwill-cfl")).text();
+  check(g.includes("Color of the Week") && g.includes("goodwillcfl.org/shop"), "goodwill-cfl missing sourced facts");
+  check(g.includes("Winter Park Boutique") && /not confirmed/i.test(g), "goodwill-cfl must flag boutique as unconfirmed");
+  check(!/Winter Park Boutique[^<]{0,120}50% off/i.test(g), "goodwill-cfl must not invent boutique 50% off");
+  check(g.includes("cannot be combined") || g.includes("No stacking"), "goodwill-cfl missing stacking note"); }
 const sec = await get("/"); for (const h of ["content-security-policy", "x-content-type-options", "referrer-policy", "x-frame-options"]) check(sec.headers.get(h), `missing header ${h}`);
 
 // 3b · 10 PM pass: suggest API, public-read caching + ETag/304, homepage hero, errors stay no-store.

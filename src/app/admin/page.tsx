@@ -10,7 +10,7 @@ import CsvImport from "./CsvImport";
 import { importFromUrl } from "@/lib/importer";
 import { checkData, summarize } from "@/lib/data-quality";
 import type { Sale } from "@/lib/data";
-import { login, logout, saveSale, saveVenue, removeSale, removeVenue, togglePublish, saveRule, removeRule, removeSub, reviewSubmission, removeContact, moderateTag } from "./actions";
+import { login, logout, saveSale, saveVenue, removeSale, removeVenue, togglePublish, saveRule, removeRule, toggleVerify, removeSub, reviewSubmission, removeContact, moderateTag } from "./actions";
 import { listTagReports } from "@/lib/data";
 import { isActive } from "@/lib/color-tags";
 import TagSwatch from "@/components/TagSwatch";
@@ -112,9 +112,11 @@ export default async function Admin({ searchParams }: SP) {
           <F n="label" l="Label" d={er?.label} req /><F n="discountPct" l="Discount %" d={er?.discountPct} t="number" />
           <label className="flex items-center gap-2 text-xs font-bold"><input type="checkbox" name="verified" defaultChecked={er?.verified} /> Verified with the store</label>
           <button className="btn-red">Save rule</button> {er && <Link href="/admin#rules" className="text-sm underline">New instead</Link>}</form>
+        <p className="border-t border-line bg-paper px-3 py-2 text-xs text-gray-600">Restock / bin rotation / $-day kinds show on <a href="/bins" className="underline">/bins</a>. Use <b>verify</b> / <b>unverify</b> for a one-click status flip (no need to re-open the form). Verified rules need a real source (store site, call, or photo of the sign).</p>
         <ul className="border-t border-line text-sm">{rules.map((r) => <li key={r.id} className={row}>
-          <Link href={`/admin?rule=${encodeURIComponent(r.id!)}#rules`} className="hover:underline">{DAYS[r.day]} · {r.label}</Link><span className="text-xs text-gray-600">{vname(r.venue)}{r.verified ? " · ✓ verified" : " · unverified"}</span>
-          <form action={removeRule} className="ml-auto"><input type="hidden" name="id" value={r.id} /><ConfirmButton message={`Delete rule "${r.label}"?`}>delete</ConfirmButton></form></li>)}</ul></Panel>
+          <Link href={`/admin?rule=${encodeURIComponent(r.id!)}#rules`} className="hover:underline">{DAYS[r.day]} · {r.label}</Link><span className="text-xs text-gray-600">{vname(r.venue)} · {r.kind}{r.verified ? " · ✓ verified" : " · unverified"}</span>
+          <span className="ml-auto flex items-center gap-3"><form action={toggleVerify}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="verified" value={String(!r.verified)} /><button type="submit" className="text-xs underline">{r.verified ? "unverify" : "verify"}</button></form>
+          <form action={removeRule}><input type="hidden" name="id" value={r.id} /><ConfirmButton message={`Delete rule "${r.label}"?`}>delete</ConfirmButton></form></span></li>)}</ul></Panel>
       <Panel id="subs" title={`Digest subscribers (${subs.length})`}><ul className="max-h-96 overflow-y-auto text-sm">{subs.map((s) => <li key={s.email} className={row}>
         <span>{s.email}</span><span className="text-xs text-gray-600">{s.area} · {s.at.slice(0, 10)}</span>
         <form action={removeSub} className="ml-auto"><input type="hidden" name="email" value={s.email} /><ConfirmButton message={`Remove ${s.email} from the digest?`}>remove</ConfirmButton></form></li>)}

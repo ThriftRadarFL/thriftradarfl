@@ -49,6 +49,17 @@ export async function saveRule(fd: FormData) {
   await upsertDealRule(r.value); await audit("rule.save", r.value.id, `${r.value.venue} · ${r.value.label}${r.value.verified ? " · verified" : ""}`); done("Saved deal rule " + r.value.label);
 }
 export async function removeRule(fd: FormData) { await guard(); await deleteDealRule(s(fd, "id")); await audit("rule.delete", s(fd, "id")); done("Deleted deal rule"); }
+export async function toggleVerify(fd: FormData) {
+  await guard();
+  const id = s(fd, "id"); const verified = s(fd, "verified") === "true";
+  const all = await data.getDealRules(); const cur = all.find((r) => r.id === id);
+  if (!cur) fail(["Deal rule not found"], "&rule=");
+  if (!cur) return;
+  const next = { ...cur, verified };
+  await upsertDealRule(next);
+  await audit(verified ? "rule.verify" : "rule.unverify", id, `${cur.venue} · ${cur.label}`);
+  done(`${verified ? "Verified" : "Unverified"} ${cur.label}`);
+}
 export async function removeSub(fd: FormData) { await guard(); await removeSubscriber(s(fd, "email")); await audit("subscriber.remove", s(fd, "email")); done("Removed subscriber " + s(fd, "email")); }
 export async function reviewSubmission(fd: FormData) {
   await guard(); const approve = s(fd, "approve") === "true"; const slug = await resolveSubmission(s(fd, "id"), approve); if (slug) await audit(approve ? "submission.approve" : "submission.reject", slug);

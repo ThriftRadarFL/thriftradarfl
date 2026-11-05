@@ -85,7 +85,7 @@ INSERT INTO deal_rules (rule_key, venue_id, kind, day_of_week, start_time, color
 SELECT v.rule_key, ve.id, v.kind::deal_kind, v.day, v.t::time, v.color, v.pct, v.label, v.label, v.verified
 FROM (VALUES
   ('goodwill-port-orange-0-color-of-the-week-50-off-color-changes-sundays-posted-in-store', 'goodwill-port-orange', 'color_tag', 0, NULL, 'bg-teal', 50, 'Color of the Week 50% off (color changes Sundays, posted in store)', true),
-  ('goodwill-port-orange-1-seniors-55-discount-ask-in-store-for-amount', 'goodwill-port-orange', 'senior_day', 1, NULL, 'bg-gray-700', NULL, 'Seniors 55+ discount (ask in store for amount)', true),
+  ('goodwill-port-orange-1-seniors-55-10-off', 'goodwill-port-orange', 'senior_day', 1, NULL, 'bg-gray-700', 10, 'Seniors 55+ 10% off', true),
   ('goodwill-port-orange-3-military-10-off', 'goodwill-port-orange', 'senior_day', 3, NULL, 'bg-gray-700', 10, 'Military 10% off', true),
   ('goodwill-port-orange-2-fresh-housewares-floor-am', 'goodwill-port-orange', 'restock', 2, '09:00', 'bg-royal', NULL, 'Fresh housewares floor (AM)', false),
   ('goodwill-pine-hills-outlet-1-heavy-bin-restock-am', 'goodwill-pine-hills-outlet', 'restock', 1, '08:00', 'bg-royal', NULL, 'Heavy bin restock (AM)', false),

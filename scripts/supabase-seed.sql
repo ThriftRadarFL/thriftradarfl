@@ -277,11 +277,11 @@ INSERT INTO deal_rules (venue_id, kind, day_of_week, start_time, discount_pct, d
       SELECT 1 FROM deal_rules dr WHERE dr.venue_id = v.id AND dr.kind = 'color_tag' AND dr.day_of_week IS NOT DISTINCT FROM 0 AND dr.description = 'Color of the Week 50% off (color changes Sundays, posted in store)'
     );
 INSERT INTO deal_rules (venue_id, kind, day_of_week, start_time, discount_pct, description, verified_at, source)
-    SELECT v.id, 'senior_day', 1, NULL, NULL, 'Seniors 55+ discount (ask in store for amount)',
+    SELECT v.id, 'senior_day', 1, NULL, 10, 'Seniors 55+ 10% off',
       now(), 'estatesales.net'
     FROM venues v WHERE v.slug = 'goodwill-port-orange'
     AND NOT EXISTS (
-      SELECT 1 FROM deal_rules dr WHERE dr.venue_id = v.id AND dr.kind = 'senior_day' AND dr.day_of_week IS NOT DISTINCT FROM 1 AND dr.description = 'Seniors 55+ discount (ask in store for amount)'
+      SELECT 1 FROM deal_rules dr WHERE dr.venue_id = v.id AND dr.kind = 'senior_day' AND dr.day_of_week IS NOT DISTINCT FROM 1 AND dr.description = 'Seniors 55+ 10% off'
     );
 INSERT INTO deal_rules (venue_id, kind, day_of_week, start_time, discount_pct, description, verified_at, source)
     SELECT v.id, 'senior_day', 3, NULL, 10, 'Military 10% off',

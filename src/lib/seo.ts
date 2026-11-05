@@ -4,7 +4,7 @@ import type { Sale, Venue } from "./data";
 import { cityList } from "./cities";
 /** City pages worth indexing: at least one upcoming sale or store. */
 export const citySlugOk = (c: { sales: number; venues: number }) => c.sales + c.venues > 0;
-export const STATIC_PAGES = ["", "/today", "/map", "/calendar", "/weekend", "/new", "/sales", "/stores", "/stores/compare", "/stores/report-cards", "/developers", "/deals", "/deals/week", "/color-tags", "/bins", "/digest", "/city", "/about", "/faq", "/submit", "/contact", "/privacy", "/terms", "/plan", "/prices", "/flip-of-the-week", "/calculator", "/estate-sale-companies"];
+export const STATIC_PAGES = ["", "/today", "/map", "/calendar", "/weekend", "/new", "/sales", "/stores", "/stores/compare", "/stores/report-cards", "/developers", "/deals", "/deals/week", "/color-tags", "/goodwill-cfl", "/bins", "/digest", "/city", "/about", "/faq", "/submit", "/contact", "/privacy", "/terms", "/plan", "/prices", "/flip-of-the-week", "/calculator", "/estate-sale-companies"];
 /** A sale has ended once its last day is before today (ET). */
 export const saleEnded = (s: Sale, today: string) => (s.days.at(-1)?.date ?? "") < today;
 export function sitemapEntries(site: string, sales: Sale[], venues: Venue[], today: string, now = new Date()): MetadataRoute.Sitemap {

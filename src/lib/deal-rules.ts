@@ -44,7 +44,7 @@ export const dealRules: DealRule[] = [
   { venue: "goodwill-apopka", day: 1, kind: "senior_day", label: "Seniors 55+ 10% off", discountPct: 10, color: "bg-gray-700", verified: true },
   { venue: "goodwill-apopka", day: 3, kind: "senior_day", label: "Military 10% off", discountPct: 10, color: "bg-gray-700", verified: true },
   { venue: "goodwill-port-orange", day: 0, kind: "color_tag", label: "Color of the Week 50% off (color changes Sundays, posted in store)", discountPct: 50, color: "bg-teal", verified: true },
-  { venue: "goodwill-port-orange", day: 1, kind: "senior_day", label: "Seniors 55+ discount (ask in store for amount)", discountPct: 10, color: "bg-gray-700", verified: true },
+  { venue: "goodwill-port-orange", day: 1, kind: "senior_day", label: "Seniors 55+ 10% off", discountPct: 10, color: "bg-gray-700", verified: true },
   { venue: "goodwill-port-orange", day: 3, kind: "senior_day", label: "Military 10% off", discountPct: 10, color: "bg-gray-700", verified: true },
   { venue: "goodwill-port-orange", day: 2, kind: "restock", label: "Fresh housewares floor (AM)", color: "bg-royal", time: "09:00", verified: false },
   { venue: "goodwill-pine-hills-outlet", day: 1, kind: "restock", label: "Heavy bin restock (AM)", color: "bg-royal", time: "08:00", verified: false },

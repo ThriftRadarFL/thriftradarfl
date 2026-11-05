@@ -17,6 +17,7 @@ import { todayET } from "@/lib/cities";
 import { embedSnippet } from "@/lib/embed";
 import ReportCardPanel from "@/components/ReportCardPanel";
 import { reportCard, tagCountsThisWeek } from "@/lib/report-card";
+import { hasVerifiedColorOfWeek } from "@/lib/goodwill-cfl";
 export const dynamic = "force-dynamic"; // "today at this store" follows the Eastern-time date
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const v = await getVenue((await params).slug); if (!v) return { title: "Store not found", robots: { index: false } };
@@ -49,7 +50,9 @@ export default async function Store({ params }: { params: Promise<{ slug: string
           : <tr><td className="px-4 py-3 text-gray-600">Hours not verified yet — call ahead</td></tr>}</tbody></table>
         <div className="panel-head border-t border-line">Deal days</div><ul className="text-sm">{!mine.length && <li className="px-4 py-2 text-gray-600">No deal days listed.</li>}{mine.map((r) => <li key={r.id} className="border-b border-line px-4 py-2">
           <b>{DAYS[r.day]}</b> {r.label}{r.time && ` · ${t12(r.time)}`}{!r.verified && <span className="ml-1 text-xs text-gray-600">(unverified)</span>}</li>)}</ul>
-        {mine.length > 0 && <div className="p-3"><CalendarLinks path={`/api/calendar/deals?venue=${v.slug}`} label="this store's deals" /><p className="mt-1 text-xs text-gray-600">Repeats weekly; updates automatically if the schedule changes.</p></div>}</div>
+        {mine.length > 0 && <div className="p-3"><CalendarLinks path={`/api/calendar/deals?venue=${v.slug}`} label="this store's deals" /><p className="mt-1 text-xs text-gray-600">Repeats weekly; updates automatically if the schedule changes.</p>
+          {v.org === "gwcfl" && hasVerifiedColorOfWeek(dealRules, v.slug) && <p className="mt-2 text-xs"><a href="/goodwill-cfl" className="link">Goodwill CFL Color of the Week explainer →</a></p>}
+          {v.org === "gwcfl" && !hasVerifiedColorOfWeek(dealRules, v.slug) && <p className="mt-2 text-xs text-gray-600">GICF outlet/boutique — Color of the Week / senior / military offers <b>not confirmed</b> here. See <a href="/goodwill-cfl" className="link">Goodwill CFL deals</a>.</p>}</div>}</div>
     </div>
     <details className="panel mt-4 overflow-hidden"><summary className="panel-head cursor-pointer list-none">▸ Embed this store&apos;s deal days on your site</summary>
       <div className="grid min-w-0 gap-4 break-words p-4 text-sm md:grid-cols-2"><div className="min-w-0 space-y-2"><p>Run a blog, club page or the store&apos;s own site? Paste this to show today&apos;s deal, the weekly schedule and the best day. It updates automatically.</p>
