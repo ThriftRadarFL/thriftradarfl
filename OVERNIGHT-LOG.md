@@ -130,3 +130,11 @@
 - **390px:** live Playwright overflow check on /, /today, /map, /stores, /deals, /goodwill-cfl, /sales, /weekend, Sharing Center store page — all scrollWidth 390, no overflow from transforms.
 - Tests 168 (163 pass, 5 PG skipped). Commits: e829090 (motion), e36471e (Sharing Center), 94f4470 (SA/Habitat notes), 8435ded (test fix). Deployed prod https://thriftradarfl.vercel.app.
 - **ONE live sweep WITH ADMIN_PASSWORD: 1,391 pass / 0 fail**, 111 sitemap URLs. PASS.
+
+## 2026-11-05 ~1:40–2:20 PM ET — Grok Bot (Keel P1 + P3, Minte Nov 5 merge)
+- **P1 root cause:** `viaDb` read timeout was 8s with a 16s retry, so a hung pooled socket held TTFB 8–24s before falling back. The city and store pages are `force-dynamic` and call getSales/getVenues/getDealRules twice (generateMetadata + page), and those reads weren't deduped or cached, so up to 6 queries queued on a max:3 pool. **Fix:** read timeout 2.5s (+4s retry on a fresh pool). Sales/venues/rules now go through in-flight dedupe plus a last-good cache: the DB is always asked first, but if it hasn't answered in 1.2s, the instance serves its last-good value while the query finishes in the background. Writes stay visible on every instance. (A first try with a 60s TTL cache broke the sweep's "new rule on /deals" check across instances, so it was replaced.)
+- **P3:** /bins store links and /prices window filters now `min-h-[40px]`.
+- **Minte Nov 5:** added 2 estatesales.org sales (9 Deerwood St Palm Coast Nov 6–7 9–1; 4701 Brenda Dr Orlando Nov 7 8–1). Pins are ZIP centers; no prices. Sharing Center pin set to ArcGIS Subaddress 28.706418, -81.327891. West Volusia ReStore set to Tue–Sat 8:30–5, Sun–Mon closed (the Mon–Sat listing is the admin office). The other CSV rows already matched. Synced via admin API (201/201/200/200).
+- Commits 54556e8, 4c46e3a, 0a83c1a; deployed prod. Tests 163 pass / 5 skipped / 0 fail.
+- Live /city/orlando TTFB: 0.89, 0.41, 0.38, 0.36, 0.38s. Store page 0.40s.
+- **Live sweep WITH ADMIN_PASSWORD: 1,415 pass / 0 fail**, 113 sitemap URLs.
