@@ -40,7 +40,7 @@ function mutate<T, R = void>(file: string, fallback: T, fn: (cur: T) => { next: 
 // DB is used when DATABASE_URL is set AND reachable. Any DB error (timeout, protocol, auth) marks it down for 60s and
 // transparently falls back to the JSON files so builds and pages never break because the database is unreachable.
 // Tunable: DB_TIMEOUT_MS (default 1500) per query, DB_BACKOFF_MS (default 5 min) before retrying a down DB.
-const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 1500; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 300_000;
+const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS) || 4000; const DB_BACKOFF_MS = Number(process.env.DB_BACKOFF_MS) || 30_000;
 let dbDownUntil = 0; let lastDbError = ""; let lastDbMessage = "";
 /** Strict writes: when a DB is configured in production (or DB_STRICT_WRITES=1), a failed DB write is a 503 — never a silent
  *  JSON write that would vanish on the next deploy / differ per serverless instance. DB_STRICT_WRITES=0 opts out. */

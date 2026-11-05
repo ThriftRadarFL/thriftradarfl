@@ -46,3 +46,4 @@
 ## 2026-11-04 night — verified Goodwill CFL rules
 - Verified from goodwillcfl.org/shop: Color of the Week (Sun refresh, 50%), Seniors 55+ 10% Mon, Military 10% Wed. Added verified rules to 13 more GICF retail stores (39 rules, synced to prod via admin API); Port Orange senior rule gets discountPct 10 in seed. Outlets + Winter Park Boutique left unverified/untouched.
 - Live crawl: /, /bins, /prices, /map, /stores all 200; /bins already has empty states. No new files in thriftradarfl-assets.
+- Bug fixed: page lambdas fell back to stale seed JSON for 5 min after one cold-start DB timeout (1.5s), so admin edits/new rules didn't show on pages (sweep: 4 read-after-write fails). DB timeout → 4s, backoff → 30s. Sweep now restores Port Orange notes instead of leaving "Sweep note" on prod (restored).

@@ -89,8 +89,10 @@ if (PW) {
   r = await get("/api/deal-rules", { method: "POST", headers: auth, body: JSON.stringify(rule) }); const body = await r.json().catch(() => ({})); check(r.status === 201, `create rule → ${r.status}`);
   check((await (await get("/deals")).text()).includes("Sweep test half off"), "new rule not on /deals");
   if (body.data?.id) { r = await get(`/api/deal-rules?id=${encodeURIComponent(body.data.id)}`, { method: "DELETE", headers: auth }); check(r.status === 200, `delete rule → ${r.status}`); }
+  const origNotes = (await (await get("/api/venues/goodwill-port-orange")).json()).data?.notes ?? "";
   r = await get("/api/venues/goodwill-port-orange", { method: "PUT", headers: auth, body: JSON.stringify({ notes: "Sweep note" }) }); check(r.status === 200, `edit venue → ${r.status}`);
   check((await (await get("/stores/goodwill-port-orange")).text()).includes("Sweep note"), "venue edit not shown");
+  await get("/api/venues/goodwill-port-orange", { method: "PUT", headers: auth, body: JSON.stringify({ notes: origNotes }) }); // restore prod notes
 } else console.log("(skipping admin write checks: set ADMIN_PASSWORD)");
 
 console.log(`${ok} checks passed, ${fails.length} failed, ${urls.length} sitemap URLs`);
