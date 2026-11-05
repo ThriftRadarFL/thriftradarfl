@@ -83,3 +83,11 @@
 - Admin UX: one-click **verify / unverify** on each deal rule (no re-open form); rules list shows kind + restock→/bins hint.
 - Tests 160 (155 pass, 5 PG skipped). data:check 0 errors / 0 warnings. Commit b0ded30 pushed + prod deployed.
 - **ONE live sweep: 1,391 pass / 0 fail**, 111 sitemap URLs. PASS.
+
+## 2026-11-05 ~1:00 AM ET — Grok Bot overnight session (/deals GWCFL collapse)
+- Assets: thriftradarfl-assets unchanged since Nov 3 (nothing to merge). Winter Park Boutique + Pine Hills/Taft outlets still unconfirmed — no invented rules.
+- Bug crawl: no new live bugs (prior sweep 1,391/0). Forms already have Notice empty/error states; skipped inventing form work.
+- Feature: **Clearer /deals deal-day display**. Verified Goodwill CFL chain offers (Color of the Week / Seniors 55+ / Military) collapse into **one pill per weekday** ("Goodwill CFL · … · N retail stores · ✓ sourced") instead of ~14 identical pills. Today panel shows the active chain offer. Covered GWCFL retail listed in their own section with compact chain summary + any store-only extras (e.g. Port Orange restock). Outlets, boutique, and non-GWCFL rules stay individual. OpenGraph + `/deals/opengraph-image`.
+- Helpers: `gwcflChainOfferKey` / `isGwcflChainRule` / `collapseDayRules` in `src/lib/goodwill-cfl.ts` (collapse only when ≥2 covered stores share a verified chain offer).
+- Tests 163 (158 pass, 5 PG skipped). data:check 0 errors / 0 warnings. Commit a068d5b pushed + prod deployed.
+- **ONE live sweep: 1,391 pass / 0 fail**, 111 sitemap URLs. PASS.
