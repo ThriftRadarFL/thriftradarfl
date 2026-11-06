@@ -162,3 +162,8 @@
 - **verify-shops-nov6.csv:** Halifax 5 shops listed open in hospice admission binder; **hours cleared** (not published). Ormond address → **160 S. Nova Rd Unit 132**. Port Orange binder-open vs Yelp-closed conflict noted (did not invent closed). City Thrift Edgewater + Semoran: open, hours Mon–Sat 9–9 / Sun 11–6 from buythrift.com; phones set (Edgewater may be HQ). Habitat Seminole-Apopka Sanford ReStore **CLOSED** / none on official site — hours null, **0 deal rules**.
 - Admin API: 11 venue PUTs + 2 sale PUTs → all **200**. data:check 0 errors / 6 expected no-hours warnings. Tests 165 pass / 5 skipped / 0 fail.
 - Commit **21dc6e9** pushed; prod deployed (NEXT_DIST_DIR=.next-build). Live pins/hours verified via admin-synced API.
+
+## 2026-11-05 ~9:45 PM ET — P3 stacked-pin fix (Minte confirmed)
+- `estate-sale-orlando-5144160` → **5113 Coddington St, Orlando 32812** pin **28.489278, -81.321487** (ArcGIS rooftop); cleared ZIP-center wording.
+- Brenda Dr (`one-day-only-estate-liquidation-orlando-2471770`) → **28.519376, -81.328420** (pins-street-nov6). Cleared leftover ZIP-center note.
+- Seed + sales.json + prod admin PUT **200**. Invented nothing else.

@@ -41,11 +41,11 @@
     "type": "estate",
     "city": "Orlando",
     "zip": "32812",
-    "lat": 28.4847,
-    "lng": -81.3244,
+    "lat": 28.489278,
+    "lng": -81.321487,
     "sourceUrl": "https://www.estatesales.net/FL/Orlando/32812/traditional/5144160",
     "paymentMethods": [],
-    "description": "Address posted closer to sale (full address posted Nov 5). Map pin is the ZIP 32812 center. Run by Orlando Estate Sale Ladies, LLC. Source: estatesales.net; estatesales.org (https://www.estatesales.org/estate-sales/fl/orlando-/32812/estate-sale-in-orlando-2471588).",
+    "description": "Address: 5113 Coddington St, Orlando, FL 32812. Map pin ArcGIS rooftop (28.489278, -81.321487; Minte stacked-pin fix). Run by Orlando Estate Sale Ladies, LLC. Source: estatesales.net; estatesales.org (https://www.estatesales.org/estate-sales/fl/orlando-/32812/estate-sale-in-orlando-2471588).",
     "days": [
       {
         "date": "2026-11-06",
@@ -583,11 +583,11 @@
     "type": "estate",
     "city": "Orlando",
     "zip": "32812",
-    "lat": 28.51937555639,
-    "lng": -81.328419969104,
+    "lat": 28.519376,
+    "lng": -81.32842,
     "sourceUrl": "https://www.estatesales.org/estate-sales/fl/orlando/32812/one-day-only-estate-liquidation-2471770",
     "paymentMethods": [],
-    "description": "Address: 4701 Brenda Dr, Orlando, FL 32812. One day only, Sat Nov 7, 8am-1pm (hours from the sale description). Map pin is approximate (ZIP 32812 center). Run by Orlando Estate Sale Ladies, LLC. Source: estatesales.org. Map pin upgraded to ArcGIS house/rooftop PointAddress (Minte pins-street-nov6, 2026-11-05).",
+    "description": "Address: 4701 Brenda Dr, Orlando, FL 32812. One day only, Sat Nov 7, 8am-1pm (hours from the sale description). Map pin ArcGIS house/rooftop PointAddress (28.519376, -81.328420; Minte pins-street-nov6). Run by Orlando Estate Sale Ladies, LLC. Source: estatesales.org.",
     "days": [
       {
         "date": "2026-11-07",
