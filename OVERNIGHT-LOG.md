@@ -174,3 +174,6 @@
 - **n8:** Audited `end=17:00` sales — only Knot Way; disclaimer already present. Added `tests/end-placeholder.test.ts` + `tests/cls-reserves.test.ts`.
 - Invented no store facts/prices/deal rules.
 - Commit **e0388b7** deployed prod. Live sweep WITH ADMIN_PASSWORD: **1,427 pass / 0 fail**, 114 sitemap URLs.
+
+## 2026-11-06 ~1:00 AM ET
+- Check-in: tree clean, no new assets since last merge, homepage 200 (TTFB ~1.6s). No changes.
