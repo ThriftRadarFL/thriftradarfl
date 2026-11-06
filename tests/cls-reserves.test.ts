@@ -20,6 +20,10 @@ test("map: reserved frame wraps SaleMap/SvgPlot; loading matches map+list", () =
 test("calendar/plan/search loading skeletons reserve final layout", () => {
   assert.match(readFileSync("src/app/calendar/loading.tsx", "utf8"), /calendar-frame/);
   assert.match(readFileSync("src/app/calendar/page.tsx", "utf8"), /calendar-frame/);
+  // Footer CLS at 1280px: sm+ reserve must cover two deal-dense rows (~3200px), not the old 22rem.
+  const calCss = readFileSync("src/app/globals.css", "utf8");
+  assert.match(calCss, /\.calendar-frame[^{]*\{[\s\S]*?min-height:\s*200rem/);
+  assert.match(calCss, /grid-auto-rows:\s*minmax\(100rem,\s*auto\)/);
   assert.match(readFileSync("src/app/plan/loading.tsx", "utf8"), /plan-frame/);
   assert.match(readFileSync("src/app/plan/Planner.tsx", "utf8"), /plan-frame/);
   const searchLoad = readFileSync("src/app/search/loading.tsx", "utf8");

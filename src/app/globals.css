@@ -175,7 +175,14 @@ h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter
 @media (min-width: 640px) { .map-frame { height: 440px; } }
 @media (min-width: 768px) { .map-frame { height: 520px; } }
 .calendar-frame { min-height: 12rem; }
-@media (min-width: 640px) { .calendar-frame { min-height: 22rem; } }
+/* 1280px CLS: deal-dense Sun/Mon/Wed cells ~1600px each; 14-day grid = 2 rows ≈ 3200px.
+   Prior 22rem reserve left footer jumping ~2.8kpx when rules filled in (Keel CLS 0.241). */
+@media (min-width: 640px) {
+  .calendar-frame {
+    min-height: 200rem; /* ~3200px */
+    grid-auto-rows: minmax(100rem, auto); /* ~1600px/row; stretch skeleton cells to match */
+  }
+}
 .plan-frame { min-height: 26.25rem; } /* 420px — matches Planner skeleton */
 .search-frame { min-height: 10rem; }
 

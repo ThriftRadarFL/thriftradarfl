@@ -186,3 +186,8 @@
 
 ## 2026-11-06 ~4:01 AM ET
 No new assets; tree clean. Live spot check: /, /stores, /deals, /bins, /goodwill-cfl, /city/orlando all 200 (homepage 1.7s, others <0.7s). No changes.
+
+## 2026-11-06 ~4:15 AM ET — /calendar CLS footer shift (Keel)
+- Keel recheck: **/calendar CLS 0.241 at 1280px (footer shift)**; other pages pass.
+- Cause: `.calendar-frame` sm+ reserve was **22rem (352px)** but live deal-dense grid is **~3163px** (Sun/Mon/Wed cells ~1600px × 2 rows from ~14 GICF rules/day).
+- Fix: sm+ `.calendar-frame` → `min-height: 200rem` + `grid-auto-rows: minmax(100rem, auto)` so loading→loaded keeps footer put. CSS only; no content change.
