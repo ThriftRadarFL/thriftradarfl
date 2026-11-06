@@ -22,9 +22,11 @@ test("store notes carry one unverified warning", () => {
 });
 test("Nov 3 hours round 3 merged", () => {
   const by = Object.fromEntries((venues as any[]).map((v) => [v.slug, v]));
-  assert.deepEqual(by["city-thrift-semoran"].hoursJson, { "mon-sat": "9:00-21:00", sun: "10:00-19:00" });
+  // City Thrift hours from buythrift.com locator (Minte verify-shops-nov6): Sun 11–6 (was aggregator 10–7).
+  assert.deepEqual(by["city-thrift-semoran"].hoursJson, { "mon-sat": "9:00-21:00", sun: "11:00-18:00" });
+  assert.deepEqual(by["city-thrift-edgewater"].hoursJson, { "mon-sat": "9:00-21:00", sun: "11:00-18:00" });
   for (const k of ["salvation-army-orlando-thrift-store-2", "salvation-army-orlando-thrift-store-4"]) { assert.deepEqual(by[k].hoursJson, { "mon-sat": "10:00-18:00", sun: "closed" }); assert.match(by[k].notes, /unverified/); }
-  const sc = by["sharing-center-village-shoppes-longwood"]; assert.equal(sc.lat, 28.706418); assert.equal(sc.lng, -81.327891); assert.match(sc.notes, /ArcGIS Subaddress/i); assert.doesNotMatch(sc.notes, /approximate and unverified/i); assert.doesNotMatch(sc.notes, /not on the map yet/i);
+  const sc = by["sharing-center-village-shoppes-longwood"]; assert.ok(Math.abs(sc.lat - 28.706417641931) < 1e-9); assert.ok(Math.abs(sc.lng - (-81.327891154833)) < 1e-9); assert.match(sc.notes, /ArcGIS Subaddress/i); assert.doesNotMatch(sc.notes, /approximate and unverified/i); assert.doesNotMatch(sc.notes, /not on the map yet/i);
 });
 test("map has a keyboard list mirroring pins + 40px controls", () => {
   const m = readFileSync("src/app/map/MapExplorer.tsx", "utf8"); assert.match(m, /aria-label=\{`Show \$\{p\.name\} on the map`\}/); assert.match(readFileSync("src/components/SaleMap.tsx", "utf8"), /focusKey/);

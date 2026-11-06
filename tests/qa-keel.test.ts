@@ -25,7 +25,8 @@ test("Nov 3 store merge: 4 pins fixed, hours filled", () => {
   const by = Object.fromEntries((venues as any[]).map((v) => [v.slug, v]));
   for (const [k, lat] of [["goodwill-casselberry", 28.69771], ["goodwill-oviedo", 28.64422], ["goodwill-apopka", 28.67319], ["salvation-army-orlando-thrift-store-4", 28.63025]] as const) assert.equal(by[k].lat, lat);
   for (const k of ["goodwill-casselberry", "goodwill-oviedo", "goodwill-apopka"]) assert.deepEqual(by[k].hoursJson, { daily: "9:00-21:00" });
-  assert.ok((venues as any[]).filter((v) => v.hoursJson).length >= 40);
+  // Halifax binder shops + Habitat Sanford CLOSED have hoursJson null (hours not published / closed) — Minte verify-shops-nov6.
+  assert.ok((venues as any[]).filter((v) => v.hoursJson).length >= 34);
 });
 test("est. thrift cost is low-confidence metadata, never a sold price", () => {
   const p = getPrices(); const tee = p.find((i) => i.item === "Vintage band tee")!;

@@ -92,13 +92,13 @@
     "address": "1577 North Nova Rd.",
     "city": "Holly Hill",
     "zip": "32117",
-    "lat": 29.23831,
-    "lng": -81.0573,
+    "lat": 29.23859590629,
+    "lng": -81.056000656009,
     "phone": "(386) 257-3247",
     "hoursJson": {
       "daily": "9:00-21:00"
     },
-    "notes": "Map pin approximate (geocoder matched S Nova Rd). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "notes": "Map pin from ArcGIS World Geocoding PointAddress (score 100) for 1577 N Nova Rd / Holly Hill ZIP 32117; Nominatim Goodwill POI cross-check. Prefer over prior Census match on S Nova. Address, phone and hours from https://www.goodwillcfl.org/locations/ (pin checked 2026-11-05).",
     "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
@@ -143,13 +143,13 @@
     "address": "4516 FL-46",
     "city": "Sanford",
     "zip": "32771",
-    "lat": 28.78691,
-    "lng": -81.20577,
+    "lat": 28.813302581577,
+    "lng": -81.330045387768,
     "phone": "(407) 878-1741",
     "hoursJson": {
       "daily": "9:00-21:00"
     },
-    "notes": "Map pin approximate (geocoded). Address, phone and hours from https://www.goodwillcfl.org/locations/ (checked 2026-11-02).",
+    "notes": "Map pin from ArcGIS PointAddress for 4516 W State Road 46, Sanford (WEST SR-46). Replaces prior approximate pin that matched Census E SR-46 (wrong corridor). Address, phone and hours from https://www.goodwillcfl.org/locations/ (pin checked 2026-11-05).",
     "sourceUrl": "https://www.goodwillcfl.org/locations/"
   },
   {
@@ -404,11 +404,9 @@
     "lat": 28.76253,
     "lng": -81.28421,
     "phone": "(407) 215-2000",
-    "hoursJson": {
-      "mon-sat": "9:00-18:00"
-    },
-    "notes": "CLOSED (reported permanent close; Minte 2026-11-05 from habitatseminoleapopka.org/restore-sanford/). Do not visit. Prior UNVERIFIED aggregator listing kept only as a closed record. Source: https://habitatseminoleapopka.org/restore-sanford/",
-    "sourceUrl": "https://findthrift.com/store-information-habitat-for-humanity-of-seminole-apopka-restore-sanford"
+    "hoursJson": null,
+    "notes": "CLOSED \u2014 none found on official site (Minte verify-shops-nov6, 2026-11-05). habitatseminoleapopka.org lists Administrative Office only (Altamonte Springs); /restore-sanford/ 404. Historical address kept as closed record only. Do not publish open hours or deal rules. Source: https://habitatseminoleapopka.org/",
+    "sourceUrl": "https://habitatseminoleapopka.org/"
   },
   {
     "slug": "salvation-army-orlando-thrift-store-2",
@@ -475,11 +473,9 @@
     "lat": 29.01552,
     "lng": -80.92231,
     "phone": "(386) 426-7308",
-    "hoursJson": {
-      "mon-sat": "10:00-16:00"
-    },
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. 2-1-1 directory; Halifax official page not fetched. Source: https://211live.org/index.php/component/cpx/?id=3883585&task=resource.view (checked 2026-11-02).",
-    "sourceUrl": "https://211live.org/index.php/component/cpx/?id=3883585&task=resource.view"
+    "hoursJson": null,
+    "notes": "Listed open in Halifax Health Hospice admission binder RESALE SHOPS (PDF checked 2026-11-05) with phone 386.426.7308. Live halifaxhealth.org resale-shop URLs 404. Hours not published in binder \u2014 do not invent (prior 211 Mon-Sat 10-4 cleared). Source: https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf",
+    "sourceUrl": "https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf"
   },
   {
     "slug": "halifax-health-hospice-resale-shop-orange-city",
@@ -492,11 +488,9 @@
     "lat": 28.91117,
     "lng": -81.29253,
     "phone": "(386) 456-0240",
-    "hoursJson": {
-      "mon-sat": "10:00-16:00"
-    },
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Source: https://211live.org/index.php?id=3883586&option=com_cpx&task=resource.view (checked 2026-11-02).",
-    "sourceUrl": "https://211live.org/index.php?id=3883586&option=com_cpx&task=resource.view"
+    "hoursJson": null,
+    "notes": "Listed open in Halifax Health Hospice admission binder RESALE SHOPS (PDF checked 2026-11-05) with phone 386.456.0240. Live resale pages 404. Hours not published in binder \u2014 do not invent. Source: https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf",
+    "sourceUrl": "https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf"
   },
   {
     "slug": "halifax-health-hospice-resale-shop-port-orange",
@@ -509,45 +503,39 @@
     "lat": 29.12669,
     "lng": -81.00469,
     "phone": "(386) 761-6045",
-    "hoursJson": {
-      "mon-sat": "10:00-16:00"
-    },
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Source: https://211live.org/index.php/component/cpx/?id=3883588&task=resource.view (checked 2026-11-02).",
-    "sourceUrl": "https://211live.org/index.php/component/cpx/?id=3883588&task=resource.view"
+    "hoursJson": null,
+    "notes": "Listed open in Halifax Health Hospice admission binder (3830-A S. Nova Rd, 386.761.6045; PDF checked 2026-11-05). Yelp marked CLOSED (updated Sep 2026) \u2014 conflict; do not invent closed without official notice. Live resale pages 404. Hours not in binder \u2014 cleared prior 211 hours. Source: https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf",
+    "sourceUrl": "https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf"
   },
   {
     "slug": "halifax-health-hospice-resale-shop-ormond-beach",
     "org": "halifax-hospice",
     "name": "Halifax Health Hospice Resale Shop - Ormond Beach",
     "type": "thrift",
-    "address": "160 N Nova Rd #132",
+    "address": "160 S. Nova Rd Unit 132",
     "city": "Ormond Beach",
     "zip": "32174",
     "lat": 29.28145,
     "lng": -81.08274,
     "phone": "(386) 672-2915",
-    "hoursJson": {
-      "mon-sat": "10:00-16:00"
-    },
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm (likely). Sources conflict N vs S Nova Rd; verify. Source: https://211live.org/ (checked 2026-11-02).",
-    "sourceUrl": "https://211live.org/"
+    "hoursJson": null,
+    "notes": "Listed open in Halifax Health Hospice admission binder as 160 S. Nova Rd., Unit 132, 386.672.2915 (PDF checked 2026-11-05; prefer binder South over prior seed N Nova). Live resale pages 404. Hours not published \u2014 do not invent. Source: https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf",
+    "sourceUrl": "https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf"
   },
   {
     "slug": "halifax-health-hospice-resale-shop-palm-coast",
     "org": "halifax-hospice",
     "name": "Halifax Health Hospice Resale Shop - Palm Coast",
     "type": "thrift",
-    "address": "126 Flagler Plaza Dr",
+    "address": "122-126 Flagler Plaza Dr",
     "city": "Palm Coast",
     "zip": "32137",
     "lat": 29.47516,
     "lng": -81.18135,
     "phone": "(386) 439-0333",
-    "hoursJson": {
-      "mon-sat": "10:00-16:00"
-    },
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 10am-4pm. Reopened 2023. Source: https://www.flaglernewsweekly.com/halifax-health-hospice-celebrates-resale-store-reopening-in-palm-coast/ (checked 2026-11-02).",
-    "sourceUrl": "https://www.flaglernewsweekly.com/halifax-health-hospice-celebrates-resale-store-reopening-in-palm-coast/"
+    "hoursJson": null,
+    "notes": "Listed open in Halifax Health Hospice admission binder as 122-126 Flagler Plaza Dr, 386.439.0333 (PDF checked 2026-11-05). Live resale pages 404. Hours not published \u2014 do not invent. Source: https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf",
+    "sourceUrl": "https://halifaxhealth.org/assets/hospice-admission-binder-web.pdf"
   },
   {
     "slug": "halifax-humane-society-thrift-store",
@@ -626,36 +614,36 @@
     "org": "city-thrift",
     "name": "City Thrift - Edgewater",
     "type": "thrift",
-    "address": "6015 Edgewater Dr",
+    "address": "6015 Edgewater Drive",
     "city": "Orlando",
     "zip": "32810",
     "lat": 28.61163,
     "lng": -81.41683,
-    "phone": null,
+    "phone": "(214) 732-7914",
     "hoursJson": {
       "mon-sat": "9:00-21:00",
-      "sun": "10:00-19:00"
+      "sun": "11:00-18:00"
     },
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon-Sat 9am-9pm; Sun 10am-7pm (aggregator). No official site found. Source: https://thriftnearby.com/fl/orlando/city-thrift-1803/ (checked 2026-11-02).",
-    "sourceUrl": "https://thriftnearby.com/fl/orlando/city-thrift-1803/"
+    "notes": "Open per buythrift.com store locator (WP store_search id=616, checked 2026-11-05): Mon-Sat 9am-9pm; Sun 11am-6pm. Phone on locator 214-732-7914 (may be HQ/shared). Source: https://buythrift.com/stores/",
+    "sourceUrl": "https://buythrift.com/stores/"
   },
   {
     "slug": "city-thrift-semoran",
     "org": "city-thrift",
     "name": "City Thrift - Semoran",
     "type": "thrift",
-    "address": "1803 S Semoran Blvd",
+    "address": "1803 S Semoran Blvd.",
     "city": "Orlando",
     "zip": "32822",
     "lat": 28.52088,
     "lng": -81.3102,
-    "phone": null,
+    "phone": "(321) 201-8556",
     "hoursJson": {
       "mon-sat": "9:00-21:00",
-      "sun": "10:00-19:00"
+      "sun": "11:00-18:00"
     },
-    "notes": "Hours Mon-Sat 9am-9pm, Sun 10am-7pm per Yelp (claimed, Oct 2026) and MapQuest; one directory says Sun 11am-7pm (checked 2026-11-03). UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Source: https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/ (checked 2026-11-02).",
-    "sourceUrl": "https://www.orlandoweekly.com/orlando-guides/newcomers-guide/everything-old-is-new-again-if-you-shop-orlandos-thrifts-to-decorate-your-home/"
+    "notes": "Open per buythrift.com store locator (WP store_search id=2881, checked 2026-11-05): Mon-Sat 9am-9pm; Sun 11am-6pm. Phone 321-201-8556. Source: https://buythrift.com/stores/",
+    "sourceUrl": "https://buythrift.com/stores/"
   },
   {
     "slug": "salvation-army-w-colonial-orlando",
@@ -717,14 +705,14 @@
     "address": "600 N Highway 17-92 Suite 130",
     "city": "Longwood",
     "zip": "32750",
-    "lat": 28.706418,
-    "lng": -81.327891,
+    "lat": 28.706417641931,
+    "lng": -81.327891154833,
     "phone": "(407) 260-9155",
     "hoursJson": {
       "mon-sat": "9:30-17:00",
       "sun": "closed"
     },
-    "notes": "Map pin from ArcGIS Subaddress geocode for 600 N Highway 17-92 Suite 130 (28.706418, -81.327891; checked 2026-11-05; tighter than the earlier Google Maps address pin). Address-geocoded suite pin, not a The Sharing Center business listing. Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (checked 2026-11-02).",
+    "notes": "Map pin street-precise ArcGIS Subaddress for suite 130 (28.706417641931, -81.327891154833; prefer ArcGIS over Google ~80 m east). Hours: Mon-Sat 9:30am-5pm; Sun closed. Site mentions weekly specials but names no days. Source: https://thesharingcenter.org/shopwithus/ (pin checked 2026-11-05).",
     "sourceUrl": "https://thesharingcenter.org/shopwithus/"
   },
   {

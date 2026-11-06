@@ -153,3 +153,11 @@
 - **Fix:** `cached()` now takes an optional cold JSON seed (same files viaDb already falls back to — no invented rows). On a cold miss, JSON is raced in after `DB_TIMEOUT_MS` (2.5s) while the DB/retry continues and refreshes the cache. viaDb read retry raised to ≥6s so background refresh can outlast connect_timeout. Wired for sales/venues/rules. Comment on `src/app/page.tsx`.
 - Tests: npm test → 165 pass / 5 skipped / 0 fail (incl. `tests/homepage-cold-ttfb.test.ts`).
 - Before deploy TTFB `/` (warm): 0.60, 0.65, 0.61, 0.68, 0.52s.
+- After deploy TTFB `/` (warm): 0.51, 0.43, 0.49, 0.65, 0.51s. Cold path now soft-caps at 2.5s JSON while viaDb retries (not re-measured as forced cold isolate).
+- Commit **239f73b** deployed prod (NEXT_DIST_DIR=.next-build, vercel@65.9.0 + proxy.cjs).
+
+## 2026-11-05 ~9:50 PM ET — Minte Nov 6 CSVs (pins + verify shops; no new sales)
+- **pins-street-nov6.csv:** ArcGIS street pins synced seed + prod — Goodwill Holly Hill 29.23859590629,-81.056000656009; Goodwill West Sanford 28.813302581577,-81.330045387768 (WEST SR-46; prior E corridor wrong); Sharing Center Suite 130 28.706417641931,-81.327891154833 (prefer ArcGIS over Google); estate Deerwood Palm Coast + Brenda Dr Orlando house pins. Cleared approximate pin wording.
+- **estate-sales-nov6-14.csv:** header only — **0 new sales**; logged, invented nothing.
+- **verify-shops-nov6.csv:** Halifax 5 shops listed open in hospice admission binder; **hours cleared** (not published). Ormond address → **160 S. Nova Rd Unit 132**. Port Orange binder-open vs Yelp-closed conflict noted (did not invent closed). City Thrift Edgewater + Semoran: open, hours Mon–Sat 9–9 / Sun 11–6 from buythrift.com; phones set (Edgewater may be HQ). Habitat Seminole-Apopka Sanford ReStore **CLOSED** / none on official site — hours null, **0 deal rules**.
+- Admin API: 11 venue PUTs + 2 sale PUTs → all **200**. data:check 0 errors / 6 expected no-hours warnings. Tests 165 pass / 5 skipped / 0 fail.

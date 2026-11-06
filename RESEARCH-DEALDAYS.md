@@ -14,3 +14,8 @@ Source: https://www.goodwillcfl.org/shop (official). Color of the Week ~50% off 
 - CSV: `thriftradarfl-assets/gwcfl-boutique-outlets-nov5.csv`, `habitat-sa-deals-nov5.csv`, `sharing-center-coords-nov5.csv`.
 - **SA Casselberry (#4, 1330 Semoran) + SA W Colonial Orlando:** hours **Mon–Sat 10–6, Sun closed** per satruck.org (2026-11-05). No deal days on satruck listings — do not invent. Existing W Colonial Yelp Wednesday Appreciation rule remains store-specific/unverified.
 - **Habitat Seminole-Apopka Sanford ReStore:** reported permanent close (medium) — flagged CLOSED in seed notes. Orlando/Osceola Habitat ReStores not in seed (closed 2019).
+
+## Minte Nov 6, 2026 — pins + shop verification (no new deal rules)
+- **pins-street-nov6.csv:** ArcGIS street pins for Goodwill Holly Hill, Goodwill West Sanford (WEST SR-46; prior E SR-46 wrong), Sharing Center Suite 130 (prefer ArcGIS Subaddress over Google), estate Deerwood Palm Coast + Brenda Dr Orlando house pins. Cleared approximate pin notes.
+- **estate-sales-nov6-14.csv:** header only — **no new sales**; invent nothing.
+- **verify-shops-nov6.csv:** Halifax 5 shops listed open in hospice admission binder; hours **not published** (cleared prior 211 hours). Ormond address → binder **160 S. Nova Rd Unit 132**. Port Orange: binder open vs Yelp closed — noted conflict, do not invent closed. City Thrift Edgewater + Semoran open with buythrift.com hours Mon–Sat 9–9 / Sun 11–6; phones from locator. Habitat Seminole-Apopka Sanford ReStore **CLOSED** / none on official site — no open hours, **no deal rules**.

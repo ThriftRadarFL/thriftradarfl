@@ -556,11 +556,11 @@
     "type": "estate",
     "city": "Palm Coast",
     "zip": "32137",
-    "lat": 29.5757,
-    "lng": -81.2238,
+    "lat": 29.660726655117,
+    "lng": -81.211305503366,
     "sourceUrl": "https://www.estatesales.org/estate-sales/fl/palm-coast/32137/estate-sale-at-9-deerwood-2471781",
     "paymentMethods": [],
-    "description": "Address: 9 Deerwood St, Palm Coast, FL 32137. Fri Nov 6 & Sat Nov 7, 9am-1pm. Map pin is approximate (ZIP 32137 center). Run by Ray of Sunshine Estate Sales. Source: estatesales.org.",
+    "description": "Address: 9 Deerwood St, Palm Coast, FL 32137. Fri Nov 6 & Sat Nov 7, 9am-1pm. Map pin is approximate (ZIP 32137 center). Run by Ray of Sunshine Estate Sales. Source: estatesales.org. Map pin upgraded to ArcGIS house/rooftop PointAddress (Minte pins-street-nov6, 2026-11-05).",
     "days": [
       {
         "date": "2026-11-06",
@@ -583,11 +583,11 @@
     "type": "estate",
     "city": "Orlando",
     "zip": "32812",
-    "lat": 28.4847,
-    "lng": -81.3244,
+    "lat": 28.51937555639,
+    "lng": -81.328419969104,
     "sourceUrl": "https://www.estatesales.org/estate-sales/fl/orlando/32812/one-day-only-estate-liquidation-2471770",
     "paymentMethods": [],
-    "description": "Address: 4701 Brenda Dr, Orlando, FL 32812. One day only, Sat Nov 7, 8am-1pm (hours from the sale description). Map pin is approximate (ZIP 32812 center). Run by Orlando Estate Sale Ladies, LLC. Source: estatesales.org.",
+    "description": "Address: 4701 Brenda Dr, Orlando, FL 32812. One day only, Sat Nov 7, 8am-1pm (hours from the sale description). Map pin is approximate (ZIP 32812 center). Run by Orlando Estate Sale Ladies, LLC. Source: estatesales.org. Map pin upgraded to ArcGIS house/rooftop PointAddress (Minte pins-street-nov6, 2026-11-05).",
     "days": [
       {
         "date": "2026-11-07",
