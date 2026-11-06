@@ -61,7 +61,8 @@ async function viaDb<T>(dbFn: () => Promise<T>, jsonFn: () => Promise<T>, write 
       // dead socket). Postgres SQLSTATE errors are real query errors and are not retried; writes are never retried.
       const code = String((e as { code?: string }).code ?? ""); if (write || /^[0-9A-Z]{5}$/.test(code)) throw e;
       resetDb();
-      const out = await attempt(DB_TIMEOUT_MS + 1500); dbFails = 0; return out;
+      // Retry budget must exceed pool connect_timeout (5s); soft JSON return in cached() already capped TTFB.
+      const out = await attempt(Math.max(DB_TIMEOUT_MS + 3500, 6000)); dbFails = 0; return out;
     }
   } catch (e) {
     const err = e as { code?: string; message?: string; cause?: { code?: string; message?: string } };
@@ -88,18 +89,28 @@ function once<T>(key: string, fn: () => Promise<T>): Promise<T> {
 // Last-good cache for the hot public list reads (sales/venues/rules). Every request still asks the DB first so admin edits
 // show up immediately on every instance; but if the DB hasn't answered within READ_STALE_AFTER_MS and this instance already has a
 // last-good value, that value is served right away while the query finishes in the background (and refreshes the cache).
-// A hung/cold pooler therefore can't block TTFB on a warm instance; cold instances are bounded by the 2.5s(+4s) viaDb timeouts.
+// Warm instances: last-good after 1.2s. Cold isolates (empty cache): same idea with packaged JSON after the first DB attempt
+// budget (DB_TIMEOUT_MS), so homepage Promise.all(sales+venues+rules) can't sit on the full 2.5s+4s viaDb retry (~6.5s+).
+// The in-flight DB/retry still completes and refreshes the cache for the next request — we never invent rows.
 const READ_STALE_AFTER_MS = Number(process.env.READ_STALE_AFTER_MS) || 1200;
 const readCache = new Map<string, unknown>();
-function cached<T>(key: string, fn: () => Promise<T>): Promise<T> {
+function cached<T>(key: string, fn: () => Promise<T>, coldJson?: () => Promise<T>): Promise<T> {
   const p = once(key, fn).then((v) => { readCache.set(key, v); return v; });
-  if (!readCache.has(key)) return p;
-  const stale = readCache.get(key) as T; let t: NodeJS.Timeout | undefined;
-  const late = new Promise<T>((res) => { t = setTimeout(() => res(stale), READ_STALE_AFTER_MS); });
-  return Promise.race([p.catch(() => stale), late]).finally(() => clearTimeout(t));
+  if (readCache.has(key)) {
+    const stale = readCache.get(key) as T; let t: NodeJS.Timeout | undefined;
+    const late = new Promise<T>((res) => { t = setTimeout(() => res(stale), READ_STALE_AFTER_MS); });
+    return Promise.race([p.catch(() => stale), late]).finally(() => clearTimeout(t));
+  }
+  if (!coldJson) return p;
+  // Cold: start JSON in parallel; if DB (incl. viaDb retry) hasn't won by first-attempt budget, serve JSON for TTFB.
+  const seed = coldJson();
+  let t: NodeJS.Timeout | undefined;
+  const late = new Promise<T>((res) => { t = setTimeout(() => { void seed.then(res, () => {}); }, DB_TIMEOUT_MS); });
+  return Promise.race([p, late]).finally(() => clearTimeout(t));
 }
 export const bust = () => readCache.clear();
-export async function getVenues(): Promise<Venue[]> { return cached("venues", () => viaDb(() => pg.dbGetVenues(), () => readJson<Venue[]>(venuesFile, seedVenues as Venue[]))); }
+const venuesJson = () => readJson<Venue[]>(venuesFile, seedVenues as Venue[]);
+export async function getVenues(): Promise<Venue[]> { return cached("venues", () => viaDb(() => pg.dbGetVenues(), venuesJson), venuesJson); }
 export async function getVenue(slug: string) {
   return once(`venue:${slug}`, () => viaDb(
     () => pg.dbGetVenue(slug),
@@ -107,7 +118,7 @@ export async function getVenue(slug: string) {
   ));
 }
 /** All sales including unpublished drafts (admin). */
-export async function getAllSales(): Promise<Sale[]> { return bySoonest(await cached("sales", () => viaDb(() => pg.dbGetSales(), jsonSales))); }
+export async function getAllSales(): Promise<Sale[]> { return bySoonest(await cached("sales", () => viaDb(() => pg.dbGetSales(), jsonSales), jsonSales)); }
 /** Public sales: published only. */
 export async function getSales(): Promise<Sale[]> { return (await getAllSales()).filter((s) => s.published !== false); }
 /** Single public sale by slug (targeted DB lookup — avoids loading every sale on /sales/[slug]). */
@@ -151,7 +162,8 @@ export async function deleteVenue(slug: string) {
 
 // Deal rules: JSON-backed (seeded from deal-rules.ts) so admins can edit them.
 const rulesFile = path.join(DATA_DIR, "deal-rules.json");
-export async function getDealRules(): Promise<DealRule[]> { return cached("rules", () => viaDb(() => pg.dbGetDealRules(), async () => (await readJson<DealRule[]>(rulesFile, seedDealRules)).map((r) => ({ ...r, id: r.id || ruleId(r) })))); }
+const rulesJson = async () => (await readJson<DealRule[]>(rulesFile, seedDealRules)).map((r) => ({ ...r, id: r.id || ruleId(r) }));
+export async function getDealRules(): Promise<DealRule[]> { return cached("rules", () => viaDb(() => pg.dbGetDealRules(), rulesJson), rulesJson); }
 const withIds = (rs: DealRule[]) => rs.map((r) => ({ ...r, id: r.id || ruleId(r) }));
 export async function upsertDealRule(r: DealRule) { await viaDb(() => pg.dbUpsertDealRule(r), () => mutate<DealRule[]>(rulesFile, seedDealRules, (all) => [...withIds(all).filter((x) => x.id !== r.id), r].sort((a, b) => a.day - b.day)), true); }
 export async function deleteDealRule(id: string) { return viaDb(() => pg.dbDeleteDealRule(id), () => mutate<DealRule[], boolean>(rulesFile, seedDealRules, (all) => { const w = withIds(all); return { next: w.filter((x) => x.id !== id), result: w.some((x) => x.id === id) }; }), true); }

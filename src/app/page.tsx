@@ -13,6 +13,7 @@ const TYPES = ["estate", "auction", "yard", "thrift", "outlet_bins"];
 export const dynamic = "force-dynamic"; // live sale/store links (no stale prerender)
 export default async function Home({ searchParams }: { searchParams: Promise<{ city?: string; type?: string; past?: string }> }) {
   const sp = await searchParams; const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+  // Cold TTFB: getSales/getVenues/getDealRules soft-fall back to packaged JSON after DB_TIMEOUT_MS while viaDb retries (see cached() in data.ts).
   const [rawSales, venues, rules] = await Promise.all([getSales(), getVenues(), getDealRules()]);
   const sum = homeSummary(rawSales, venues, rules, today); const dow = new Date(today + "T12:00:00Z").getUTCDay();
   const all = [...rawSales].sort((a, b) => a.days[0].date.localeCompare(b.days[0].date));

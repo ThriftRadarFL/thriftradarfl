@@ -147,3 +147,9 @@
 - GWCFL Color of the Week: asset still says color not shown — left as in-store; no color invented.
 - Synced via admin API POST `/api/sales` → 201. data:check 0 errors / 0 warnings. Test count 20→21.
 - Commit 292f137 pushed; prod deployed (NEXT_DIST_DIR=.next-build). Live sale page **200**.
+
+## 2026-11-05 ~9:45 PM ET — Nicholas n6: homepage cold TTFB
+- **Root cause:** `/` already used getSales/getVenues/getDealRules (P1 viaDb 2.5s+retry + in-flight dedupe + last-good after 1.2s). Warm isolates were fine; **cold** isolates had an empty `readCache`, so Promise.all waited the full viaDb first attempt **plus** retry (~6.5s+, measured hangs ~8s). Retry budget (4s) was also shorter than pool `connect_timeout` (5s), so cold reconnects often failed the retry too.
+- **Fix:** `cached()` now takes an optional cold JSON seed (same files viaDb already falls back to — no invented rows). On a cold miss, JSON is raced in after `DB_TIMEOUT_MS` (2.5s) while the DB/retry continues and refreshes the cache. viaDb read retry raised to ≥6s so background refresh can outlast connect_timeout. Wired for sales/venues/rules. Comment on `src/app/page.tsx`.
+- Tests: npm test → 165 pass / 5 skipped / 0 fail (incl. `tests/homepage-cold-ttfb.test.ts`).
+- Before deploy TTFB `/` (warm): 0.60, 0.65, 0.61, 0.68, 0.52s.
