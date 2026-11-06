@@ -192,3 +192,6 @@ No new assets; tree clean. Live spot check: /, /stores, /deals, /bins, /goodwill
 - Cause: `.calendar-frame` sm+ reserve was **22rem (352px)** but live deal-dense grid is **~3163px** (Sun/Mon/Wed cells ~1600px × 2 rows from ~14 GICF rules/day).
 - Fix: sm+ `.calendar-frame` → `min-height: 200rem` + `grid-auto-rows: minmax(100rem, auto)` so loading→loaded keeps footer put. CSS only; no content change.
 - Commit **ac1a1e8** (log tip **796c461**) deployed prod. Live `/calendar` **200**; CSS has `min-height:200rem` + `grid-auto-rows:minmax(100rem,auto)`.
+
+## 2026-11-06 7:05 AM ET
+Final overnight check: tree clean, no new assets, homepage 200 (~1.8s). No changes; ready for 8 AM brief.
