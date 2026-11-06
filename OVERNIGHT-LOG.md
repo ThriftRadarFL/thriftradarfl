@@ -161,3 +161,4 @@
 - **estate-sales-nov6-14.csv:** header only — **0 new sales**; logged, invented nothing.
 - **verify-shops-nov6.csv:** Halifax 5 shops listed open in hospice admission binder; **hours cleared** (not published). Ormond address → **160 S. Nova Rd Unit 132**. Port Orange binder-open vs Yelp-closed conflict noted (did not invent closed). City Thrift Edgewater + Semoran: open, hours Mon–Sat 9–9 / Sun 11–6 from buythrift.com; phones set (Edgewater may be HQ). Habitat Seminole-Apopka Sanford ReStore **CLOSED** / none on official site — hours null, **0 deal rules**.
 - Admin API: 11 venue PUTs + 2 sale PUTs → all **200**. data:check 0 errors / 6 expected no-hours warnings. Tests 165 pass / 5 skipped / 0 fail.
+- Commit **21dc6e9** pushed; prod deployed (NEXT_DIST_DIR=.next-build). Live pins/hours verified via admin-synced API.
