@@ -13,7 +13,7 @@
   --font-sans: Verdana, Tahoma, "Segoe UI", Arial, sans-serif;
 }
 
-body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); }
+body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); font-synthesis: none; text-rendering: optimizeLegibility; }
 h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter-spacing: -0.01em; }
 
 @layer components {
@@ -165,6 +165,19 @@ h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter
   background-size: 220% 100%;
   animation: trfl-skel 1.5s ease-in-out infinite;
 }
+
+/* CLS reserves (1280px Lighthouse): map/calendar/plan/search keep stable boxes before JS/data fill in */
+.map-frame {
+  height: 360px;
+  width: 100%;
+  background: #eaf2f8;
+}
+@media (min-width: 640px) { .map-frame { height: 440px; } }
+@media (min-width: 768px) { .map-frame { height: 520px; } }
+.calendar-frame { min-height: 12rem; }
+@media (min-width: 640px) { .calendar-frame { min-height: 22rem; } }
+.plan-frame { min-height: 26.25rem; } /* 420px — matches Planner skeleton */
+.search-frame { min-height: 10rem; }
 
 /* Skeletons / busy regions: skip enter motion so content swap feels calmer */
 [aria-busy="true"] .panel,

@@ -56,5 +56,5 @@ export default function SaleMap({ pins, apiKey, me, focusKey }: { pins: MapPin[]
     popup.current = new lib.Popup({ offset: 14, maxWidth: "240px", className: "trfl-popup" }).setLngLat([p.lng, p.lat]).setDOMContent(popupNode(p)).addTo(m);
     (popup.current.getElement().querySelector("a") as HTMLAnchorElement | null)?.focus({ preventScroll: true }); el.current?.scrollIntoView({ block: "nearest" });
   }, [focusKey, ready]);
-  return <div ref={el} className="h-[360px] w-full sm:h-[440px] md:h-[520px]" role="region" aria-label="Interactive map of sales and stores. Tap a dot for details; tap a numbered cluster to zoom in." />;
+  return <div ref={el} className="absolute inset-0 h-full w-full" role="region" aria-label="Interactive map of sales and stores. Tap a dot for details; tap a numbered cluster to zoom in." />;
 }

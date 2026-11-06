@@ -66,7 +66,7 @@ export default async function Admin({ searchParams }: SP) {
         {!contacts.length && <li className="px-3 py-2 text-gray-600">No messages.</li>}</ul></Panel>
 
       <Panel title={found ? `Edit sale: ${found.slug}` : draft ? "Add sale (imported draft — review before saving)" : "Add sale"}>
-        <form method="get" className="flex gap-2 border-b border-line p-3"><label className="sr-only" htmlFor="import">Listing URL</label><input id="import" name="import" type="url" placeholder="Paste EstateSales.net listing URL to prefill" className={inp + " mt-0"} defaultValue={sp.import} /><button className="btn-gray text-xs">Import</button></form>
+        <form method="get" className="flex gap-2 border-b border-line p-3"><label className="sr-only" htmlFor="import-url">Listing URL</label><input id="import-url" name="import" type="url" placeholder="Paste EstateSales.net listing URL to prefill" className={inp + " mt-0"} defaultValue={sp.import} /><button className="btn-gray text-xs">Import</button></form>
         {importErr && <p role="alert" className="px-4 pt-2 text-sm text-red-700">Import failed: {importErr}</p>}
         <form action={saveSale} key={es?.slug ?? "new"} className="p-4 space-y-2">
           {found && <input type="hidden" name="slug" value={found.slug} />}

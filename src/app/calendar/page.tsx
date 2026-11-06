@@ -14,7 +14,7 @@ export default async function Calendar() {
   return (<div><PageHead title="Calendar" sub="Estate sales and store deal days for the next two weeks" />
     <p className="mb-3 text-sm">Subscribe in your calendar app: <a className="font-bold text-royal hover:underline" href="/api/calendar">estate sales</a> · <a className="font-bold text-royal hover:underline" href="/api/calendar/deals">store deal days</a> · <a className="font-bold text-royal hover:underline" href="/api/calendar?deals=1">both</a> (iCal feeds)</p>
     <div className="panel"><div className="panel-head">Next 14 days</div>
-      <div className="grid grid-cols-1 gap-px bg-line sm:grid-cols-7">{days.map((d, i) => {
+      <div className="calendar-frame grid grid-cols-1 gap-px bg-line sm:grid-cols-7">{days.map((d, i) => {
         const iso = fmt(d); const daySales = sales.filter((s) => s.days.some((x) => x.date === iso));
         const deals = dealRules.filter((r) => r.day === d.getDay());
         return <div key={iso} className={`bg-white sm:min-h-40 ${i === 0 ? "ring-2 ring-cta ring-inset" : ""}`}>

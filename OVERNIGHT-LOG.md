@@ -167,3 +167,9 @@
 - `estate-sale-orlando-5144160` → **5113 Coddington St, Orlando 32812** pin **28.489278, -81.321487** (ArcGIS rooftop); cleared ZIP-center wording.
 - Brenda Dr (`one-day-only-estate-liquidation-orlando-2471770`) → **28.519376, -81.328420** (pins-street-nov6). Cleared leftover ZIP-center note.
 - Seed + sales.json + prod admin PUT **200**. Invented nothing else.
+
+## 2026-11-05 ~9:55 PM ET — Keel P3 CLS + n7/n8 polish
+- **CLS (1280px):** Reserved frames in CSS (`.map-frame` 360/440/520, `.calendar-frame`, `.plan-frame` 420px, `.search-frame`). `/map` wraps SvgPlot→SaleMap swap in fixed `.map-frame` (list panel min-height matched). Loading skeletons for map/calendar/plan/search now match final layout (empty `/search` no longer flashes fake Sales/Stores rows). `font-synthesis: none` on body.
+- **n7 admin:** `#import` nav now targets CSV panel (`id="import"`); listing URL input renamed `import-url` (was stealing the hash).
+- **n8:** Audited `end=17:00` sales — only Knot Way; disclaimer already present. Added `tests/end-placeholder.test.ts` + `tests/cls-reserves.test.ts`.
+- Invented no store facts/prices/deal rules.

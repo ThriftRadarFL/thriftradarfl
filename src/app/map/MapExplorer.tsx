@@ -35,8 +35,12 @@ export default function MapExplorer({ pins, apiKey, today }: { pins: Pin[]; apiK
       <p role="status" aria-live="polite" className="col-span-2 text-xs text-gray-600 sm:col-span-5">{shown.length} of {pins.length} pins{msg ? ` · ${msg}` : ""}</p></form>
     <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
       <div className="panel min-w-0 overflow-hidden md:col-span-2"><h2 className="panel-head">Map</h2>
-        {apiKey && live ? <SaleMap apiKey={apiKey} pins={mapPins} me={me} focusKey={focusKey} /> : <><SvgPlot pins={shown} />{apiKey && <button type="button" onClick={() => setLive(true)} className="btn-gray m-3">🗺 Load street map</button>}</>}</div>
-      <section className="panel min-w-0 self-start"><h2 className="panel-head">{me ? "Nearest first" : "North to south"} ({withDist.length})</h2>
+        <div className="map-frame relative overflow-hidden">
+          {apiKey && live
+            ? <SaleMap apiKey={apiKey} pins={mapPins} me={me} focusKey={focusKey} />
+            : <><SvgPlot pins={shown} />{apiKey && <button type="button" onClick={() => setLive(true)} className="btn-gray absolute bottom-3 left-3 z-10">🗺 Load street map</button>}</>}
+        </div></div>
+      <section className="panel min-w-0 self-start md:min-h-[calc(2.5rem+520px)]"><h2 className="panel-head">{me ? "Nearest first" : "North to south"} ({withDist.length})</h2>
         <ul aria-label="Sales and stores on the map (same as the pins)" className="max-h-[520px] divide-y divide-line overflow-y-auto text-sm">{withDist.map((p) => { const focused = !!focusKey && focusKey.replace(/#\d+$/, "") === p.key;
           return <li key={p.key} className={`map-list-row flex min-h-11 items-center gap-2 px-3 ${focused ? "map-list-row--focus" : ""}`}>
           <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: fill[p.type] ?? "#888" }} aria-hidden="true" />
@@ -48,12 +52,13 @@ export default function MapExplorer({ pins, apiKey, today }: { pins: Pin[]; apiK
   </div>);
 }
 function SvgPlot({ pins }: { pins: Pin[] }) {
-  if (!pins.length) return <p className="p-4 text-sm text-gray-600">No pins to show.</p>;
+  if (!pins.length) return <p className="absolute inset-0 flex items-center justify-center p-4 text-sm text-gray-600">No pins to show.</p>;
   const [minLat, maxLat] = [Math.min(...pins.map((p) => p.lat)) - 0.05, Math.max(...pins.map((p) => p.lat)) + 0.05];
   const [minLng, maxLng] = [Math.min(...pins.map((p) => p.lng)) - 0.05, Math.max(...pins.map((p) => p.lng)) + 0.05];
   const W = 800, H = Math.max(200, Math.round(W * ((maxLat - minLat) / ((maxLng - minLng) * Math.cos((minLat * Math.PI) / 180)))));
   const X = (lng: number) => ((lng - minLng) / (maxLng - minLng)) * W, Y = (lat: number) => ((maxLat - lat) / (maxLat - minLat)) * H;
-  return (<><svg viewBox={`0 0 ${W} ${H}`} className="block h-auto max-h-[520px] w-full bg-[#eaf2f8]" role="group" aria-label="Plot of sales and stores by location">
+  return (<div className="absolute inset-0 flex flex-col">
+    <svg viewBox={`0 0 ${W} ${H}`} className="block min-h-0 w-full flex-1 bg-[#eaf2f8]" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Plot of sales and stores by location">
     {pins.map((p) => <a key={p.key} href={p.href}><circle cx={X(p.lng)} cy={Y(p.lat)} r="11" fill={fill[p.type] ?? "#888"} stroke="#fff" strokeWidth="2"><title>{p.name}</title></circle></a>)}</svg>
-    <p className="px-3 py-1 text-[11px] text-gray-600">Approximate positions — tap a dot for details.</p></>);
+    <p className="shrink-0 bg-[#eaf2f8] px-3 py-1 text-[11px] text-gray-600">Approximate positions — tap a dot for details.</p></div>);
 }
