@@ -173,3 +173,4 @@
 - **n7 admin:** `#import` nav now targets CSV panel (`id="import"`); listing URL input renamed `import-url` (was stealing the hash).
 - **n8:** Audited `end=17:00` sales — only Knot Way; disclaimer already present. Added `tests/end-placeholder.test.ts` + `tests/cls-reserves.test.ts`.
 - Invented no store facts/prices/deal rules.
+- Commit **e0388b7** deployed prod. Live sweep WITH ADMIN_PASSWORD: **1,427 pass / 0 fail**, 114 sitemap URLs.
