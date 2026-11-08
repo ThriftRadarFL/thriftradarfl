@@ -12,6 +12,8 @@ import { checkData, summarize } from "@/lib/data-quality";
 import type { Sale } from "@/lib/data";
 import { login, logout, saveSale, saveVenue, removeSale, removeVenue, togglePublish, saveRule, removeRule, toggleVerify, removeSub, reviewSubmission, removeContact, moderateTag } from "./actions";
 import { listTagReports } from "@/lib/data";
+import { ingestHealth } from "@/lib/ingestion/run";
+import { listCandidates } from "@/lib/ingestion/store";
 import { isActive } from "@/lib/color-tags";
 import TagSwatch from "@/components/TagSwatch";
 export const dynamic = "force-dynamic";
@@ -39,14 +41,18 @@ export default async function Admin({ searchParams }: SP) {
   const vname = (s: string) => venues.find((v) => v.slug === s)?.name ?? s; const db = dbStatus();
   const isErr = sp.msg?.startsWith("Not saved");
   const issues = checkData(sales, venues, rules); const dq = summarize(issues);
+  const ingest = await ingestHealth().catch(() => null); const ingestCands = await listCandidates(12).catch(() => []);
   const fixHref = (code: string, target: string) => { const t = target.split(", ")[0]; return code.startsWith("sale.") ? `/admin?sale=${encodeURIComponent(t)}#sales` : code.startsWith("store.") ? `/admin?venue=${encodeURIComponent(t)}#venues` : `/admin?rule=${encodeURIComponent(t)}#rules`; };
   return (<div><PageHead title="Admin" sub={`Data: ${dataMode()}${db.configured && !db.up ? ` (database unreachable: ${db.lastError} — using JSON fallback)` : ""}`} />
     {sp.msg && <p role="status" className={`mb-3 border p-2 text-sm font-bold ${isErr ? "border-red-300 bg-red-50 text-red-800" : "border-line bg-paper"}`}>{sp.msg}</p>}
     <nav aria-label="Admin sections" className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"><form action={logout}><button className="btn-gray text-xs">Log out</button></form>
       <a href="#pending" className="underline">Pending ({pending.length})</a><a href="#tags" className="underline">Color tags ({tagPending.length} pending)</a><a href="#sales" className="underline">Sales ({sales.length})</a><a href="#venues" className="underline">Venues ({venues.length})</a>
-      <a href="#rules" className="underline">Deal rules ({rules.length})</a><a href="#subs" className="underline">Subscribers ({subs.length})</a><a href="#messages" className="underline">Messages ({contacts.length})</a><a href="#import" className="underline">CSV import</a><a href="#audit" className="underline">Audit log</a><a href="#quality" className="underline">Data quality ({dq.errors ? `${dq.errors} errors` : `${dq.warnings} warnings`})</a>
+      <a href="#rules" className="underline">Deal rules ({rules.length})</a><a href="#subs" className="underline">Subscribers ({subs.length})</a><a href="#messages" className="underline">Messages ({contacts.length})</a><a href="#import" className="underline">CSV import</a><a href="#audit" className="underline">Audit log</a><a href="#ingest" className="underline">Ingest</a><a href="#quality" className="underline">Data quality ({dq.errors ? `${dq.errors} errors` : `${dq.warnings} warnings`})</a>
       <a href="/api/admin/subscribers" className="underline">Export CSV</a><a href="/api/admin/export?what=submissions" className="underline">Submissions CSV</a><a href="/api/admin/export?what=contacts" className="underline">Messages CSV</a><a href="/api/admin/export?what=audit" className="underline">Audit log CSV</a><a href="/digest/preview" className="underline" target="_blank" rel="noopener">Preview digest</a><a href="/api/calendar" className="underline">Calendar feed</a></nav>
     <div className="grid gap-4 lg:grid-cols-2">
+      <Panel id="ingest" title="Ingestion">{ingest ? <div className="px-3 py-2 text-sm space-y-1"><p>Last run: {ingest.lastRunAt ?? "none"} · {ingest.lastStatus ?? "—"} · dryRun={String(ingest.dryRun)} · publish={String(ingest.publish)}</p>
+        <p className="text-xs text-gray-600">Enabled {String(ingest.enabled)}. Quarantined {ingest.quarantined} of {ingest.recentCandidates} recent candidates. Auto-publish stays off unless INGEST_PUBLISH=1. Held: Silver Star 5147001, Prince John 2472421.</p>
+        <ul className="text-xs">{ingestCands.map((c) => <li key={c.id} className="border-b border-line py-1 last:border-0"><b>{c.status}</b> · {c.sourceUrl} · {(c.reasons ?? []).join(", ")}</li>)}</ul></div> : <p className="px-3 py-2 text-sm text-gray-600">Ingest status unavailable.</p>}</Panel>
       <Panel id="pending" title={`Pending submissions (${pending.length})`}><ul className="text-sm">{pending.map((p) => <li key={p.id} className="border-b border-line px-3 py-2 last:border-0">
         <b>{p.sale.title}</b> <span className="text-xs text-gray-600">{p.sale.city} · {p.sale.days.map((d) => d.date).join(", ")} · from {p.email}</span>
         {p.sale.description && <p className="text-xs text-gray-600">{p.sale.description}</p>}

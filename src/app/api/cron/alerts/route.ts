@@ -5,6 +5,7 @@ import { newKeywordMatches, buildKeywordAlert } from "@/lib/keyword-alerts";
 import { json } from "@/lib/api";
 import { unsubToken } from "@/lib/auth";
 import { SITE_URL, isLocalUrl } from "@/lib/site";
+import { runIngestion } from "@/lib/ingestion/run";
 export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
@@ -18,7 +19,9 @@ export async function GET(req: Request) {
     return { email: s.email, matches: m.length, ...a, unsub };
   });
   const key = process.env.RESEND_API_KEY; const sender = process.env.DIGEST_FROM ?? "ThriftRadarFL <onboarding@resend.dev>";
-  if (!key || u.searchParams.get("dry") === "1") return json({ dryRun: true, hours, subscribersWithKeywords: subs.length, emails: mails.length, preview: mails.slice(0, 3).map((m) => ({ matches: m.matches, subject: m.subject })) });
+  let ingest: unknown = null;
+  if (u.searchParams.get("ingest") !== "0") { try { ingest = await runIngestion(); } catch { ingest = { error: "ingest-failed" }; } }
+  if (!key || u.searchParams.get("dry") === "1") return json({ dryRun: true, hours, subscribersWithKeywords: subs.length, emails: mails.length, preview: mails.slice(0, 3).map((m) => ({ matches: m.matches, subject: m.subject })), ingest });
   if (isLocalUrl(SITE_URL)) return json({ error: "NEXT_PUBLIC_SITE_URL is not set to a public https URL; refusing to send emails with localhost links" }, 500);
   let sent = 0; const errors: string[] = [];
   for (let i = 0; i < mails.length; i += 100) {
@@ -26,5 +29,6 @@ export async function GET(req: Request) {
     const r = await fetch("https://api.resend.com/emails/batch", { method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" }, body: JSON.stringify(batch) });
     if (r.ok) sent += batch.length; else errors.push(`${r.status} ${await r.text()}`);
   }
-  return json({ sent, errors });
+  if (!ingest && u.searchParams.get("ingest") !== "0") { try { ingest = await runIngestion(); } catch { ingest = { error: "ingest-failed" }; } }
+  return json({ sent, errors, ingest });
 }

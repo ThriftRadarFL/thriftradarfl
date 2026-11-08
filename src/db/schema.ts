@@ -144,3 +144,36 @@ export const colorTagReports = pgTable("color_tag_reports", {
   expiresOn: text("expires_on").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
+
+
+export const ingestionRuns = pgTable("ingestion_runs", {
+  id: text("id").primaryKey(),
+  startedAt: timestamp("started_at", { withTimezone: true }).defaultNow().notNull(),
+  finishedAt: timestamp("finished_at", { withTimezone: true }),
+  status: text("status").notNull(),
+  dryRun: boolean("dry_run").default(true).notNull(),
+  owner: text("owner"),
+  summary: jsonb("summary"),
+});
+
+export const ingestionCandidates = pgTable("ingestion_candidates", {
+  id: text("id").primaryKey(),
+  source: text("source").notNull(),
+  externalId: text("external_id").notNull(),
+  sourceUrl: text("source_url").notNull(),
+  digest: text("digest").notNull(),
+  status: text("status").notNull(),
+  reasons: text("reasons").array(),
+  payload: jsonb("payload"),
+  fetchedAt: timestamp("fetched_at", { withTimezone: true }).defaultNow().notNull(),
+  lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).defaultNow().notNull(),
+  publishedSlug: text("published_slug"),
+  runId: text("run_id"),
+});
+
+export const ingestionLeases = pgTable("ingestion_leases", {
+  name: text("name").primaryKey(),
+  owner: text("owner").notNull(),
+  token: text("token").notNull(),
+  until: timestamp("until", { withTimezone: true }).notNull(),
+});

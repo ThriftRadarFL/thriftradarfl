@@ -21,7 +21,7 @@ export function parseSale(o: Record<string, unknown>): R<Sale> {
   if (Array.isArray(o.days)) days = o.days as SaleDay[];
   else if (typeof o.days === "string") days = o.days.split("\n").map((l) => l.trim()).filter(Boolean).map((l) => {
     const [date, start, end, pct] = l.split(/[\s,]+/); return { date, start, end, discountPct: num(pct) }; });
-  days.forEach((d, i) => { if (!isRealDate(String(d.date)) || !/^\d{2}:\d{2}$/.test(d.start) || !/^\d{2}:\d{2}$/.test(d.end)) e.push(`day ${i + 1} must be "YYYY-MM-DD HH:MM HH:MM [pct]"`); });
+  days.forEach((d, i) => { if (!isRealDate(String(d.date)) || !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(d.start) || !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(d.end)) e.push(`day ${i + 1} must be "YYYY-MM-DD HH:MM HH:MM [pct]"`); });
   days.forEach((d, i) => { if (d.end <= d.start) e.push(`day ${i + 1}: end must be after start`); if (d.discountPct < 0 || d.discountPct > 100) e.push(`day ${i + 1}: discount 0-100`); });
   if (!days.length) e.push("at least one day required");
   if (title.length > CAPS.title) e.push("title too long");
@@ -34,7 +34,7 @@ export function parseSale(o: Record<string, unknown>): R<Sale> {
   if (o.slug && !/^[a-z0-9-]+$/.test(String(o.slug))) e.push("slug must be lowercase letters, digits, dashes");
   const sourceUrl = String(o.sourceUrl ?? ""); if (sourceUrl && !isHttpUrl(sourceUrl)) e.push("sourceUrl must be a valid http(s) URL");
   if (e.length) return { ok: false, errors: e };
-  const pm = Array.isArray(o.paymentMethods) ? (o.paymentMethods as string[]) : String(o.paymentMethods ?? "cash").split(",").map((x) => x.trim()).filter(Boolean);
+  const pm = Array.isArray(o.paymentMethods) ? (o.paymentMethods as string[]) : String(o.paymentMethods ?? "").split(",").map((x) => x.trim()).filter(Boolean);
   const pmClean = pm.map((x) => String(x).slice(0, CAPS.paymentItem)).slice(0, CAPS.payment);
   return { ok: true, value: { slug: String(o.slug || "") || slugify(`${title}-${days[0].date.slice(0, 7)}`), title, type, city, zip, lat: num(o.lat), lng: num(o.lng), sourceUrl, paymentMethods: pmClean, days, ...(typeof o.description === "string" && o.description.trim() ? { description: o.description.trim().slice(0, CAPS.description) } : {}), ...(o.tags != null && cleanTags(o.tags).length ? { tags: cleanTags(o.tags) } : {}) } };
 }

@@ -37,3 +37,7 @@ See `OVERNIGHT.md` → "What's built" and the dated passes below it. Latest: sec
 
 ## shadcn (later)
 `npx shadcn@latest init` then `npx shadcn@latest add button card input badge`.
+
+
+## Automation
+See `AUTOMATION.md` for the listing ingest pipeline (quarantine-by-default, no guessed end times or cash claims) and `FUTURE-QUEUE.md` for remaining manual gates.

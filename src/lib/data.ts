@@ -5,6 +5,7 @@ import { seedVenues, mockSales } from "./seed-data";
 import { hasDb, resetDb } from "@/db";
 import * as pg from "./db-store";
 import { dealRules as seedDealRules, ruleId, type DealRule } from "./deal-rules";
+import { saleIsActive } from "./upcoming";
 
 export type Venue = Omit<(typeof seedVenues)[number], "hoursJson" | "phone" | "type" | "sourceUrl"> & { type: string; phone: string | null; hoursJson: Record<string, string> | null; sourceUrl?: string };
 export type SaleDay = { date: string; start: string; end: string; discountPct: number };
@@ -120,7 +121,7 @@ export async function getVenue(slug: string) {
 /** All sales including unpublished drafts (admin). */
 export async function getAllSales(): Promise<Sale[]> { return bySoonest(await cached("sales", () => viaDb(() => pg.dbGetSales(), jsonSales), jsonSales)); }
 /** Public sales: published only. */
-export async function getSales(): Promise<Sale[]> { return (await getAllSales()).filter((s) => s.published !== false); }
+export async function getSales(): Promise<Sale[]> { return (await getAllSales()).filter((s) => s.published !== false && saleIsActive(s)); }
 /** Single public sale by slug (targeted DB lookup — avoids loading every sale on /sales/[slug]). */
 export async function getSale(slug: string) {
   return once(`sale:${slug}`, () => viaDb(

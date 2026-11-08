@@ -67,3 +67,19 @@ export const nextDealDate = (r: DealRule, from = new Date()) => { const iso = fr
 export const ruleId = (r: Pick<DealRule, "venue" | "day" | "label">) => `${r.venue}-${r.day}-${r.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
 export const DEAL_KINDS: DealKind[] = ["color_tag", "half_off", "senior_day", "restock", "bins_rotation", "dollar_day"];
 export const KIND_COLOR: Record<DealKind, string> = { color_tag: "bg-teal", half_off: "bg-coral", senior_day: "bg-gray-700", restock: "bg-royal", bins_rotation: "bg-royal", dollar_day: "bg-coral" };
+
+export type GroupedDeal = { key: string; label: string; color: string; verified: boolean; count: number; names: string[] };
+/** Collapse identical chain-wide deal labels (e.g. Goodwill Color of the Week on 13 stores) into one calendar pill. */
+export function groupChainDeals(rules: DealRule[], venues: { slug: string; name: string; org?: string }[]): GroupedDeal[] {
+  const nameOf = (slug: string) => venues.find((v) => v.slug === slug)?.name ?? slug;
+  const map = new Map<string, GroupedDeal>();
+  for (const r of rules) {
+    const key = `${r.day}|${r.kind}|${r.label}`;
+    const g = map.get(key) ?? { key, label: r.label, color: r.color, verified: r.verified, count: 0, names: [] };
+    g.count += 1;
+    g.verified = g.verified && r.verified;
+    g.names.push(nameOf(r.venue));
+    map.set(key, g);
+  }
+  return [...map.values()];
+}
