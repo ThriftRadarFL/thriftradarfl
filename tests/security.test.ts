@@ -93,5 +93,14 @@ test("health reports json mode without DB, never leaks secrets", async () => {
 });
 test("cron fails closed in production without CRON_SECRET", async () => {
   const env = process.env as Record<string, string | undefined>; const prev = env.NODE_ENV; delete env.CRON_SECRET; env.NODE_ENV = "production";
-  try { assert.equal((await cron.GET(new Request("http://localhost/api/cron/digest?dry=1"))).status, 401); } finally { env.NODE_ENV = prev; }
+  try {
+    assert.equal((await cron.GET(new Request("http://localhost/api/cron/digest?dry=1"))).status, 401);
+    const ingest = await import("../src/app/api/cron/ingest/route");
+    const alerts = await import("../src/app/api/cron/alerts/route");
+    assert.equal((await ingest.GET(new Request("http://localhost/api/cron/ingest?publish=1"))).status, 401);
+    assert.equal((await alerts.GET(new Request("http://localhost/api/cron/alerts"))).status, 401);
+    const src = readFileSync("src/app/api/cron/ingest/route.ts", "utf8");
+    assert.match(src, /CRON_SECRET/);
+    assert.doesNotMatch(src, /searchParams.get\("publish"\)/);
+  } finally { env.NODE_ENV = prev; }
 });

@@ -1,5 +1,6 @@
 // Bounded public-listing ingest (Vercel Cron / manual with Authorization: Bearer $CRON_SECRET).
-// Shares auth with other cron jobs. Discovery/quarantine by default; set INGEST_PUBLISH=1 to auto-publish publishable records.
+// GET is authenticated the same way as other cron jobs; it is not a public write surface.
+// Query `dry=1` can only force a safer dry run. Publish/patches are env flags only (INGEST_PUBLISH / INGEST_APPLY_PATCHES).
 import { json } from "@/lib/api";
 import { runIngestion } from "@/lib/ingestion/run";
 export const dynamic = "force-dynamic";
@@ -10,9 +11,6 @@ export async function GET(req: Request) {
   if (secret && req.headers.get("authorization") !== `Bearer ${secret}`) return json({ error: "unauthorized" }, 401);
   const u = new URL(req.url);
   const dry = u.searchParams.get("dry") === "1" || u.searchParams.get("dry") === "true";
-  const publish = u.searchParams.get("publish") === "1";
-  const applyPatches = u.searchParams.get("patches") === "1";
-  const extra = u.searchParams.getAll("url").filter(Boolean);
-  const result = await runIngestion({ dryRun: dry || undefined, publish: publish || undefined, applyPatches: applyPatches || undefined, extraUrls: extra });
+  const result = await runIngestion({ dryRun: dry ? true : undefined });
   return json(result);
 }

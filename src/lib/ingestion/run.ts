@@ -18,6 +18,9 @@ export type IngestOptions = {
 };
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+function safeErr(e: unknown) {
+  return String((e as Error).message ?? e).replace(/\b[a-z]+:\/\/\S+/gi, "<url>").replace(/(password|token|key|secret)\S*/gi, "<redacted>").slice(0, 160);
+}
 
 function envFlag(name: string, fallback: boolean) {
   const v = process.env[name];
@@ -73,7 +76,7 @@ export async function runIngestion(opts: IngestOptions = {}) {
   let patches: PatchResult[] = [];
 
   try {
-    const urls: string[] = [...(opts.extraUrls ?? [])];
+    const urls: string[] = [...(opts.extraUrls ?? [])].filter((u) => isAllowedImportHost(u));
     const sources = DISCOVERY_SOURCES.filter((s) => s.enabled).slice(0, INGEST_LIMITS.maxIndexPages);
     for (const src of sources) {
       const page = await fetchText(src.url, fetchImpl);
@@ -145,7 +148,8 @@ export async function runIngestion(opts: IngestOptions = {}) {
       }
     }
 
-    if (!dryRun && applyPatches) {
+    // Curated pin/venue patches are independent of listing publish. dryRun only suppresses auto-publishing discovered sales.
+    if (applyPatches) {
       patches = await applyReadyDataPatches({ getVenue, getSaleAdmin, upsertVenue, upsertSale });
     }
 
@@ -156,7 +160,7 @@ export async function runIngestion(opts: IngestOptions = {}) {
   } catch (e) {
     const summary = { ...counts, exceptions: [...exceptions, "run-failed"], error: "run-failed", patches };
     await recordRun({ id: runId, startedAt, finishedAt: new Date().toISOString(), status: "error", dryRun, owner, summary });
-    return { disabled: false, runId, dryRun, publish, summary, error: (e as Error).message };
+    return { disabled: false, runId, dryRun, publish, summary, error: safeErr(e) };
   } finally {
     await releaseLease("ingest", lease.token);
   }

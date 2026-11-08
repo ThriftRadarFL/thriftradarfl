@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { randomBytes } from "crypto";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, lt } from "drizzle-orm";
 import { getDb, hasDb } from "@/db";
 import * as t from "@/db/schema";
 
@@ -118,11 +118,11 @@ export async function acquireLease(name: string, ms: number): Promise<{ owner: s
   const db = getDb();
   if (hasDb && db) {
     try {
-      const [cur] = await db.select().from(t.ingestionLeases).where(eq(t.ingestionLeases.name, name));
-      if (cur && cur.until.getTime() > Date.now()) return null;
       const vals = { name, owner, token, until };
-      if (!cur) await db.insert(t.ingestionLeases).values(vals);
-      else await db.update(t.ingestionLeases).set(vals).where(eq(t.ingestionLeases.name, name));
+      const rows = await db.insert(t.ingestionLeases).values(vals)
+        .onConflictDoUpdate({ target: t.ingestionLeases.name, set: { owner, token, until }, setWhere: lt(t.ingestionLeases.until, new Date()) })
+        .returning({ token: t.ingestionLeases.token });
+      if (!rows.length || rows[0].token !== token) return null;
       return { owner, token };
     } catch { /* JSON */ }
   }

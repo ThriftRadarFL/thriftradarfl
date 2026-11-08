@@ -28,3 +28,19 @@ CREATE TABLE IF NOT EXISTS "ingestion_leases" (
 	"token" text NOT NULL,
 	"until" timestamp with time zone NOT NULL
 );
+
+--> statement-breakpoint
+ALTER TABLE "ingestion_runs" ENABLE ROW LEVEL SECURITY;
+--> statement-breakpoint
+ALTER TABLE "ingestion_candidates" ENABLE ROW LEVEL SECURITY;
+--> statement-breakpoint
+ALTER TABLE "ingestion_leases" ENABLE ROW LEVEL SECURITY;
+--> statement-breakpoint
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
+    REVOKE ALL ON TABLE ingestion_runs, ingestion_candidates, ingestion_leases FROM anon;
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN
+    REVOKE ALL ON TABLE ingestion_runs, ingestion_candidates, ingestion_leases FROM authenticated;
+  END IF;
+END $$;
