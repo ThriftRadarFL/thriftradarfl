@@ -374,11 +374,11 @@
     "type": "estate",
     "city": "Ormond Beach",
     "zip": "32174",
-    "lat": 29.2922,
-    "lng": -81.1614,
+    "lat": 29.324826327769,
+    "lng": -81.108846711511,
     "sourceUrl": "https://www.estatesales.net/FL/Ormond%20Beach/32174/traditional/5136183",
     "paymentMethods": [],
-    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32174 center. Run by D&D Estate Sale Pros. Source: estatesales.net.",
+    "description": "Address posted closer to sale (street address not yet posted). Map pin is the ZIP 32174 center. Run by D&D Estate Sale Pros. Source: estatesales.net. Address: 14 Sherrington Dr, Ormond Beach, FL 32174. Pin is ArcGIS PointAddress (not ZIP centroid).",
     "days": [
       {
         "date": "2026-11-06",
@@ -401,11 +401,11 @@
     "type": "estate",
     "city": "Ormond Beach",
     "zip": "32174",
-    "lat": 29.2922,
-    "lng": -81.1614,
+    "lat": 29.335467070032,
+    "lng": -81.115407730041,
     "sourceUrl": "https://www.estatesales.net/FL/Ormond%20Beach/32174/traditional/5130090",
     "paymentMethods": [],
-    "description": "Address posted closer to sale (full address posted Nov 4, 5pm). Map pin is the ZIP 32174 center. Run by Ray Of Sunshine Estate Sales. Source: estatesales.net; estatesales.org (https://www.estatesales.org/estate-sales/fl/ormond-beach/32174/massive-estate-sale-new-vintage-2469708).",
+    "description": "Address posted closer to sale (full address posted Nov 4, 5pm). Map pin is the ZIP 32174 center. Run by Ray Of Sunshine Estate Sales. Source: estatesales.net; estatesales.org (https://www.estatesales.org/estate-sales/fl/ormond-beach/32174/massive-estate-sale-new-vintage-2469708). Address: 10 Needles Ln, Ormond Beach, FL 32174. Pin is ArcGIS PointAddress (not ZIP centroid).",
     "days": [
       {
         "date": "2026-11-06",

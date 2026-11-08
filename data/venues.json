@@ -416,14 +416,14 @@
     "address": "4075-A S Goldenrod Rd",
     "city": "Orlando",
     "zip": "32822",
-    "lat": 28.4886,
-    "lng": -81.28524,
+    "lat": 28.489625,
+    "lng": -81.283752,
     "phone": "(407) 295-9311",
     "hoursJson": {
       "mon-sat": "10:00-18:00",
       "sun": "closed"
     },
-    "notes": "Hours Mon-Sat 10am-6pm, Sun closed per thethriftshopper.com and Apple Maps, unverified (checked 2026-11-03). Apple Maps lists (689) 986-0780. Source: https://www.salvationarmyusa.org/fl/orlando/ (checked 2026-11-02).",
+    "notes": "Hours Mon-Sat 10am-6pm, Sun closed per thethriftshopper.com and Apple Maps, unverified (checked 2026-11-03). Apple Maps lists (689) 986-0780. Source: https://www.salvationarmyusa.org/fl/orlando/ (checked 2026-11-02). Pin corrected 2026-11-07 to ArcGIS PointAddress 28.489625,-81.283752 (address-point, NOT rooftop).",
     "sourceUrl": "https://www.salvationarmyusa.org/fl/orlando/"
   },
   {
@@ -646,6 +646,24 @@
     "sourceUrl": "https://buythrift.com/stores/"
   },
   {
+    "slug": "city-thrift-daytona-beach",
+    "org": "city-thrift",
+    "name": "City Thrift - Daytona Beach",
+    "type": "thrift",
+    "address": "808 N Nova Road",
+    "city": "Daytona Beach",
+    "zip": "32117",
+    "lat": 29.22099,
+    "lng": -81.050323,
+    "phone": "(386) 257-2611",
+    "hoursJson": {
+      "mon-sat": "9:00-21:00",
+      "sun": "11:00-18:00"
+    },
+    "notes": "Official BuyThrift/City Thrift store locator record 125 (fetched 2026-11-06 11:59 PM EST, HTTP 200): 808 N Nova Road, Daytona Beach FL 32117; Mon\u2013Sat 9am\u20139pm / Sun 11am\u20136pm; phone (386) 257-2611. Pin is the official locator point 29.22099,-81.050323 (NOT a surveyed rooftop; ArcGIS PointAddress for the same address is ~201m away and was not used). Source: https://buythrift.com/stores/",
+    "sourceUrl": "https://buythrift.com/stores/"
+  },
+  {
     "slug": "salvation-army-w-colonial-orlando",
     "org": "salvation",
     "name": "Salvation Army Thrift Store (W Colonial Dr)",
@@ -694,8 +712,8 @@
     "hoursJson": {
       "mon,wed,fri,sat": "10:00-15:00"
     },
-    "notes": "UNVERIFIED listing (third-party directory only; confirm the store is open before visiting). Hours: Mon, Wed, Fri, Sat 10am-3pm (211 listing; another source adds Thu). No official site found, only Facebook. Source: 211live.org (checked 2026-11-02).",
-    "sourceUrl": "https://211live.org/index.php/component/cpx/?id=3883031&task=resource.view"
+    "notes": "Official parish page https://smdmcc.org/st-vincent-de-paul names Nearly New Thrift Store at 400 S Daytona Avenue, Flagler Beach, phone 386-439-0071 (checked 2026-11-07). Hours still secondary (Mon/Wed/Fri/Sat 10am\u20133pm); Thursday not added. Pins kept. Confirm hours before visiting.",
+    "sourceUrl": "https://smdmcc.org/st-vincent-de-paul"
   },
   {
     "slug": "sharing-center-village-shoppes-longwood",
